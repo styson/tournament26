@@ -57,7 +57,7 @@ export default function Login() {
   return (
     <div style={{
       minHeight: '100vh',
-      background: '#0a0908',
+      background: 'var(--c-bg)',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
@@ -69,7 +69,7 @@ export default function Login() {
       <div style={{
         position: 'absolute',
         inset: 0,
-        backgroundImage: 'radial-gradient(circle, #1e1c18 1px, transparent 1px)',
+        backgroundImage: 'radial-gradient(circle, var(--c-raised) 1px, transparent 1px)',
         backgroundSize: '22px 22px',
         opacity: 0.8,
         pointerEvents: 'none',
@@ -79,7 +79,7 @@ export default function Login() {
       <div style={{
         position: 'absolute',
         inset: 0,
-        background: 'radial-gradient(ellipse at center, transparent 40%, #0a0908 100%)',
+        background: 'radial-gradient(ellipse at center, transparent 40%, var(--c-bg) 100%)',
         pointerEvents: 'none',
       }} />
 
@@ -88,13 +88,13 @@ export default function Login() {
         {/* Header */}
         <div className="anim-0" style={{ textAlign: 'center', marginBottom: '2rem' }}>
           {/* Badge */}
-          <div style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '52px', height: '52px', background: '#b8861a', clipPath: 'polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px))', marginBottom: '1rem' }}>
-            <span style={{ fontFamily: '"Bebas Neue", sans-serif', fontSize: '1.5rem', color: '#0a0908', letterSpacing: '0.05em' }}>T</span>
+          <div style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '52px', height: '52px', background: 'var(--c-accent)', clipPath: 'polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px))', marginBottom: '1rem' }}>
+            <span style={{ fontFamily: '"Bebas Neue", sans-serif', fontSize: '1.5rem', color: 'var(--c-bg)', letterSpacing: '0.05em' }}>T</span>
           </div>
-          <h1 style={{ fontFamily: '"Bebas Neue", sans-serif', fontSize: '2.2rem', letterSpacing: '0.1em', color: '#ddd4bc', margin: 0 }}>
-            TOURNEY<span style={{ color: '#b8861a' }}>26</span>
+          <h1 style={{ fontFamily: '"Bebas Neue", sans-serif', fontSize: '2.2rem', letterSpacing: '0.1em', color: 'var(--c-text)', margin: 0 }}>
+            TOURNEY<span style={{ color: 'var(--c-accent)' }}>26</span>
           </h1>
-          <p style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.6rem', letterSpacing: '0.2em', color: '#9a8e7e', textTransform: 'uppercase', marginTop: '0.4rem' }}>
+          <p style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.6rem', letterSpacing: '0.2em', color: 'var(--c-muted)', textTransform: 'uppercase', marginTop: '0.4rem' }}>
             Secure Access Required
           </p>
         </div>
@@ -103,7 +103,7 @@ export default function Login() {
         <div className="card anim-1" style={{ padding: '1.75rem' }}>
 
           {/* Mode toggle */}
-          <div style={{ display: 'flex', marginBottom: '1.5rem', borderBottom: '1px solid #282420' }}>
+          <div style={{ display: 'flex', marginBottom: '1.5rem', borderBottom: '1px solid var(--c-border)' }}>
             {(['signin', 'signup'] as Mode[]).map((m) => (
               <button
                 key={m}
@@ -113,8 +113,8 @@ export default function Login() {
                   padding: '0.5rem',
                   background: 'transparent',
                   border: 'none',
-                  borderBottom: mode === m ? '2px solid #b8861a' : '2px solid transparent',
-                  color: mode === m ? '#b8861a' : '#9a8e7e',
+                  borderBottom: mode === m ? '2px solid var(--c-accent)' : '2px solid transparent',
+                  color: mode === m ? 'var(--c-accent)' : 'var(--c-muted)',
                   fontFamily: '"IBM Plex Mono", monospace',
                   fontSize: '0.65rem',
                   letterSpacing: '0.16em',
@@ -173,13 +173,13 @@ export default function Login() {
             </div>
 
             {error && (
-              <div style={{ padding: '0.6rem 0.75rem', background: 'rgba(139, 46, 46, 0.15)', border: '1px solid #5a1e1e', fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.7rem', color: '#c46060', letterSpacing: '0.05em' }}>
+              <div style={{ padding: '0.6rem 0.75rem', background: 'rgba(139, 46, 46, 0.15)', border: '1px solid var(--c-red-border)', fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.7rem', color: 'var(--c-red)', letterSpacing: '0.05em' }}>
                 {error}
               </div>
             )}
 
             {info && (
-              <div style={{ padding: '0.6rem 0.75rem', background: 'rgba(58, 92, 56, 0.15)', border: '1px solid #263d25', fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.7rem', color: '#6a9c68', letterSpacing: '0.05em' }}>
+              <div style={{ padding: '0.6rem 0.75rem', background: 'rgba(58, 92, 56, 0.15)', border: '1px solid var(--c-green)', fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.7rem', color: 'var(--c-green)', letterSpacing: '0.05em' }}>
                 {info}
               </div>
             )}
@@ -196,9 +196,9 @@ export default function Login() {
 
           {/* Divider */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', margin: '1.25rem 0' }}>
-            <div style={{ flex: 1, height: '1px', background: '#282420' }} />
-            <span style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.6rem', color: '#706858', letterSpacing: '0.15em' }}>OR</span>
-            <div style={{ flex: 1, height: '1px', background: '#282420' }} />
+            <div style={{ flex: 1, height: '1px', background: 'var(--c-border)' }} />
+            <span style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.6rem', color: 'var(--c-muted-dim)', letterSpacing: '0.15em' }}>OR</span>
+            <div style={{ flex: 1, height: '1px', background: 'var(--c-border)' }} />
           </div>
 
           {/* Google */}
@@ -217,7 +217,7 @@ export default function Login() {
           </button>
         </div>
 
-        <p style={{ textAlign: 'center', fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.58rem', color: '#706858', letterSpacing: '0.12em', marginTop: '1.25rem', textTransform: 'uppercase' }}>
+        <p style={{ textAlign: 'center', fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.58rem', color: 'var(--c-muted-dim)', letterSpacing: '0.12em', marginTop: '1.25rem', textTransform: 'uppercase' }}>
           Authorized Personnel Only
         </p>
       </div>

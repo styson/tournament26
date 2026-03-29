@@ -20,9 +20,9 @@ export default function Standings() {
             value={selectedTournament}
             onChange={(e) => setSelectedTournament(e.target.value)}
             style={{
-              background: '#0a0908',
-              color: selectedTournament ? '#ddd4bc' : '#9a8e7e',
-              border: '1px solid #282420',
+              background: 'var(--c-bg)',
+              color: selectedTournament ? 'var(--c-text)' : 'var(--c-muted)',
+              border: '1px solid var(--c-border)',
               fontFamily: '"IBM Plex Mono", monospace',
               fontSize: '0.7rem',
               letterSpacing: '0.1em',
@@ -35,20 +35,20 @@ export default function Standings() {
           >
             <option value="">Select Tournament</option>
           </select>
-          <span style={{ position: 'absolute', right: '0.6rem', top: '50%', transform: 'translateY(-50%)', color: '#9a8e7e', fontSize: '0.6rem', pointerEvents: 'none' }}>▼</span>
+          <span style={{ position: 'absolute', right: '0.6rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--c-muted)', fontSize: '0.6rem', pointerEvents: 'none' }}>▼</span>
         </div>
       </div>
 
       <div className="card anim-1" style={{ padding: 0, overflow: 'hidden' }}>
         {standings.length === 0 ? (
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '4rem 2rem', gap: '1rem' }}>
-            <div style={{ fontFamily: '"Bebas Neue", sans-serif', fontSize: '4rem', color: '#1e1c18', letterSpacing: '0.05em' }}>ST-00</div>
-            <h3 style={{ fontFamily: '"Bebas Neue", sans-serif', fontSize: '1.4rem', letterSpacing: '0.06em', color: '#9a8e7e', margin: 0 }}>
-              {selectedTournament ? 'No Data Available' : 'Select an Tournament'}
+            <div style={{ fontFamily: '"Bebas Neue", sans-serif', fontSize: '4rem', color: 'var(--c-raised)', letterSpacing: '0.05em' }}>ST-00</div>
+            <h3 style={{ fontFamily: '"Bebas Neue", sans-serif', fontSize: '1.4rem', letterSpacing: '0.06em', color: 'var(--c-muted)', margin: 0 }}>
+              {selectedTournament ? 'No Data Available' : 'Select a Tournament'}
             </h3>
-            <p style={{ fontFamily: '"Crimson Text", serif', fontSize: '0.95rem', color: '#706858', margin: 0, textAlign: 'center' }}>
+            <p style={{ fontFamily: '"Crimson Text", serif', fontSize: '0.95rem', color: 'var(--c-muted-dim)', margin: 0, textAlign: 'center' }}>
               {selectedTournament
-                ? 'No battles have been logged for this tournament'
+                ? 'No games have been logged for this tournament'
                 : 'Choose a tournament above to view its standings'}
             </p>
           </div>
