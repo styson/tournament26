@@ -42,7 +42,7 @@ const amplifyConfig: ResourcesConfig = {
     REST: {
       TournamentAPI: {
         endpoint: import.meta.env.VITE_AWS_API_ENDPOINT || 'https://api.example.com',
-        region: import.meta.env.VITE_AWS_REGION || 'us-east-1',
+        region: import.meta.env.VITE_AWS_REGION || 'us-west-2',
       },
     },
   },

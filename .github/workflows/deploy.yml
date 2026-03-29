@@ -32,25 +32,21 @@ jobs:
       - name: Build application
         run: npm run build
         env:
-          VITE_AWS_REGION: ${{ secrets.VITE_AWS_REGION }}
-          VITE_AWS_USER_POOL_ID: ${{ secrets.VITE_AWS_USER_POOL_ID }}
-          VITE_AWS_USER_POOL_CLIENT_ID: ${{ secrets.VITE_AWS_USER_POOL_CLIENT_ID }}
-          VITE_AWS_OAUTH_DOMAIN: ${{ secrets.VITE_AWS_OAUTH_DOMAIN }}
-          VITE_AWS_API_ENDPOINT: ${{ secrets.VITE_AWS_API_ENDPOINT }}
-          VITE_APP_URL: ${{ secrets.VITE_APP_URL }}
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
 
-      - name: Deploy to AWS Amplify
+      - name: Configure AWS credentials
+        if: github.ref == 'refs/heads/main'
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
+          aws-region: us-east-1
 
-      - name: Upload to S3 (if using S3 + CloudFront)
+      - name: Deploy to Amplify Hosting
         if: github.ref == 'refs/heads/main'
         run: |
-          aws s3 sync dist/ s3://${{ secrets.S3_BUCKET_NAME }} --delete
-          aws cloudfront create-invalidation --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} --paths "/*"
+          aws amplify start-job --app-id ${{ secrets.AMPLIFY_APP_ID }} --branch-name main --job-type RELEASE
         continue-on-error: true
 
       - name: Comment on PR

@@ -1,14 +1,33 @@
+import { useEffect, useState } from 'react';
 import { useAuth } from '@/config/auth';
 import { Link } from '@tanstack/react-router';
+import { supabase } from '@/config/supabase';
 
 export default function Dashboard() {
   const { user } = useAuth();
+  const [counts, setCounts] = useState({ tournaments: '—', players: '—', games: '—', scenarios: '—' });
+
+  useEffect(() => {
+    Promise.all([
+      supabase.from('tournaments').select('*', { count: 'exact', head: true }).in('status', ['ACTIVE', 'DRAFT']),
+      supabase.from('players').select('*', { count: 'exact', head: true }),
+      supabase.from('games').select('*', { count: 'exact', head: true }).eq('status', 'COMPLETED'),
+      supabase.from('scenarios').select('*', { count: 'exact', head: true }),
+    ]).then(([t, p, g, s]) => {
+      setCounts({
+        tournaments: t.error ? 'Err' : String(t.count ?? 0),
+        players:     p.error ? 'Err' : String(p.count ?? 0),
+        games:       g.error ? 'Err' : String(g.count ?? 0),
+        scenarios:   s.error ? 'Err' : String(s.count ?? 0),
+      });
+    });
+  }, []);
 
   const stats = [
-    { label: 'Active Tournaments', value: '0', link: '/tournaments', code: 'TN' },
-    { label: 'Total Players',      value: '0', link: '/players',     code: 'PL' },
-    { label: 'Games Played',       value: '0', link: '/games',       code: 'GM' },
-    { label: 'Scenarios',          value: '0', link: '/scenarios',   code: 'SC' },
+    { label: 'Active Tournaments', value: counts.tournaments, link: '/tournaments', code: 'TN' },
+    { label: 'Total Players',      value: counts.players,     link: '/players',     code: 'PL' },
+    { label: 'Games Played',       value: counts.games,       link: '/games',       code: 'GM' },
+    { label: 'Scenarios',          value: counts.scenarios,   link: '/scenarios',   code: 'SC' },
   ];
 
   const quickActions = [
