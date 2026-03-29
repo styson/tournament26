@@ -41,12 +41,14 @@ export interface Tournament {
   updatedAt: Date;
 }
 
-export enum TournamentStatus {
-  DRAFT = 'DRAFT',
-  ACTIVE = 'ACTIVE',
-  COMPLETED = 'COMPLETED',
-  CANCELLED = 'CANCELLED',
-}
+export const TournamentStatus = {
+  DRAFT: 'DRAFT',
+  ACTIVE: 'ACTIVE',
+  COMPLETED: 'COMPLETED',
+  CANCELLED: 'CANCELLED',
+} as const;
+
+export type TournamentStatus = typeof TournamentStatus[keyof typeof TournamentStatus];
 
 // Round Types
 export interface Round {
@@ -61,11 +63,13 @@ export interface Round {
   updatedAt: Date;
 }
 
-export enum RoundStatus {
-  PENDING = 'PENDING',
-  IN_PROGRESS = 'IN_PROGRESS',
-  COMPLETED = 'COMPLETED',
-}
+export const RoundStatus = {
+  PENDING: 'PENDING',
+  IN_PROGRESS: 'IN_PROGRESS',
+  COMPLETED: 'COMPLETED',
+} as const;
+
+export type RoundStatus = typeof RoundStatus[keyof typeof RoundStatus];
 
 // Scenario Types
 export interface Scenario {
@@ -78,17 +82,19 @@ export interface Scenario {
   createdAt: Date;
 }
 
-export enum Nationality {
-  AMERICAN = 'AMERICAN',
-  GERMAN = 'GERMAN',
-  BRITISH = 'BRITISH',
-  SOVIET = 'SOVIET',
-  JAPANESE = 'JAPANESE',
-  ITALIAN = 'ITALIAN',
-  FRENCH = 'FRENCH',
-  POLISH = 'POLISH',
-  CHINESE = 'CHINESE',
-}
+export const Nationality = {
+  AMERICAN: 'AMERICAN',
+  GERMAN: 'GERMAN',
+  BRITISH: 'BRITISH',
+  SOVIET: 'SOVIET',
+  JAPANESE: 'JAPANESE',
+  ITALIAN: 'ITALIAN',
+  FRENCH: 'FRENCH',
+  POLISH: 'POLISH',
+  CHINESE: 'CHINESE',
+} as const;
+
+export type Nationality = typeof Nationality[keyof typeof Nationality];
 
 // Game Types
 export interface Game {
@@ -107,18 +113,22 @@ export interface Game {
   updatedAt: Date;
 }
 
-export enum GameStatus {
-  SCHEDULED = 'SCHEDULED',
-  IN_PROGRESS = 'IN_PROGRESS',
-  COMPLETED = 'COMPLETED',
-  CANCELLED = 'CANCELLED',
-}
+export const GameStatus = {
+  SCHEDULED: 'SCHEDULED',
+  IN_PROGRESS: 'IN_PROGRESS',
+  COMPLETED: 'COMPLETED',
+  CANCELLED: 'CANCELLED',
+} as const;
 
-export enum GameResult {
-  DEFENDER_WIN = 'DEFENDER_WIN',
-  ATTACKER_WIN = 'ATTACKER_WIN',
-  DRAW = 'DRAW',
-}
+export type GameStatus = typeof GameStatus[keyof typeof GameStatus];
+
+export const GameResult = {
+  DEFENDER_WIN: 'DEFENDER_WIN',
+  ATTACKER_WIN: 'ATTACKER_WIN',
+  DRAW: 'DRAW',
+} as const;
+
+export type GameResult = typeof GameResult[keyof typeof GameResult];
 
 // Standings Types
 export interface Standing {

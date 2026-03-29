@@ -1,57 +1,92 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Link } from '@tanstack/react-router';
+import { supabase } from '@/config/supabase';
+
+interface Player {
+  id: string;
+  name: string;
+  email: string | null;
+  phone: string | null;
+  location: string | null;
+}
 
 export default function Players() {
-  const [players] = useState([]);
+  const [players, setPlayers] = useState<Player[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    supabase
+      .from('players')
+      .select('*')
+      .order('name')
+      .then(({ data, error }) => {
+        if (error) {
+          console.error(error);
+          setError(error.message);
+        } else {
+          setPlayers(data ?? []);
+        }
+        setLoading(false);
+      });
+  }, []);
 
   return (
-    <div className="space-y-6">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+
       {/* Header */}
-      <div className="flex justify-between items-center">
+      <div className="anim-0" style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.75rem' }}>
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Players</h1>
-          <p className="text-gray-600 mt-1">Manage player profiles and view statistics</p>
+          <div className="section-label" style={{ marginBottom: '0.3rem' }}>Personnel Records</div>
+          <h1 style={{ fontFamily: '"Bebas Neue", sans-serif', fontSize: '2.4rem', letterSpacing: '0.06em', margin: 0 }}>
+            Players
+          </h1>
         </div>
-        <Link to="/players/new" className="btn-primary">
-          Add Player
-        </Link>
+        <Link to="/players/new" className="btn-primary">+ Enlist Player</Link>
       </div>
 
-      {/* Players List */}
-      <div className="card">
-        {players.length === 0 ? (
-          <div className="text-center py-12">
-            <div className="text-6xl mb-4">👥</div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">No players yet</h3>
-            <p className="text-gray-600 mb-6">Get started by adding your first player</p>
-            <Link to="/players/new" className="btn-primary">
-              Add Your First Player
-            </Link>
+      <div className="card anim-1" style={{ padding: 0, overflow: 'hidden' }}>
+        {loading ? (
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '3rem', gap: '0.75rem' }}>
+            <div style={{ width: '20px', height: '20px', border: '2px solid #282420', borderTopColor: '#b8861a', borderRadius: '50%', animation: 'spin 0.8s linear infinite', flexShrink: 0 }} />
+            <span style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.65rem', color: '#9a8e7e', letterSpacing: '0.15em', textTransform: 'uppercase' }}>Loading...</span>
+            <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+          </div>
+        ) : error ? (
+          <div style={{ padding: '1.25rem', fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.7rem', color: '#c46060', border: '1px solid #5a1e1e' }}>
+            {error}
+          </div>
+        ) : players.length === 0 ? (
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '4rem 2rem', gap: '1rem' }}>
+            <div style={{ fontFamily: '"Bebas Neue", sans-serif', fontSize: '4rem', color: '#1e1c18', letterSpacing: '0.05em' }}>PL-00</div>
+            <h3 style={{ fontFamily: '"Bebas Neue", sans-serif', fontSize: '1.4rem', letterSpacing: '0.06em', color: '#9a8e7e', margin: 0 }}>
+              No Personnel on Record
+            </h3>
+            <p style={{ fontFamily: '"Crimson Text", serif', fontSize: '0.95rem', color: '#706858', margin: 0, textAlign: 'center' }}>
+              Enlist your first player to begin building the roster
+            </p>
+            <Link to="/players/new" className="btn-primary" style={{ marginTop: '0.5rem' }}>+ Enlist First Player</Link>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
+          <div style={{ overflowX: 'auto' }}>
+            <table className="ops-table">
+              <thead>
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Name
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Email
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Location
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Tournaments
-                  </th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Actions
-                  </th>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Phone</th>
+                  <th>Location</th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {/* Player rows will be rendered here */}
+              <tbody>
+                {players.map(p => (
+                  <tr key={p.id}>
+                    <td style={{ color: '#ddd4bc', fontWeight: 500 }}>{p.name}</td>
+                    <td>{p.email ?? '—'}</td>
+                    <td>{p.phone ?? '—'}</td>
+                    <td>{p.location ?? '—'}</td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>

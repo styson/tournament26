@@ -1,62 +1,131 @@
-import { Link } from 'react-router-dom';
+import { Link } from '@tanstack/react-router';
 import { useAuth } from '@/config/auth';
+
+const features = [
+  {
+    code: '01',
+    title: 'Player Roster',
+    desc: 'Maintain complete dossiers — history, W/L records, opponent strength.',
+  },
+  {
+    code: '02',
+    title: 'Tournaments',
+    desc: 'Run multiple tournaments simultaneously with independent round control.',
+  },
+  {
+    code: '03',
+    title: 'Live Intel',
+    desc: 'Real-time standings with Buchholz-style opponent strength metrics.',
+  },
+];
 
 export default function Home() {
   const { user } = useAuth();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 to-blue-100 flex items-center justify-center px-2 sm:px-4">
-      <div className="max-w-4xl mx-auto text-center w-full">
-        {/* Hero Section */}
-        <div className="space-y-4 sm:space-y-6">
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-gray-900 tracking-tight">
-            Hello World!
-          </h1>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-primary-600">
-            Tournament26
-          </h2>
-          <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto px-2">
-            Track players, games, and standings for your WW2 board game tournaments with ease.
-            Built for Tournament Directors.
-          </p>
+    <div style={{
+      minHeight: '100vh',
+      background: '#0a0908',
+      display: 'flex',
+      flexDirection: 'column',
+      position: 'relative',
+      overflow: 'hidden',
+    }}>
 
-          {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-2 justify-center items-center mt-4">
-            {user ? (
-              <Link to="/dashboard" className="btn-primary px-6 py-2">
-                Go to Dashboard
-              </Link>
-            ) : (
-              <Link to="/login" className="btn-primary px-6 py-2">
-                Sign In with Google
-              </Link>
-            )}
-          </div>
+      {/* Dot grid */}
+      <div style={{
+        position: 'absolute',
+        inset: 0,
+        backgroundImage: 'radial-gradient(circle, #1e1c18 1px, transparent 1px)',
+        backgroundSize: '22px 22px',
+        pointerEvents: 'none',
+      }} />
 
-          {/* Features */}
-          <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4 mt-8">
-            <div className="card">
-              <div className="text-primary-600 text-2xl sm:text-3xl mb-2">👥</div>
-              <h3 className="text-sm sm:text-base font-semibold mb-1">Player Management</h3>
-              <p className="text-xs sm:text-sm text-gray-600">
-                Track player profiles and historical performance
+      {/* Radial vignette */}
+      <div style={{
+        position: 'absolute',
+        inset: 0,
+        background: 'radial-gradient(ellipse at 50% 30%, transparent 30%, #0a0908 80%)',
+        pointerEvents: 'none',
+      }} />
+
+      {/* Diagonal accent line */}
+      <div style={{
+        position: 'absolute',
+        top: 0,
+        right: '15%',
+        width: '1px',
+        height: '100%',
+        background: 'linear-gradient(180deg, transparent 0%, #282420 30%, #282420 70%, transparent 100%)',
+        transform: 'skewX(-8deg)',
+        pointerEvents: 'none',
+      }} />
+
+      <div style={{ position: 'relative', zIndex: 1, flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '4rem 2rem', maxWidth: '1000px', margin: '0 auto', width: '100%' }}>
+
+        {/* Top coordinate label */}
+        <div className="anim-0" style={{ marginBottom: '1.5rem' }}>
+          <span style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.6rem', letterSpacing: '0.25em', color: '#9a8e7e', textTransform: 'uppercase' }}>
+            // WW2 Board Game · Tournament Director Platform
+          </span>
+        </div>
+
+        {/* Hero heading */}
+        <h1 className="anim-1" style={{
+          fontFamily: '"Bebas Neue", sans-serif',
+          fontSize: 'clamp(4rem, 12vw, 9rem)',
+          letterSpacing: '0.06em',
+          lineHeight: 0.9,
+          color: '#ddd4bc',
+          margin: '0 0 1.5rem',
+        }}>
+          TOURNAMENT<br />
+          <span style={{ color: '#b8861a', WebkitTextStroke: '0px' }}>26</span>
+        </h1>
+
+        {/* Sub-heading */}
+        <p className="anim-2" style={{
+          fontFamily: '"Crimson Text", serif',
+          fontSize: '1.2rem',
+          color: '#b0a090',
+          maxWidth: '480px',
+          lineHeight: 1.7,
+          marginBottom: '2.5rem',
+        }}>
+          Command your WW2 tournament from roster to final standings.
+          Track every battle, every player, every campaign.
+        </p>
+
+        {/* CTA */}
+        <div className="anim-3" style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+          {user ? (
+            <Link to="/dashboard" className="btn-primary">→ Enter Command Center</Link>
+          ) : (
+            <>
+              <Link to="/login" className="btn-primary">→ Begin Mission</Link>
+              <Link to="/login" className="btn-secondary">Learn More</Link>
+            </>
+          )}
+        </div>
+
+        {/* Feature cards */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1px', marginTop: '5rem', background: '#282420' }}>
+          {features.map((f, i) => (
+            <div key={f.code} className={`anim-${i + 4}`} style={{
+              background: '#0d0c0a',
+              padding: '1.25rem 1.5rem',
+            }}>
+              <div style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.58rem', letterSpacing: '0.2em', color: '#b8861a', marginBottom: '0.6rem' }}>
+                [{f.code}]
+              </div>
+              <h3 style={{ fontFamily: '"Bebas Neue", sans-serif', fontSize: '1.3rem', letterSpacing: '0.06em', color: '#ddd4bc', margin: '0 0 0.5rem' }}>
+                {f.title}
+              </h3>
+              <p style={{ fontFamily: '"Crimson Text", serif', fontSize: '0.9rem', color: '#b0a090', margin: 0, lineHeight: 1.6 }}>
+                {f.desc}
               </p>
             </div>
-            <div className="card">
-              <div className="text-primary-600 text-2xl sm:text-3xl mb-2">🎯</div>
-              <h3 className="text-sm sm:text-base font-semibold mb-1">Tournament Control</h3>
-              <p className="text-xs sm:text-sm text-gray-600">
-                Manage tournaments, rounds, and game pairings
-              </p>
-            </div>
-            <div className="card sm:col-span-2 md:col-span-1">
-              <div className="text-primary-600 text-2xl sm:text-3xl mb-2">📊</div>
-              <h3 className="text-sm sm:text-base font-semibold mb-1">Live Standings</h3>
-              <p className="text-xs sm:text-sm text-gray-600">
-                Real-time standings with opponent strength tracking
-              </p>
-            </div>
-          </div>
+          ))}
         </div>
       </div>
     </div>

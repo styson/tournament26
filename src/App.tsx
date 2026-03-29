@@ -1,6 +1,5 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { createRootRoute, createRoute, createRouter, RouterProvider, Outlet, Navigate } from '@tanstack/react-router';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { AuthProvider } from './config/auth';
 import Layout from './components/common/Layout';
 import ProtectedRoute from './components/common/ProtectedRoute';
 
@@ -13,6 +12,9 @@ import Tournaments from './pages/Tournaments';
 import Games from './pages/Games';
 import Scenarios from './pages/Scenarios';
 import Standings from './pages/Standings';
+import NewTournament from './pages/NewTournament';
+import NewPlayer from './pages/NewPlayer';
+import TournamentDetail from './pages/TournamentDetail';
 
 // Create React Query client
 const queryClient = new QueryClient({
@@ -25,83 +27,101 @@ const queryClient = new QueryClient({
   },
 });
 
+const rootRoute = createRootRoute({
+  component: () => <Outlet />,
+  notFoundComponent: () => <Navigate to="/" />,
+});
+
+const indexRoute = createRoute({ getParentRoute: () => rootRoute, path: '/', component: Home });
+const loginRoute = createRoute({ getParentRoute: () => rootRoute, path: '/login', component: Login });
+
+const dashboardRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/dashboard',
+  component: () => <ProtectedRoute><Layout><Dashboard /></Layout></ProtectedRoute>,
+});
+
+const playersRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/players',
+  component: () => <ProtectedRoute><Layout><Players /></Layout></ProtectedRoute>,
+});
+
+const tournamentsRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/tournaments',
+  component: () => <ProtectedRoute><Layout><Tournaments /></Layout></ProtectedRoute>,
+});
+
+const gamesRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/games',
+  component: () => <ProtectedRoute><Layout><Games /></Layout></ProtectedRoute>,
+});
+
+const scenariosRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/scenarios',
+  component: () => <ProtectedRoute><Layout><Scenarios /></Layout></ProtectedRoute>,
+});
+
+const standingsRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/standings',
+  component: () => <ProtectedRoute><Layout><Standings /></Layout></ProtectedRoute>,
+});
+
+const playersNewRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/players/new',
+  component: () => <ProtectedRoute><Layout><NewPlayer /></Layout></ProtectedRoute>,
+});
+
+const tournamentsNewRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/tournaments/new',
+  component: () => <ProtectedRoute><Layout><NewTournament /></Layout></ProtectedRoute>,
+});
+
+const tournamentDetailRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/tournaments/$id',
+  component: () => <ProtectedRoute><Layout><TournamentDetail /></Layout></ProtectedRoute>,
+});
+
+const gamesNewRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/games/new',
+  component: () => <ProtectedRoute><Layout><Games /></Layout></ProtectedRoute>,
+});
+
+const routeTree = rootRoute.addChildren([
+  indexRoute,
+  loginRoute,
+  dashboardRoute,
+  playersRoute,
+  playersNewRoute,
+  tournamentsRoute,
+  tournamentsNewRoute,
+  tournamentDetailRoute,
+  gamesRoute,
+  gamesNewRoute,
+  scenariosRoute,
+  standingsRoute,
+]);
+
+const router = createRouter({ routeTree });
+
+declare module '@tanstack/react-router' {
+  interface Register {
+    router: typeof router;
+  }
+}
+
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <BrowserRouter>
-          <Routes>
-            {/* Public Routes */}
-            <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
-
-            {/* Protected Routes */}
-            <Route
-              path="/dashboard"
-              element={
-                <ProtectedRoute>
-                  <Layout>
-                    <Dashboard />
-                  </Layout>
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/players"
-              element={
-                <ProtectedRoute>
-                  <Layout>
-                    <Players />
-                  </Layout>
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/tournaments"
-              element={
-                <ProtectedRoute>
-                  <Layout>
-                    <Tournaments />
-                  </Layout>
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/games"
-              element={
-                <ProtectedRoute>
-                  <Layout>
-                    <Games />
-                  </Layout>
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/scenarios"
-              element={
-                <ProtectedRoute>
-                  <Layout>
-                    <Scenarios />
-                  </Layout>
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/standings"
-              element={
-                <ProtectedRoute>
-                  <Layout>
-                    <Standings />
-                  </Layout>
-                </ProtectedRoute>
-              }
-            />
-
-            {/* Catch all - redirect to home */}
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </BrowserRouter>
-      </AuthProvider>
+      <RouterProvider router={router} />
     </QueryClientProvider>
   );
 }

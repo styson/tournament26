@@ -1,36 +1,224 @@
-import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Authenticator } from '@aws-amplify/ui-react';
-import '@aws-amplify/ui-react/styles.css';
+import { useState, useEffect } from 'react';
+import { useNavigate } from '@tanstack/react-router';
+import { supabase } from '@/config/supabase';
 import { useAuth } from '@/config/auth';
+
+type Mode = 'signin' | 'signup';
 
 export default function Login() {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const [mode, setMode] = useState<Mode>('signin');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
+  const [error, setError] = useState('');
+  const [info, setInfo] = useState('');
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (user) {
-      navigate('/dashboard');
-    }
+    if (user) navigate({ to: '/dashboard' });
   }, [user, navigate]);
 
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setError('');
+    setInfo('');
+    setLoading(true);
+
+    try {
+      if (mode === 'signin') {
+        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        if (error) throw error;
+      } else {
+        const { error } = await supabase.auth.signUp({
+          email,
+          password,
+          options: { data: { full_name: name } },
+        });
+        if (error) throw error;
+        setInfo('Check your email to confirm your account.');
+      }
+    } catch (err: any) {
+      setError(err.message ?? 'Authentication failed.');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleGoogle() {
+    setError('');
+    await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo: `${window.location.origin}/dashboard` },
+    });
+  }
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 to-blue-100 flex items-center justify-center px-4">
-      <div className="max-w-md w-full">
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">Tournament26</h1>
-          <p className="text-gray-600">Sign in to manage your tournaments</p>
+    <div style={{
+      minHeight: '100vh',
+      background: '#0a0908',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: '1.5rem',
+      position: 'relative',
+      overflow: 'hidden',
+    }}>
+      {/* Dot-grid background */}
+      <div style={{
+        position: 'absolute',
+        inset: 0,
+        backgroundImage: 'radial-gradient(circle, #1e1c18 1px, transparent 1px)',
+        backgroundSize: '22px 22px',
+        opacity: 0.8,
+        pointerEvents: 'none',
+      }} />
+
+      {/* Vignette */}
+      <div style={{
+        position: 'absolute',
+        inset: 0,
+        background: 'radial-gradient(ellipse at center, transparent 40%, #0a0908 100%)',
+        pointerEvents: 'none',
+      }} />
+
+      <div style={{ position: 'relative', zIndex: 1, width: '100%', maxWidth: '380px' }}>
+
+        {/* Header */}
+        <div className="anim-0" style={{ textAlign: 'center', marginBottom: '2rem' }}>
+          {/* Badge */}
+          <div style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '52px', height: '52px', background: '#b8861a', clipPath: 'polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px))', marginBottom: '1rem' }}>
+            <span style={{ fontFamily: '"Bebas Neue", sans-serif', fontSize: '1.5rem', color: '#0a0908', letterSpacing: '0.05em' }}>T</span>
+          </div>
+          <h1 style={{ fontFamily: '"Bebas Neue", sans-serif', fontSize: '2.2rem', letterSpacing: '0.1em', color: '#ddd4bc', margin: 0 }}>
+            TOURNEY<span style={{ color: '#b8861a' }}>26</span>
+          </h1>
+          <p style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.6rem', letterSpacing: '0.2em', color: '#9a8e7e', textTransform: 'uppercase', marginTop: '0.4rem' }}>
+            Secure Access Required
+          </p>
         </div>
 
-        <div className="card">
-          <Authenticator
-            socialProviders={['google']}
-            hideSignUp={false}
-          />
+        {/* Card */}
+        <div className="card anim-1" style={{ padding: '1.75rem' }}>
+
+          {/* Mode toggle */}
+          <div style={{ display: 'flex', marginBottom: '1.5rem', borderBottom: '1px solid #282420' }}>
+            {(['signin', 'signup'] as Mode[]).map((m) => (
+              <button
+                key={m}
+                onClick={() => { setMode(m); setError(''); setInfo(''); }}
+                style={{
+                  flex: 1,
+                  padding: '0.5rem',
+                  background: 'transparent',
+                  border: 'none',
+                  borderBottom: mode === m ? '2px solid #b8861a' : '2px solid transparent',
+                  color: mode === m ? '#b8861a' : '#9a8e7e',
+                  fontFamily: '"IBM Plex Mono", monospace',
+                  fontSize: '0.65rem',
+                  letterSpacing: '0.16em',
+                  textTransform: 'uppercase',
+                  cursor: 'pointer',
+                  transition: 'all 0.15s ease',
+                  marginBottom: '-1px',
+                }}
+              >
+                {m === 'signin' ? 'Sign In' : 'Sign Up'}
+              </button>
+            ))}
+          </div>
+
+          {/* Form */}
+          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+
+            {mode === 'signup' && (
+              <div>
+                <label className="field-label">Full Name</label>
+                <input
+                  className="input"
+                  type="text"
+                  placeholder="Lt. John Smith"
+                  value={name}
+                  onChange={e => setName(e.target.value)}
+                  required
+                />
+              </div>
+            )}
+
+            <div>
+              <label className="field-label">Email</label>
+              <input
+                className="input"
+                type="email"
+                placeholder="commander@unit.mil"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                required
+                autoComplete="email"
+              />
+            </div>
+
+            <div>
+              <label className="field-label">Password</label>
+              <input
+                className="input"
+                type="password"
+                placeholder="••••••••"
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+                required
+                autoComplete={mode === 'signin' ? 'current-password' : 'new-password'}
+              />
+            </div>
+
+            {error && (
+              <div style={{ padding: '0.6rem 0.75rem', background: 'rgba(139, 46, 46, 0.15)', border: '1px solid #5a1e1e', fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.7rem', color: '#c46060', letterSpacing: '0.05em' }}>
+                {error}
+              </div>
+            )}
+
+            {info && (
+              <div style={{ padding: '0.6rem 0.75rem', background: 'rgba(58, 92, 56, 0.15)', border: '1px solid #263d25', fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.7rem', color: '#6a9c68', letterSpacing: '0.05em' }}>
+                {info}
+              </div>
+            )}
+
+            <button
+              type="submit"
+              className="btn-primary"
+              disabled={loading}
+              style={{ width: '100%', justifyContent: 'center', opacity: loading ? 0.6 : 1, cursor: loading ? 'wait' : 'pointer' }}
+            >
+              {loading ? 'Processing...' : mode === 'signin' ? 'Enter Command' : 'Enlist'}
+            </button>
+          </form>
+
+          {/* Divider */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', margin: '1.25rem 0' }}>
+            <div style={{ flex: 1, height: '1px', background: '#282420' }} />
+            <span style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.6rem', color: '#706858', letterSpacing: '0.15em' }}>OR</span>
+            <div style={{ flex: 1, height: '1px', background: '#282420' }} />
+          </div>
+
+          {/* Google */}
+          <button
+            onClick={handleGoogle}
+            className="btn-secondary"
+            style={{ width: '100%', justifyContent: 'center' }}
+          >
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" style={{ flexShrink: 0 }}>
+              <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+              <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+              <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
+              <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+            </svg>
+            Continue with Google
+          </button>
         </div>
 
-        <p className="text-center text-sm text-gray-500 mt-4">
-          Sign in with your Google account to get started
+        <p style={{ textAlign: 'center', fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.58rem', color: '#706858', letterSpacing: '0.12em', marginTop: '1.25rem', textTransform: 'uppercase' }}>
+          Authorized Personnel Only
         </p>
       </div>
     </div>
