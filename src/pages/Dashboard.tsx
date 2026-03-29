@@ -9,9 +9,9 @@ export default function Dashboard() {
 
   useEffect(() => {
     Promise.all([
-      supabase.from('tournaments').select('*', { count: 'exact', head: true }).in('status', ['ACTIVE', 'DRAFT']),
+      supabase.from('tournaments').select('*', { count: 'exact', head: true }),
       supabase.from('players').select('*', { count: 'exact', head: true }),
-      supabase.from('games').select('*', { count: 'exact', head: true }).eq('status', 'COMPLETED'),
+      supabase.from('games').select('*', { count: 'exact', head: true }),
       supabase.from('scenarios').select('*', { count: 'exact', head: true }),
     ]).then(([t, p, g, s]) => {
       setCounts({
@@ -24,7 +24,7 @@ export default function Dashboard() {
   }, []);
 
   const stats = [
-    { label: 'Active Tournaments', value: counts.tournaments, link: '/tournaments', code: 'TN' },
+    { label: 'Tournaments',        value: counts.tournaments, link: '/tournaments', code: 'TN' },
     { label: 'Total Players',      value: counts.players,     link: '/players',     code: 'PL' },
     { label: 'Games Played',       value: counts.games,       link: '/games',       code: 'GM' },
     { label: 'Scenarios',          value: counts.scenarios,   link: '/scenarios',   code: 'SC' },
