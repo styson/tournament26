@@ -1,13 +1,13 @@
 # Tournament26
 
-A modern, sleek web application for tracking players, games, and standings of WW2 board game tournaments. Built for Tournament Directors.
+A modern, sleek web application for tracking players, games, and standings of board game tournaments. Built for Tournament Directors.
 
 ## Features
 
 - **Player Management**: Track player profiles, contact information, and historical tournament data
 - **Tournament Control**: Manage multiple tournaments with rounds and game pairings
 - **Game Tracking**: Record game results with attacker/defender roles and scenario tracking
-- **Scenario Library**: Browse and select from predefined WW2 scenarios with nationality assignments
+- **Scenario Library**: Browse and select from predefined scenarios with nationality assignments
 - **Live Standings**: Real-time tournament standings with opponent strength tracking
 
 ## Technology Stack
@@ -165,7 +165,7 @@ Option 2: Use GitHub Actions workflow (included)
 - Tracks results and opponent records
 
 ### Scenario
-- Predefined WW2 game setups
+- Predefined scenario listing
 - Defender and attacker nationalities
 
 ## Contributing

@@ -1,7 +1,7 @@
-# Project: WW2 Tournament Tracker
+# Project: Tournament Tracker
 
 ## Overview
-A modern, sleek web app for a tournament director (TD) to track players, games, and standings for a WW2 board game tournament.
+A modern, sleek web app for a tournament director (TD) to track players, games, and standings for a board game tournament.
 
 ## Tech Stack
 - **Frontend:** React + Vite + TypeScript

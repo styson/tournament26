@@ -14,7 +14,7 @@ gh auth login
 Then create and push the repository:
 
 ```bash
-gh repo create tournament26 --public --source=. --description "WW2 Board Game Tournament Tracker" --remote=origin --push
+gh repo create tournament26 --public --source=. --description "Tournament Tracker" --remote=origin --push
 ```
 
 ## Option 2: Manual Setup via GitHub Website

@@ -6,7 +6,11 @@
       "Bash(npm run build:*)",
       "Bash(npm uninstall:*)",
       "Bash(xargs grep:*)",
-      "Bash(find /c/projects/bfp2 -maxdepth 1 -name .env* -o -name *.example)"
+      "Bash(find /c/projects/bfp2 -maxdepth 1 -name .env* -o -name *.example)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(git add:*)",
+      "Bash(curl:*)"
     ]
   }
 }
