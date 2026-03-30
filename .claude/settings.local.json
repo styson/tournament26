@@ -10,7 +10,13 @@
       "Bash(git commit:*)",
       "Bash(git push:*)",
       "Bash(git add:*)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(bash \"C:/Users/styso/.claude/plugins/cache/claude-plugins-official/superpowers/5.0.6/skills/brainstorming/scripts/start-server.sh\" --project-dir \"C:/projects/tourney26\")",
+      "Bash(cat C:/projects/tourney26/.superpowers/brainstorm/*/state/server-info)",
+      "Bash(xargs cat:*)",
+      "Bash(xargs sed:*)",
+      "Bash(git grep:*)",
+      "Bash(npm test:*)"
     ]
   }
 }

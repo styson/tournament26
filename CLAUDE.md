@@ -50,5 +50,7 @@ Each player tracks: wins, losses, opponents faced, opponent W/L record at time o
 ## Development Guidelines
 - Use TypeScript strictly throughout
 - Component-first architecture; colocate styles and tests
+- Avoid inline styles
 - AWS Amplify CLI for backend provisioning
-- GitHub Actions workflow triggers on push to `main` for Amplify deploy
+- GitHub Actions workflow triggers on push to `main` for Amplify 
+- don't include Calude in commit messages
