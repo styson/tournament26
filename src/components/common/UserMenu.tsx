@@ -20,6 +20,7 @@ export default function UserMenu({ theme, onThemeChange }: UserMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [toastVisible, setToastVisible] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     function handleOutsideClick(e: MouseEvent) {
@@ -33,12 +34,24 @@ export default function UserMenu({ theme, onThemeChange }: UserMenuProps) {
     return () => document.removeEventListener('mousedown', handleOutsideClick);
   }, [isOpen]);
 
+  useEffect(() => {
+    return () => {
+      if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
+    };
+  }, []);
+
   async function handleResetPassword() {
     if (!user?.email) return;
     setIsOpen(false);
     await supabase.auth.resetPasswordForEmail(user.email);
     setToastVisible(true);
-    setTimeout(() => setToastVisible(false), 3000);
+    if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
+    toastTimerRef.current = setTimeout(() => setToastVisible(false), 3000);
+  }
+
+  function handleSignOut() {
+    setIsOpen(false);
+    signOut();
   }
 
   if (!user) return null;
@@ -184,7 +197,7 @@ export default function UserMenu({ theme, onThemeChange }: UserMenuProps) {
 
           {/* Sign out */}
           <button
-            onClick={signOut}
+            onClick={handleSignOut}
             style={{
               width: '100%',
               padding: '0.5rem 0.75rem',
