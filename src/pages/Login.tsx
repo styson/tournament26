@@ -3,17 +3,12 @@ import { useNavigate } from '@tanstack/react-router';
 import { supabase } from '@/config/supabase';
 import { useAuth } from '@/config/auth';
 
-type Mode = 'signin' | 'signup';
-
 export default function Login() {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const [mode, setMode] = useState<Mode>('signin');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [name, setName] = useState('');
   const [error, setError] = useState('');
-  const [info, setInfo] = useState('');
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -23,22 +18,11 @@ export default function Login() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError('');
-    setInfo('');
     setLoading(true);
 
     try {
-      if (mode === 'signin') {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) throw error;
-      } else {
-        const { error } = await supabase.auth.signUp({
-          email,
-          password,
-          options: { data: { full_name: name } },
-        });
-        if (error) throw error;
-        setInfo('Check your email to confirm your account.');
-      }
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) throw error;
     } catch (err: any) {
       setError(err.message ?? 'Authentication failed.');
     } finally {
@@ -93,50 +77,7 @@ export default function Login() {
 
         {/* Card */}
         <div className="card anim-1" style={{ padding: '1.75rem' }}>
-
-          {/* Mode toggle */}
-          <div style={{ display: 'flex', marginBottom: '1.5rem', borderBottom: '1px solid var(--color-border)' }}>
-            {(['signin', 'signup'] as Mode[]).map((m) => (
-              <button
-                key={m}
-                onClick={() => { setMode(m); setError(''); setInfo(''); }}
-                style={{
-                  flex: 1,
-                  padding: '0.5rem',
-                  background: 'transparent',
-                  border: 'none',
-                  borderBottom: mode === m ? '2px solid var(--color-accent)' : '2px solid transparent',
-                  color: mode === m ? 'var(--color-accent)' : 'var(--color-muted)',
-                  fontFamily: '"IBM Plex Mono", monospace',
-                  fontSize: '0.8rem',
-                  letterSpacing: '0.16em',
-                  textTransform: 'uppercase',
-                  cursor: 'pointer',
-                  transition: 'all 0.15s ease',
-                  marginBottom: '-1px',
-                }}
-              >
-                {m === 'signin' ? 'Sign In' : 'Sign Up'}
-              </button>
-            ))}
-          </div>
-
-          {/* Form */}
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-
-            {mode === 'signup' && (
-              <div>
-                <label className="field-label">Full Name</label>
-                <input
-                  className="input"
-                  type="text"
-                  placeholder="Lt. John Smith"
-                  value={name}
-                  onChange={e => setName(e.target.value)}
-                  required
-                />
-              </div>
-            )}
 
             <div>
               <label className="field-label">Email</label>
@@ -160,18 +101,12 @@ export default function Login() {
                 value={password}
                 onChange={e => setPassword(e.target.value)}
                 required
-                autoComplete={mode === 'signin' ? 'current-password' : 'new-password'}
+                autoComplete="current-password"
               />
             </div>
 
             {error && (
               <div className="error-box">{error}</div>
-            )}
-
-            {info && (
-              <div style={{ padding: '0.6rem 0.75rem', background: 'rgba(58, 92, 56, 0.15)', border: '1px solid var(--color-green)', fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.7rem', color: 'var(--color-green)', letterSpacing: '0.05em' }}>
-                {info}
-              </div>
             )}
 
             <button
@@ -180,7 +115,7 @@ export default function Login() {
               disabled={loading}
               style={{ width: '100%', justifyContent: 'center', opacity: loading ? 0.6 : 1, cursor: loading ? 'wait' : 'pointer' }}
             >
-              {loading ? 'Processing...' : mode === 'signin' ? 'Enter HQ' : 'Log In'}
+              {loading ? 'Processing...' : 'Enter HQ'}
             </button>
           </form>
         </div>
