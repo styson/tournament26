@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
 import { Link, useLocation } from '@tanstack/react-router';
 import { useAuth } from '@/config/auth';
+import UserMenu from '@/components/common/UserMenu';
 
 interface LayoutProps {
   children: ReactNode;
@@ -16,7 +17,7 @@ const navigation = [
 ];
 
 export default function Layout({ children }: LayoutProps) {
-  const { user, signOut } = useAuth();
+  const { user } = useAuth();
   const location = useLocation();
 
   const [theme, setTheme] = useState<'dark' | 'light'>(() => {
@@ -115,34 +116,9 @@ export default function Layout({ children }: LayoutProps) {
           {/* Spacer when no user */}
           {!user && <div style={{ flex: 1 }} />}
 
-          {/* User info */}
+          {/* User menu */}
           {user && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexShrink: 0 }}>
-              <span style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.6rem', color: 'var(--color-muted)', letterSpacing: '0.08em', maxWidth: '160px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                {user.name}
-              </span>
-              <button
-                onClick={() => setTheme(t => t === 'dark' ? 'light' : 'dark')}
-                style={{
-                  background: 'transparent',
-                  border: '1px solid var(--color-border-bright)',
-                  color: 'var(--color-muted)',
-                  fontFamily: '"IBM Plex Mono", monospace',
-                  fontSize: '0.6rem',
-                  letterSpacing: '0.1em',
-                  padding: '0.25rem 0.6rem',
-                  cursor: 'pointer',
-                  transition: 'all 0.15s ease',
-                }}
-                onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--color-accent)'; (e.currentTarget as HTMLButtonElement).style.color = 'var(--color-accent)'; }}
-                onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--color-border-bright)'; (e.currentTarget as HTMLButtonElement).style.color = 'var(--color-muted)'; }}
-              >
-                {theme === 'dark' ? '◑ Light' : '◑ Dark'}
-              </button>
-              <button onClick={signOut} className="btn-secondary" style={{ padding: '0.25rem 0.6rem', fontSize: '0.6rem' }}>
-                Logout
-              </button>
-            </div>
+            <UserMenu theme={theme} onThemeChange={setTheme} />
           )}
         </div>
       </header>
