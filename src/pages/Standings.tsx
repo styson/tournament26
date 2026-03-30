@@ -226,7 +226,7 @@ export default function Standings() {
                 </tr>
               </thead>
               <tbody>
-                {standings.map((s, i) => {
+                {standings.map((s) => {
                   const base  = s.wins * 10;
                   const bonus = s.points - base;
                   const isTied = standings.filter(x => x.rank === s.rank).length > 1;
