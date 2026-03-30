@@ -59,7 +59,7 @@ export default function Layout({ children }: LayoutProps) {
                 justifyContent: 'center',
                 clipPath: 'polygon(0 0, calc(100% - 4px) 0, 100% 4px, 100% 100%, 4px 100%, 0 calc(100% - 4px))',
               }}>
-                <span style={{ fontFamily: '"Bebas Neue", sans-serif', fontSize: '1rem', color: 'var(--color-bg)', letterSpacing: '0.05em' }}>T</span>
+                <span style={{ fontFamily: '"Bebas Neue", sans-serif', color: 'var(--color-bg)', letterSpacing: '0.05em' }}>T</span>
               </div>
               {user && (
                 <div style={{
@@ -75,7 +75,7 @@ export default function Layout({ children }: LayoutProps) {
                 }} />
               )}
             </div>
-            <span style={{ fontFamily: '"Bebas Neue", sans-serif', fontSize: '1.1rem', letterSpacing: '0.12em', color: 'var(--color-text)' }}>
+            <span style={{ fontFamily: '"Bebas Neue", sans-serif', letterSpacing: '0.12em', color: 'var(--color-text)' }}>
               TOURNEY<span style={{ color: 'var(--color-accent)' }}>26</span>
             </span>
           </Link>
@@ -94,7 +94,6 @@ export default function Layout({ children }: LayoutProps) {
                     to={item.href}
                     style={{
                       fontFamily: '"IBM Plex Mono", monospace',
-                      fontSize: '0.62rem',
                       letterSpacing: '0.14em',
                       textTransform: 'uppercase',
                       padding: '0.3rem 0.6rem',
@@ -130,7 +129,7 @@ export default function Layout({ children }: LayoutProps) {
 
       {/* ── Footer ── */}
       <footer style={{ borderTop: '1px solid var(--color-raised)', padding: '0.75rem 1rem', textAlign: 'center' }}>
-        <span style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.6rem', color: 'var(--color-muted-dim)', letterSpacing: '0.15em' }}>
+        <span style={{ fontFamily: '"IBM Plex Mono", monospace', color: 'var(--color-muted-dim)', letterSpacing: '0.15em' }}>
           TOURNAMENT26 · {new Date().getFullYear()}
         </span>
       </footer>

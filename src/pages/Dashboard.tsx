@@ -66,7 +66,6 @@ function StatCard({ label, value, link, code, delay = 0 }: StatCardProps) {
 
       <div style={{
         fontFamily: '"IBM Plex Mono", monospace',
-        fontSize: '0.55rem',
         letterSpacing: '0.2em',
         color: 'var(--color-muted)',
         marginBottom: '0.5rem',
@@ -144,7 +143,7 @@ export default function Dashboard() {
             <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--color-green)', animation: 'blink 2s step-end infinite' }} />
             <div style={{ position: 'absolute', inset: 0, borderRadius: '50%', background: 'var(--color-green)', animation: 'pulseRing 2s ease-out infinite' }} />
           </div>
-          <span style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.6rem', color: 'var(--color-muted-dim)', letterSpacing: '0.12em' }}>
+          <span style={{ fontFamily: '"IBM Plex Mono", monospace', color: 'var(--color-muted-dim)', letterSpacing: '0.12em' }}>
             {new Date().toLocaleDateString('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' }).toUpperCase()}
           </span>
         </div>
@@ -187,8 +186,8 @@ export default function Dashboard() {
                     d.style.background = 'transparent';
                   }}
                 >
-                  <span style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '1rem', color: 'var(--color-accent)', lineHeight: 1 }}>{action.symbol}</span>
-                  <span style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.62rem', letterSpacing: '0.1em', color: 'var(--color-text-dim)', textTransform: 'uppercase' }}>{action.name}</span>
+                  <span style={{ fontFamily: '"IBM Plex Mono", monospace', color: 'var(--color-accent)', lineHeight: 1 }}>{action.symbol}</span>
+                  <span style={{ fontFamily: '"IBM Plex Mono", monospace', letterSpacing: '0.1em', color: 'var(--color-text-dim)', textTransform: 'uppercase' }}>{action.name}</span>
                 </div>
               </Link>
             ))}
@@ -200,7 +199,7 @@ export default function Dashboard() {
           <div className="section-label" style={{ marginBottom: '0.75rem' }}>Recent Activity</div>
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '2rem 0', gap: '0.5rem' }}>
             <div style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '1.5rem', color: 'var(--color-border)' }}>—</div>
-            <p style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.8rem', color: 'var(--color-muted-dim)', letterSpacing: '0.12em', textTransform: 'uppercase', margin: 0 }}>
+            <p style={{ fontFamily: '"IBM Plex Mono", monospace', color: 'var(--color-muted-dim)', letterSpacing: '0.12em', textTransform: 'uppercase', margin: 0 }}>
               No recent activity
             </p>
           </div>

@@ -126,7 +126,7 @@
     color: var(--color-bg);
     border: 1px solid var(--color-accent);
     font-family: "IBM Plex Mono", monospace;
-    font-size: 0.7rem;
+    font-size: 0.9rem;
     font-weight: 600;
     letter-spacing: 0.14em;
     text-transform: uppercase;
@@ -150,7 +150,7 @@
     color: var(--color-text-dim);
     border: 1px solid var(--color-border-bright);
     font-family: "IBM Plex Mono", monospace;
-    font-size: 0.7rem;
+    font-size: 0.9rem;
     font-weight: 500;
     letter-spacing: 0.12em;
     text-transform: uppercase;
@@ -197,7 +197,7 @@
     color: var(--color-text);
     border: 1px solid var(--color-border);
     font-family: "IBM Plex Mono", monospace;
-    font-size: 0.8rem;
+    font-size: 1rem;
     outline: none;
     transition: border-color 0.15s ease;
   }
@@ -210,14 +210,14 @@
   /* ── Labels ── */
   .section-label {
     font-family: "IBM Plex Mono", monospace;
-    font-size: 0.6rem;
-    letter-spacing: 0.22em;
+    font-size: 1rem;
+    letter-spacing: 0.2em;
     text-transform: uppercase;
     color: var(--color-muted);
   }
   .field-label {
     font-family: "IBM Plex Mono", monospace;
-    font-size: 0.85rem;
+    font-size: 1rem;
     letter-spacing: 0.15em;
     text-transform: uppercase;
     color: var(--color-muted);
@@ -239,7 +239,7 @@
     width: 100%;
     border-collapse: collapse;
     font-family: "IBM Plex Mono", monospace;
-    font-size: 0.75rem;
+    font-size: 1rem;
   }
   .ops-table thead tr { border-bottom: 1px solid var(--color-border-bright); }
   .ops-table th {
@@ -275,18 +275,18 @@
   }
 
   /* ── Typography utilities ── */
-  .mono-xs { font-family: "IBM Plex Mono", monospace; font-size: 0.55rem; letter-spacing: 0.2em; }
-  .mono-sm { font-family: "IBM Plex Mono", monospace; font-size: 0.6rem;  letter-spacing: 0.12em; }
-  .mono-md { font-family: "IBM Plex Mono", monospace; font-size: 0.75rem; letter-spacing: 0.06em; }
+  .mono-xs { font-family: "IBM Plex Mono", monospace; font-size: 0.75rem; letter-spacing: 0.2em; }
+  .mono-sm { font-family: "IBM Plex Mono", monospace; font-size: 0.8rem;  letter-spacing: 0.12em; }
+  .mono-md { font-family: "IBM Plex Mono", monospace; font-size: 0.95rem; letter-spacing: 0.06em; }
   .serif-body {
     font-family: "IBM Plex Mono", monospace;
-    font-size: 0.95rem;
+    font-size: 1.15rem;
     line-height: 1.6;
     color: var(--color-muted-dim);
   }
   .accent-code {
     font-family: "IBM Plex Mono", monospace;
-    font-size: 0.55rem;
+    font-size: 0.75rem;
     letter-spacing: 0.2em;
     text-transform: uppercase;
     color: var(--color-accent);
@@ -303,7 +303,7 @@
     background: var(--color-red-bg);
     border: 1px solid var(--color-red-border);
     font-family: "IBM Plex Mono", monospace;
-    font-size: 0.7rem;
+    font-size: 0.9rem;
     letter-spacing: 0.05em;
     color: var(--color-red);
   }
@@ -312,7 +312,7 @@
     background: rgba(74, 158, 212, 0.07);
     border: 1px solid var(--color-accent-dim);
     font-family: "IBM Plex Mono", monospace;
-    font-size: 0.6rem;
+    font-size: 0.8rem;
     letter-spacing: 0.1em;
     color: var(--color-accent);
   }
@@ -324,7 +324,7 @@
     width: 24px; height: 24px;
     display: flex; align-items: center; justify-content: center;
     cursor: pointer; padding: 0;
-    font-size: 0.75rem; line-height: 1;
+    font-size: 1rem; line-height: 1;
     color: var(--color-muted);
     transition: all 0.15s ease;
     flex-shrink: 0;

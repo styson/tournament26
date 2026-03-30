@@ -134,7 +134,7 @@ export default function Home() {
         zIndex: 2,
       }} />
 
-      <div style={{ position: 'relative', zIndex: 4, flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '4rem 2rem', maxWidth: '1000px', margin: '0 auto', width: '100%' }}>
+      <div style={{ position: 'relative', zIndex: 4, flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '2rem 0', maxWidth: '1000px', margin: '0 auto', width: '100%' }}>
 
         {/* Status label with blinking dot + pulse ring */}
         <div className="anim-0" style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '1.5rem' }}>
@@ -142,7 +142,7 @@ export default function Home() {
             <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--color-accent)', animation: 'blink 1.4s step-end infinite' }} />
             <div style={{ position: 'absolute', inset: 0, borderRadius: '50%', background: 'var(--color-accent)', animation: 'pulseRing 1.4s ease-out infinite' }} />
           </div>
-          <span style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.6rem', letterSpacing: '0.25em', color: 'var(--color-muted)', textTransform: 'uppercase' }}>
+          <span style={{ fontFamily: '"IBM Plex Mono", monospace', letterSpacing: '0.25em', color: 'var(--color-muted)', textTransform: 'uppercase' }}>
             Tournament Director Platform · System Online
           </span>
         </div>
@@ -150,7 +150,7 @@ export default function Home() {
         {/* Hero heading */}
         <h1 className="anim-1" style={{
           fontFamily: '"Bebas Neue", sans-serif',
-          fontSize: 'clamp(4rem, 12vw, 9rem)',
+          fontSize: 'clamp(3rem, 10vw, 7rem)',
           letterSpacing: '0.06em',
           lineHeight: 0.88,
           color: 'var(--color-text)',
@@ -168,7 +168,7 @@ export default function Home() {
         {/* Designation line */}
         <div className="anim-2" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem' }}>
           <div style={{ height: '1px', width: '2rem', background: 'var(--color-accent)', opacity: 0.6 }} />
-          <span style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.58rem', letterSpacing: '0.28em', color: 'var(--color-accent)', textTransform: 'uppercase', opacity: 0.7 }}>
+          <span style={{ fontFamily: '"IBM Plex Mono", monospace', letterSpacing: '0.28em', color: 'var(--color-accent)', textTransform: 'uppercase', opacity: 0.7 }}>
             Designation: TOURNEY-26
           </span>
         </div>
@@ -178,7 +178,7 @@ export default function Home() {
           fontFamily: '"IBM Plex Mono", monospace',
           fontSize: '1.2rem',
           color: 'var(--color-muted)',
-          maxWidth: '460px',
+          maxWidth: '70%',
           lineHeight: 1.7,
           marginBottom: '2.5rem',
         }}>
@@ -218,13 +218,13 @@ export default function Home() {
                 height: '2px',
                 background: 'linear-gradient(90deg, var(--color-accent), transparent 75%)',
               }} />
-              <div style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.58rem', letterSpacing: '0.2em', color: 'var(--color-accent)', marginBottom: '0.6rem' }}>
+              <div style={{ fontFamily: '"IBM Plex Mono", monospace', letterSpacing: '0.2em', color: 'var(--color-accent)', marginBottom: '0.6rem' }}>
                 [{f.code}]
               </div>
               <h3 style={{ fontFamily: '"Bebas Neue", sans-serif', fontSize: '1.3rem', letterSpacing: '0.06em', color: 'var(--color-text)', margin: '0 0 0.5rem' }}>
                 {f.title}
               </h3>
-              <p style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.9rem', color: 'var(--color-muted)', margin: 0, lineHeight: 1.6 }}>
+              <p style={{ fontFamily: '"IBM Plex Mono", monospace', color: 'var(--color-muted)', margin: 0, lineHeight: 1.6 }}>
                 {f.desc}
               </p>
             </div>

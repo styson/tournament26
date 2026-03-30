@@ -208,7 +208,7 @@ export default function TournamentDetail() {
   // ─────────────────────────────────────────────────────────
   if (loadingTournament) return <Spinner />;
   if (!tournament) return (
-    <div style={{ fontFamily: '"IBM Plex Mono", monospace', color: 'var(--color-red)', fontSize: '0.8rem' }}>
+    <div style={{ fontFamily: '"IBM Plex Mono", monospace', color: 'var(--color-red)' }}>
       Tournament not found. <Link to="/tournaments" style={{ color: 'var(--color-accent)' }}>← Back</Link>
     </div>
   );
@@ -218,7 +218,7 @@ export default function TournamentDetail() {
 
       {/* Back */}
       <div className="anim-0">
-        <Link to="/tournaments" style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.8rem', letterSpacing: '0.15em', color: 'var(--color-muted)', textTransform: 'uppercase' }}>
+        <Link to="/tournaments" style={{ fontFamily: '"IBM Plex Mono", monospace', letterSpacing: '0.15em', color: 'var(--color-muted)', textTransform: 'uppercase' }}>
           ← Tournaments
         </Link>
       </div>
@@ -232,11 +232,11 @@ export default function TournamentDetail() {
               {tournament.name}
             </h1>
             {tournament.description && (
-              <p style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '1rem', color: 'var(--color-muted)', margin: '0 0 0.75rem' }}>
+              <p style={{ fontFamily: '"IBM Plex Mono", monospace', color: 'var(--color-muted)', margin: '0 0 0.75rem' }}>
                 {tournament.description}
               </p>
             )}
-            <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap', fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.8rem', letterSpacing: '0.12em', color: 'var(--color-muted)' }}>
+            <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap', fontFamily: '"IBM Plex Mono", monospace', letterSpacing: '0.12em', color: 'var(--color-muted)' }}>
               <span>Start: {tournament.start_date}</span>
               {tournament.end_date && <span>End: {tournament.end_date}</span>}
             </div>
@@ -251,7 +251,6 @@ export default function TournamentDetail() {
                 color: tournamentStatusColor(tournament.status),
                 border: `1px solid ${tournamentStatusColor(tournament.status)}`,
                 fontFamily: '"IBM Plex Mono", monospace',
-                fontSize: '0.8rem',
                 letterSpacing: '0.14em',
                 textTransform: 'uppercase',
                 padding: '0.25rem 1.75rem 0.25rem 0.6rem',
@@ -268,7 +267,7 @@ export default function TournamentDetail() {
               <option value="COMPLETED">COMPLETED</option>
               <option value="CANCELLED">CANCELLED</option>
             </select>
-            <span style={{ position: 'absolute', right: '0.5rem', top: '50%', transform: 'translateY(-50%)', color: tournamentStatusColor(tournament.status), fontSize: '0.5rem', pointerEvents: 'none' }}>▼</span>
+            <span style={{ position: 'absolute', right: '0.5rem', top: '50%', transform: 'translateY(-50%)', color: tournamentStatusColor(tournament.status), pointerEvents: 'none' }}>▼</span>
           </div>
         </div>
       </div>
@@ -293,7 +292,7 @@ export default function TournamentDetail() {
         {loadingRounds ? (
           <div className="card" style={{ padding: '2rem' }}><Spinner inline /></div>
         ) : rounds.length === 0 ? (
-          <div className="card" style={{ padding: '2.5rem', textAlign: 'center', fontFamily: '"IBM Plex Mono", monospace', fontSize: '1rem', color: 'var(--color-muted-dim)' }}>
+          <div className="card" style={{ padding: '2.5rem', textAlign: 'center', fontFamily: '"IBM Plex Mono", monospace', color: 'var(--color-muted-dim)' }}>
             No rounds yet. Use + Round 1 above to get started.
           </div>
         ) : (
@@ -309,7 +308,7 @@ export default function TournamentDetail() {
                 onMouseEnter={e => (e.currentTarget as HTMLDivElement).style.background = 'var(--color-raised)'}
                 onMouseLeave={e => (e.currentTarget as HTMLDivElement).style.background = 'var(--color-surface)'}
               >
-                <div style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.55rem', letterSpacing: '0.2em', color: 'var(--color-accent)' }}>
+                <div style={{ fontFamily: '"IBM Plex Mono", monospace', letterSpacing: '0.2em', color: 'var(--color-accent)' }}>
                   [R-{String(round.round_number).padStart(2, '0')}]
                 </div>
 
@@ -318,14 +317,14 @@ export default function TournamentDetail() {
                     Round {round.round_number}
                   </div>
                   {round.name && (
-                    <div style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.875rem', color: 'var(--color-muted)', marginTop: '0.2rem' }}>
+                    <div style={{ fontFamily: '"IBM Plex Mono", monospace', color: 'var(--color-muted)', marginTop: '0.2rem' }}>
                       {round.name}
                     </div>
                   )}
                 </div>
 
                 <span style={{
-                  fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.58rem', letterSpacing: '0.12em',
+                  fontFamily: '"IBM Plex Mono", monospace', letterSpacing: '0.12em',
                   textTransform: 'uppercase', color: roundStatusColor(round.status),
                   border: `1px solid ${roundStatusColor(round.status)}`,
                   padding: '0.15rem 0.4rem',
@@ -338,7 +337,7 @@ export default function TournamentDetail() {
                   to="/tournaments/$id/rounds/$roundId"
                   params={{ id: tournament.id, roundId: round.id }}
                   className="btn-secondary"
-                  style={{ marginTop: 'auto', justifyContent: 'center', fontSize: '0.6rem', padding: '0.3rem 0.5rem' }}
+                  style={{ marginTop: 'auto', justifyContent: 'center', padding: '0.3rem 0.5rem' }}
                 >
                   View →
                 </Link>
@@ -360,7 +359,7 @@ export default function TournamentDetail() {
         {loadingPlayers ? (
           <div style={{ padding: '2rem', display: 'flex', justifyContent: 'center' }}><Spinner inline /></div>
         ) : enrolled.length === 0 ? (
-          <div style={{ padding: '2.5rem', textAlign: 'center', fontFamily: '"IBM Plex Mono", monospace', fontSize: '1rem', color: 'var(--color-muted-dim)' }}>
+          <div style={{ padding: '2.5rem', textAlign: 'center', fontFamily: '"IBM Plex Mono", monospace', color: 'var(--color-muted-dim)' }}>
             No players enrolled yet.
           </div>
         ) : (
@@ -376,13 +375,13 @@ export default function TournamentDetail() {
                 onMouseLeave={e => (e.currentTarget as HTMLDivElement).style.borderColor = 'var(--color-border)'}
               >
                 <div style={{ overflow: 'hidden', minWidth: 0 }}>
-                  <div style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.95rem', color: 'var(--color-text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  <div style={{ fontFamily: '"IBM Plex Mono", monospace', color: 'var(--color-text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                     {p.name}
                   </div>
-                  <div style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.58rem', letterSpacing: '0.1em', color: 'var(--color-accent)', marginTop: '0.1rem' }}>
+                  <div style={{ fontFamily: '"IBM Plex Mono", monospace', letterSpacing: '0.1em', color: 'var(--color-accent)', marginTop: '0.1rem' }}>
                     {`${points[p.id] ?? 0} Points`}
                   </div>
-                  <div style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.58rem', letterSpacing: '0.1em', color: 'var(--color-muted)' }}>
+                  <div style={{ fontFamily: '"IBM Plex Mono", monospace', letterSpacing: '0.1em', color: 'var(--color-muted)' }}>
                     {(() => { const r = records[p.id] ?? { w: 0, l: 0 }; return `W/L ${r.w}-${r.l}`; })()}
                   </div>
                 </div>
@@ -392,13 +391,13 @@ export default function TournamentDetail() {
                       onClick={() => { setConfirmRemovePlayer(null); handleRemove(p.id); }}
                       disabled={removingId === p.id}
                       title="Confirm remove"
-                      style={{ background: 'var(--color-red-bg)', border: '1px solid var(--color-red)', color: 'var(--color-red-bright)', fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.6rem', padding: '0.2rem 0.35rem', cursor: 'pointer', lineHeight: 1 }}
+                      style={{ background: 'var(--color-red-bg)', border: '1px solid var(--color-red)', color: 'var(--color-red-bright)', fontFamily: '"IBM Plex Mono", monospace', padding: '0.2rem 0.35rem', cursor: 'pointer', lineHeight: 1 }}
                     >{removingId === p.id ? '…' : '✓'}</button>
                     <button
                       onClick={() => setConfirmRemovePlayer(null)}
                       title="Cancel"
                       className="btn-secondary"
-                      style={{ padding: '0.2rem 0.35rem', fontSize: '0.6rem' }}
+                      style={{ padding: '0.2rem 0.35rem' }}
                     >✕</button>
                   </div>
                 ) : (
@@ -428,7 +427,7 @@ export default function TournamentDetail() {
                   width: '100%', background: 'var(--color-bg)',
                   color: selectedPlayerId ? 'var(--color-text)' : 'var(--color-muted)',
                   border: '1px solid var(--color-border)',
-                  fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.75rem',
+                  fontFamily: '"IBM Plex Mono", monospace',
                   letterSpacing: '0.06em', padding: '0.5rem 2rem 0.5rem 0.75rem',
                   outline: 'none', appearance: 'none', cursor: 'pointer',
                 }}
@@ -438,7 +437,7 @@ export default function TournamentDetail() {
                   <option key={p.id} value={p.id}>{p.name}{p.location ? ` — ${p.location}` : ''}</option>
                 ))}
               </select>
-              <span style={{ position: 'absolute', right: '0.6rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--color-muted)', fontSize: '0.6rem', pointerEvents: 'none' }}>▼</span>
+              <span style={{ position: 'absolute', right: '0.6rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--color-muted)', pointerEvents: 'none' }}>▼</span>
             </div>
             <button
               type="submit"
@@ -459,7 +458,7 @@ export default function TournamentDetail() {
       )}
 
       {!loadingPlayers && roster.length === 0 && enrolled.length > 0 && (
-        <div style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.8rem', color: 'var(--color-muted-dim)', letterSpacing: '0.12em', textAlign: 'center', padding: '0.5rem' }}>
+        <div style={{ fontFamily: '"IBM Plex Mono", monospace', color: 'var(--color-muted-dim)', letterSpacing: '0.12em', textAlign: 'center', padding: '0.5rem' }}>
           All players are enrolled in this tournament.
         </div>
       )}
