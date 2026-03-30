@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500;600&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
 @import "tailwindcss";
 
 /* ── Design tokens ─────────────────────────────────────────────
@@ -10,70 +10,70 @@
   /* Fonts */
   --font-display: "Bebas Neue", sans-serif;
   --font-mono:    "IBM Plex Mono", monospace;
-  --font-serif:   "Crimson Text", serif;
+  --font-serif:   "IBM Plex Mono", monospace;
 
   /* Backgrounds */
-  --color-bg:            #0e1116;
-  --color-bg-header:     #0b0f14;
-  --color-surface:       #161b24;
-  --color-raised:        #2a3545;
+  --color-bg:            #07101e;
+  --color-bg-header:     #050d18;
+  --color-surface:       #0d1d30;
+  --color-raised:        #142840;
 
   /* Borders */
-  --color-border:        #2a3340;
-  --color-border-bright: #3a4a5a;
+  --color-border:        #1a3652;
+  --color-border-bright: #2a4a6a;
 
-  /* Accent (amber) */
-  --color-accent:        #f0a020;
-  --color-accent-hover:  #fbbf24;
-  --color-accent-dim:    #a06a10;
+  /* Accent (steel blue) */
+  --color-accent:        #4a9ed4;
+  --color-accent-hover:  #6ab8e8;
+  --color-accent-dim:    #1a5480;
 
   /* Text */
-  --color-text:          #f0ece0;
-  --color-text-body:     #e8eef4;
-  --color-text-dim:      #dde2e8;
-  --color-muted:         #e0e4e8;
-  --color-muted-dim:     #dddddd;
+  --color-text:          #ddeaf8;
+  --color-text-body:     #b8d0e8;
+  --color-text-dim:      #9ab8d4;
+  --color-muted:         #b8d8f0;
+  --color-muted-dim:     #88b4d4;
 
   /* Status */
   --color-red:           #e05050;
   --color-red-bright:    #ff7070;
   --color-red-border:    #c03838;
   --color-red-bg:        #2a0e0e;
-  --color-green:         #28a040;
-  --color-green-dim:     #4a9c68;
+  --color-green:         #2a9e7a;
+  --color-green-dim:     #38b89a;
 
   /* Misc */
-  --color-spin-track:    #2a3340;
+  --color-spin-track:    #1a3652;
 }
 
 /* ── Light theme overrides ─────────────────────────────────── */
 [data-theme="light"] {
-  --color-bg:            #eef1f6;
-  --color-bg-header:     #dde3ec;
-  --color-surface:       #ffffff;
-  --color-raised:        #f0f3f8;
+  --color-bg:            #e8f0f8;
+  --color-bg-header:     #d8eaf6;
+  --color-surface:       #f4f8fd;
+  --color-raised:        #dce7f4;
 
-  --color-border:        #c8d4e0;
-  --color-border-bright: #a0b4c8;
+  --color-border:        #a8c0d8;
+  --color-border-bright: #7aa0c0;
 
-  --color-accent:        #c07010;
-  --color-accent-hover:  #d4880a;
-  --color-accent-dim:    #e8a040;
+  --color-accent:        #1a5490;
+  --color-accent-hover:  #1e6aaa;
+  --color-accent-dim:    #4a9ed4;
 
-  --color-text:          #1a2030;
-  --color-text-body:     #2a3040;
-  --color-text-dim:      #3a4858;
-  --color-muted:         #5a6878;
-  --color-muted-dim:     #8898a8;
+  --color-text:          #0a1828;
+  --color-text-body:     #162438;
+  --color-text-dim:      #1e3650;
+  --color-muted:         #0e2e4a;
+  --color-muted-dim:     #2a5070;
 
   --color-red:           #c02020;
   --color-red-bright:    #e03030;
   --color-red-border:    #d04040;
   --color-red-bg:        #fde8e8;
-  --color-green:         #1a8030;
-  --color-green-dim:     #2a8848;
+  --color-green:         #1a7858;
+  --color-green-dim:     #228870;
 
-  --color-spin-track:    #c8d4e0;
+  --color-spin-track:    #a8c0d8;
 }
 
 @layer base {
@@ -82,7 +82,7 @@
   body {
     background-color: var(--color-bg);
     color: var(--color-text-body);
-    font-family: "Crimson Text", serif;
+    font-family: "IBM Plex Mono", monospace;
     font-size: 1rem;
     line-height: 1.65;
     -webkit-font-smoothing: antialiased;
@@ -100,7 +100,7 @@
   a { color: inherit; text-decoration: none; }
 
   ::selection {
-    background: rgba(184, 134, 26, 0.3);
+    background: rgba(74, 158, 212, 0.3);
     color: var(--color-text);
   }
 
@@ -279,7 +279,7 @@
   .mono-sm { font-family: "IBM Plex Mono", monospace; font-size: 0.6rem;  letter-spacing: 0.12em; }
   .mono-md { font-family: "IBM Plex Mono", monospace; font-size: 0.75rem; letter-spacing: 0.06em; }
   .serif-body {
-    font-family: "Crimson Text", serif;
+    font-family: "IBM Plex Mono", monospace;
     font-size: 0.95rem;
     line-height: 1.6;
     color: var(--color-muted-dim);
