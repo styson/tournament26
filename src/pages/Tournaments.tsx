@@ -72,7 +72,7 @@ export default function Tournaments() {
                 <div>
                   <h3 style={{ fontFamily: '"Bebas Neue", sans-serif', fontSize: '1.3rem', letterSpacing: '0.06em', margin: '0 0 0.35rem' }}>{tournament.name}</h3>
                   {tournament.description && (
-                    <p style={{ fontFamily: '"Crimson Text", serif', fontSize: '0.9rem', color: 'var(--color-muted)', margin: '0 0 0.5rem' }}>{tournament.description}</p>
+                    <p style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.9rem', color: 'var(--color-muted)', margin: '0 0 0.5rem' }}>{tournament.description}</p>
                   )}
                   <div style={{ display: 'flex', gap: '1.5rem', fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.62rem', letterSpacing: '0.1em', color: 'var(--color-muted)' }}>
                     <span style={{ color: statusColor(tournament.status) }}>{tournament.status}</span>

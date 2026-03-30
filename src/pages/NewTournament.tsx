@@ -76,7 +76,7 @@ export default function NewTournament() {
             value={description}
             onChange={e => setDescription(e.target.value)}
             rows={3}
-            style={{ resize: 'vertical', fontFamily: '"Crimson Text", serif', fontSize: '1rem', lineHeight: 1.6 }}
+            style={{ resize: 'vertical', fontFamily: '"IBM Plex Mono", monospace', fontSize: '1rem', lineHeight: 1.6 }}
           />
         </div>
 

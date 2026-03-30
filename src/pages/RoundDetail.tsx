@@ -155,7 +155,7 @@ function ScenarioPicker({
                   {s.scen_id}
                 </span>
               )}
-              <span style={{ fontFamily: '"Crimson Text", serif', fontSize: '0.95rem', color: 'var(--color-text-dim)' }}>{s.title}</span>
+              <span style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.95rem', color: 'var(--color-text-dim)' }}>{s.title}</span>
               <span style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.55rem', color: 'var(--color-muted-dim)', marginLeft: 'auto', whiteSpace: 'nowrap', flexShrink: 0 }}>
                 {s.attacker_nationality} vs {s.defender_nationality}
               </span>
@@ -538,7 +538,7 @@ export default function RoundDetail() {
 
         {scenOpen && <div style={{ padding: '0.875rem 1.25rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
           {roundScenarios.length === 0 ? (
-            <p style={{ fontFamily: '"Crimson Text", serif', fontSize: '0.95rem', color: 'var(--color-muted-dim)', margin: '0 0 0.5rem' }}>
+            <p style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.95rem', color: 'var(--color-muted-dim)', margin: '0 0 0.5rem' }}>
               No scenarios assigned yet.
             </p>
           ) : (
@@ -550,7 +550,7 @@ export default function RoundDetail() {
                       {s.scen_id}
                     </span>
                   )}
-                  <span style={{ fontFamily: '"Crimson Text", serif', fontSize: '0.95rem', color: 'var(--color-text-dim)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  <span style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.95rem', color: 'var(--color-text-dim)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                     {s.title}
                   </span>
                   <span style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.55rem', color: 'var(--color-muted-dim)', letterSpacing: '0.08em', whiteSpace: 'nowrap', flexShrink: 0 }}>
@@ -628,7 +628,7 @@ export default function RoundDetail() {
         {games.length === 0 ? (
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '3rem 2rem', gap: '0.75rem' }}>
             <div style={{ fontFamily: '"Bebas Neue", sans-serif', fontSize: '3rem', color: 'var(--color-raised)', letterSpacing: '0.05em' }}>GM-00</div>
-            <p style={{ fontFamily: '"Crimson Text", serif', fontSize: '1rem', color: 'var(--color-muted-dim)', margin: 0, textAlign: 'center' }}>
+            <p style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '1rem', color: 'var(--color-muted-dim)', margin: 0, textAlign: 'center' }}>
               No games scheduled yet. Create the first pairing below.
             </p>
           </div>
@@ -658,7 +658,7 @@ export default function RoundDetail() {
                             {scenario.scen_id}
                           </span>
                         )}
-                        <span style={{ fontFamily: '"Crimson Text", serif', fontSize: '1rem', color: 'var(--color-text)', fontWeight: 600 }}>
+                        <span style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '1rem', color: 'var(--color-text)', fontWeight: 600 }}>
                           {scenario?.title ?? '—'}
                         </span>
                         {scenario && (
@@ -797,7 +797,7 @@ export default function RoundDetail() {
           <div className="section-label" style={{ marginBottom: '0.875rem' }}>Schedule a Game</div>
 
           {availablePlayers.length < 2 ? (
-            <p style={{ fontFamily: '"Crimson Text", serif', fontSize: '0.95rem', color: 'var(--color-muted-dim)', margin: 0 }}>
+            <p style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.95rem', color: 'var(--color-muted-dim)', margin: 0 }}>
               {availablePlayers.length === 0
                 ? 'All enrolled players already have a game this round.'
                 : `Only ${availablePlayers.length} player available — need at least 2 to schedule a game.`}
@@ -897,7 +897,7 @@ function PlayerSideTag({ name, role, isWinner, isCompleted, points }: { name: st
       <span style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.55rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: role === 'Attacker' ? 'var(--color-accent)' : 'var(--color-muted)', border: `1px solid ${role === 'Attacker' ? 'var(--color-accent-dim)' : 'var(--color-border)'}`, padding: '0.1rem 0.35rem', flexShrink: 0 }}>
         {role === 'Attacker' ? 'ATK' : 'DEF'}
       </span>
-      <span style={{ fontFamily: '"Crimson Text", serif', fontSize: '1rem', color: isCompleted && isWinner ? 'var(--color-green-dim)' : isCompleted ? 'var(--color-muted)' : 'var(--color-text-dim)', fontWeight: isWinner ? 600 : 400 }}>
+      <span style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '1rem', color: isCompleted && isWinner ? 'var(--color-green-dim)' : isCompleted ? 'var(--color-muted)' : 'var(--color-text-dim)', fontWeight: isWinner ? 600 : 400 }}>
         {name}
         {points !== undefined && (
           <sup style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.5rem', letterSpacing: '0.05em', color: 'var(--color-muted)', marginLeft: '0.15em', verticalAlign: 'super', lineHeight: 0 }}>

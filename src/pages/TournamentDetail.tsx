@@ -232,7 +232,7 @@ export default function TournamentDetail() {
               {tournament.name}
             </h1>
             {tournament.description && (
-              <p style={{ fontFamily: '"Crimson Text", serif', fontSize: '1rem', color: 'var(--color-muted)', margin: '0 0 0.75rem' }}>
+              <p style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '1rem', color: 'var(--color-muted)', margin: '0 0 0.75rem' }}>
                 {tournament.description}
               </p>
             )}
@@ -293,7 +293,7 @@ export default function TournamentDetail() {
         {loadingRounds ? (
           <div className="card" style={{ padding: '2rem' }}><Spinner inline /></div>
         ) : rounds.length === 0 ? (
-          <div className="card" style={{ padding: '2.5rem', textAlign: 'center', fontFamily: '"Crimson Text", serif', fontSize: '1rem', color: 'var(--color-muted-dim)' }}>
+          <div className="card" style={{ padding: '2.5rem', textAlign: 'center', fontFamily: '"IBM Plex Mono", monospace', fontSize: '1rem', color: 'var(--color-muted-dim)' }}>
             No rounds yet. Use + Round 1 above to get started.
           </div>
         ) : (
@@ -318,7 +318,7 @@ export default function TournamentDetail() {
                     Round {round.round_number}
                   </div>
                   {round.name && (
-                    <div style={{ fontFamily: '"Crimson Text", serif', fontSize: '0.875rem', color: 'var(--color-muted)', marginTop: '0.2rem' }}>
+                    <div style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.875rem', color: 'var(--color-muted)', marginTop: '0.2rem' }}>
                       {round.name}
                     </div>
                   )}
@@ -360,7 +360,7 @@ export default function TournamentDetail() {
         {loadingPlayers ? (
           <div style={{ padding: '2rem', display: 'flex', justifyContent: 'center' }}><Spinner inline /></div>
         ) : enrolled.length === 0 ? (
-          <div style={{ padding: '2.5rem', textAlign: 'center', fontFamily: '"Crimson Text", serif', fontSize: '1rem', color: 'var(--color-muted-dim)' }}>
+          <div style={{ padding: '2.5rem', textAlign: 'center', fontFamily: '"IBM Plex Mono", monospace', fontSize: '1rem', color: 'var(--color-muted-dim)' }}>
             No players enrolled yet.
           </div>
         ) : (
@@ -376,7 +376,7 @@ export default function TournamentDetail() {
                 onMouseLeave={e => (e.currentTarget as HTMLDivElement).style.borderColor = 'var(--color-border)'}
               >
                 <div style={{ overflow: 'hidden', minWidth: 0 }}>
-                  <div style={{ fontFamily: '"Crimson Text", serif', fontSize: '0.95rem', color: 'var(--color-text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  <div style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.95rem', color: 'var(--color-text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                     {p.name}
                   </div>
                   <div style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.58rem', letterSpacing: '0.1em', color: 'var(--color-accent)', marginTop: '0.1rem' }}>

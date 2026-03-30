@@ -175,7 +175,7 @@ export default function Home() {
 
         {/* Sub-heading */}
         <p className="anim-2" style={{
-          fontFamily: '"Crimson Text", serif',
+          fontFamily: '"IBM Plex Mono", monospace',
           fontSize: '1.2rem',
           color: 'var(--color-muted)',
           maxWidth: '460px',
@@ -224,7 +224,7 @@ export default function Home() {
               <h3 style={{ fontFamily: '"Bebas Neue", sans-serif', fontSize: '1.3rem', letterSpacing: '0.06em', color: 'var(--color-text)', margin: '0 0 0.5rem' }}>
                 {f.title}
               </h3>
-              <p style={{ fontFamily: '"Crimson Text", serif', fontSize: '0.9rem', color: 'var(--color-muted)', margin: 0, lineHeight: 1.6 }}>
+              <p style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.9rem', color: 'var(--color-muted)', margin: 0, lineHeight: 1.6 }}>
                 {f.desc}
               </p>
             </div>

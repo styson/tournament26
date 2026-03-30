@@ -60,7 +60,7 @@ export default function Players() {
             <h3 style={{ fontFamily: '"Bebas Neue", sans-serif', fontSize: '1.4rem', letterSpacing: '0.06em', color: 'var(--color-muted)', margin: 0 }}>
               No Personnel on Record
             </h3>
-            <p style={{ fontFamily: '"Crimson Text", serif', fontSize: '0.95rem', color: 'var(--color-muted-dim)', margin: 0, textAlign: 'center' }}>
+            <p style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.95rem', color: 'var(--color-muted-dim)', margin: 0, textAlign: 'center' }}>
               Enlist your first player to begin building the roster
             </p>
             <Link to="/players/new" className="btn-primary" style={{ marginTop: '0.5rem' }}>+ Enlist First Player</Link>

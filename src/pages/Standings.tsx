@@ -243,7 +243,7 @@ export default function Standings() {
                           {rankLabel(s.rank)}{isTied ? '=' : ''}
                         </span>
                       </td>
-                      <td style={{ color: 'var(--color-text)', fontFamily: '"Crimson Text", serif', fontSize: '1rem' }}>
+                      <td style={{ color: 'var(--color-text)', fontFamily: '"IBM Plex Mono", monospace', fontSize: '1rem' }}>
                         {s.player.name}
                       </td>
                       <td style={{ textAlign: 'center', color: 'var(--color-green-dim)', fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.75rem' }}>

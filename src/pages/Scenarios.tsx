@@ -80,7 +80,7 @@ export default function Scenarios() {
             <h3 style={{ fontFamily: '"Bebas Neue", sans-serif', fontSize: '1.4rem', letterSpacing: '0.06em', color: 'var(--color-muted)', margin: 0 }}>
               {search ? 'No Matches Found' : 'No Scenarios Loaded'}
             </h3>
-            <p style={{ fontFamily: '"Crimson Text", serif', fontSize: '0.95rem', color: 'var(--color-muted-dim)', margin: 0, textAlign: 'center' }}>
+            <p style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.95rem', color: 'var(--color-muted-dim)', margin: 0, textAlign: 'center' }}>
               {search ? 'Try a different search term' : 'Import scenarios via the SQL migration'}
             </p>
           </div>
