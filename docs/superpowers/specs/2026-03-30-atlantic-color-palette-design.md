@@ -4,7 +4,7 @@
 
 ## Overview
 
-Replace the existing amber-on-navy color scheme with the **Atlantic** palette: deep navy backgrounds, ice-blue text, steel-blue accent, and teal-green status color. Both dark and light modes are redesigned. The existing fonts (Bebas Neue, IBM Plex Mono, Crimson Text) and all component structure are unchanged.
+Replace the existing amber-on-navy color scheme with the **Atlantic** palette: deep navy backgrounds, ice-blue text, steel-blue accent, and teal-green status color. Both dark and light modes are redesigned. Crimson Text is removed and replaced with IBM Plex Mono throughout.
 
 ## Motivation
 
@@ -14,7 +14,10 @@ The previous scheme had two problems:
 
 ## Scope
 
-One file changes: `src/index.css`. Only the CSS custom property values inside `@theme` and `[data-theme="light"]` are updated, plus the `::selection` background. No component code, no layout, no typography changes.
+Two categories of change:
+
+1. **`src/index.css`** — CSS custom property values in `@theme` and `[data-theme="light"]`, the `::selection` background, the Google Fonts import, the `--font-serif` token, and the `body` font-family declaration.
+2. **8 component files** — All 22 hardcoded `"Crimson Text", serif` references replaced with `"IBM Plex Mono", monospace`. Files affected: `Home.tsx`, `NewTournament.tsx`, `RoundDetail.tsx`, `Players.tsx`, `Scenarios.tsx`, `TournamentDetail.tsx`, `Standings.tsx`, `Tournaments.tsx`.
 
 ## Token Changes
 
@@ -76,6 +79,20 @@ Red tokens unchanged.
 ::selection { background: rgba(74, 158, 212, 0.3); }
 ```
 
+## Font Changes
+
+### `src/index.css`
+- Remove `family=Crimson+Text:ital,wght@0,400;0,600;1,400` from the Google Fonts `@import` URL
+- Update `--font-serif` token: `"Crimson Text", serif` → `"IBM Plex Mono", monospace`
+- Update `body { font-family }`: `"Crimson Text", serif` → `"IBM Plex Mono", monospace`
+- Remove `.serif-body` utility class (was `font-family: "Crimson Text", serif`) or redirect it to IBM Plex Mono
+
+### Component files (8 files, 22 occurrences)
+Find: `"Crimson Text", serif`
+Replace: `"IBM Plex Mono", monospace`
+
+This is a mechanical replacement — no size or weight adjustments needed as part of this spec. IBM Plex Mono at the existing sizes produces a denser, more technical feel consistent with the military-tactical aesthetic.
+
 ## Design Rationale
 
 - **Accent** (`#4a9ed4` dark / `#1a5490` light): Steel blue with enough saturation to stand out against the navy backgrounds without feeling neon.
@@ -85,8 +102,8 @@ Red tokens unchanged.
 
 ## What Is Not Changing
 
-- Font families and sizes
+- Bebas Neue (display headings) — kept as-is
+- IBM Plex Mono weights and sizes — kept as-is
 - Component structure (`.card`, `.btn-primary`, `.btn-secondary`, etc.)
 - Layout and spacing
 - Animations
-- Any TypeScript/React component files
