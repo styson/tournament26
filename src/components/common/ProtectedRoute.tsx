@@ -11,18 +11,18 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
 
   if (loading) {
     return (
-      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--c-bg)' }}>
+      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--color-bg)' }}>
         <div style={{ textAlign: 'center' }}>
           <div style={{
             width: '32px',
             height: '32px',
-            border: '2px solid var(--c-spin-track)',
-            borderTopColor: 'var(--c-accent)',
+            border: '2px solid var(--color-spin-track)',
+            borderTopColor: 'var(--color-accent)',
             borderRadius: '50%',
             animation: 'spin 0.8s linear infinite',
             margin: '0 auto',
           }} />
-          <p style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.65rem', letterSpacing: '0.2em', color: 'var(--c-muted)', marginTop: '1rem', textTransform: 'uppercase' }}>
+          <p style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.8rem', letterSpacing: '0.2em', color: 'var(--color-muted)', marginTop: '1rem', textTransform: 'uppercase' }}>
             Authenticating...
           </p>
           <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>

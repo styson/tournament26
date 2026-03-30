@@ -47,22 +47,20 @@ export default function Players() {
 
       <div className="card anim-1" style={{ padding: 0, overflow: 'hidden' }}>
         {loading ? (
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '3rem', gap: '0.75rem' }}>
-            <div style={{ width: '20px', height: '20px', border: '2px solid var(--c-spin-track)', borderTopColor: 'var(--c-accent)', borderRadius: '50%', animation: 'spin 0.8s linear infinite', flexShrink: 0 }} />
-            <span style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.65rem', color: 'var(--c-muted)', letterSpacing: '0.15em', textTransform: 'uppercase' }}>Loading...</span>
-            <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+          <div className="row" style={{ justifyContent: 'center', padding: '3rem' }}>
+            <div className="spinner" /><span className="section-label">Loading...</span>
           </div>
         ) : error ? (
-          <div style={{ padding: '1.25rem', fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.7rem', color: 'var(--c-red)', border: '1px solid var(--c-red-border)' }}>
+          <div className="error-box" style={{ padding: '1.25rem' }}>
             {error}
           </div>
         ) : players.length === 0 ? (
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '4rem 2rem', gap: '1rem' }}>
-            <div style={{ fontFamily: '"Bebas Neue", sans-serif', fontSize: '4rem', color: 'var(--c-raised)', letterSpacing: '0.05em' }}>PL-00</div>
-            <h3 style={{ fontFamily: '"Bebas Neue", sans-serif', fontSize: '1.4rem', letterSpacing: '0.06em', color: 'var(--c-muted)', margin: 0 }}>
+            <div style={{ fontFamily: '"Bebas Neue", sans-serif', fontSize: '4rem', color: 'var(--color-raised)', letterSpacing: '0.05em' }}>PL-00</div>
+            <h3 style={{ fontFamily: '"Bebas Neue", sans-serif', fontSize: '1.4rem', letterSpacing: '0.06em', color: 'var(--color-muted)', margin: 0 }}>
               No Personnel on Record
             </h3>
-            <p style={{ fontFamily: '"Crimson Text", serif', fontSize: '0.95rem', color: 'var(--c-muted-dim)', margin: 0, textAlign: 'center' }}>
+            <p style={{ fontFamily: '"Crimson Text", serif', fontSize: '0.95rem', color: 'var(--color-muted-dim)', margin: 0, textAlign: 'center' }}>
               Enlist your first player to begin building the roster
             </p>
             <Link to="/players/new" className="btn-primary" style={{ marginTop: '0.5rem' }}>+ Enlist First Player</Link>
@@ -81,7 +79,7 @@ export default function Players() {
               <tbody>
                 {players.map(p => (
                   <tr key={p.id}>
-                    <td style={{ color: 'var(--c-text)', fontWeight: 500 }}>{p.name}</td>
+                    <td style={{ color: 'var(--color-text)', fontWeight: 500 }}>{p.name}</td>
                     <td>{p.email ?? '—'}</td>
                     <td>{p.phone ?? '—'}</td>
                     <td>{p.location ?? '—'}</td>

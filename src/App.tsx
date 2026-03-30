@@ -9,12 +9,12 @@ import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Players from './pages/Players';
 import Tournaments from './pages/Tournaments';
-import Games from './pages/Games';
 import Scenarios from './pages/Scenarios';
 import Standings from './pages/Standings';
 import NewTournament from './pages/NewTournament';
 import NewPlayer from './pages/NewPlayer';
 import TournamentDetail from './pages/TournamentDetail';
+import RoundDetail from './pages/RoundDetail';
 
 // Create React Query client
 const queryClient = new QueryClient({
@@ -53,11 +53,6 @@ const tournamentsRoute = createRoute({
   component: () => <ProtectedRoute><Layout><Tournaments /></Layout></ProtectedRoute>,
 });
 
-const gamesRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: '/games',
-  component: () => <ProtectedRoute><Layout><Games /></Layout></ProtectedRoute>,
-});
 
 const scenariosRoute = createRoute({
   getParentRoute: () => rootRoute,
@@ -89,10 +84,11 @@ const tournamentDetailRoute = createRoute({
   component: () => <ProtectedRoute><Layout><TournamentDetail /></Layout></ProtectedRoute>,
 });
 
-const gamesNewRoute = createRoute({
+
+const roundDetailRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: '/games/new',
-  component: () => <ProtectedRoute><Layout><Games /></Layout></ProtectedRoute>,
+  path: '/tournaments/$id/rounds/$roundId',
+  component: () => <ProtectedRoute><Layout><RoundDetail /></Layout></ProtectedRoute>,
 });
 
 const routeTree = rootRoute.addChildren([
@@ -104,8 +100,7 @@ const routeTree = rootRoute.addChildren([
   tournamentsRoute,
   tournamentsNewRoute,
   tournamentDetailRoute,
-  gamesRoute,
-  gamesNewRoute,
+  roundDetailRoute,
   scenariosRoute,
   standingsRoute,
 ]);

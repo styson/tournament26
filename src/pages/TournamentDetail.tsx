@@ -29,19 +29,19 @@ interface Round {
 
 function tournamentStatusColor(status: string) {
   switch (status) {
-    case 'ACTIVE':      return 'var(--c-green-dim)';
-    case 'COMPLETED':   return 'var(--c-muted)';
-    case 'CANCELLED':   return 'var(--c-red)';
-    case 'IN_PROGRESS': return 'var(--c-accent)';
-    default:            return 'var(--c-accent)';
+    case 'ACTIVE':      return 'var(--color-green-dim)';
+    case 'COMPLETED':   return 'var(--color-muted)';
+    case 'CANCELLED':   return 'var(--color-red)';
+    case 'IN_PROGRESS': return 'var(--color-accent)';
+    default:            return 'var(--color-accent)';
   }
 }
 
 function roundStatusColor(status: string) {
   switch (status) {
-    case 'IN_PROGRESS': return 'var(--c-accent)';
-    case 'COMPLETED':   return 'var(--c-green-dim)';
-    default:            return 'var(--c-muted)';
+    case 'IN_PROGRESS': return 'var(--color-accent)';
+    case 'COMPLETED':   return 'var(--color-green-dim)';
+    default:            return 'var(--color-muted)';
   }
 }
 
@@ -57,8 +57,7 @@ function roundStatusLabel(status: string) {
 function Spinner({ inline }: { inline?: boolean }) {
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', ...(inline ? {} : { justifyContent: 'center', padding: '4rem' }) }}>
-      <div style={{ width: '20px', height: '20px', border: '2px solid var(--c-spin-track)', borderTopColor: 'var(--c-accent)', borderRadius: '50%', animation: 'spin 0.8s linear infinite', flexShrink: 0 }} />
-      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+      <div className="spinner" />
     </div>
   );
 }
@@ -73,6 +72,7 @@ export default function TournamentDetail() {
   const [roster,     setRoster]     = useState<Player[]>([]);
   const [rounds,     setRounds]     = useState<Round[]>([]);
   const [records,    setRecords]    = useState<Record<string, { w: number; l: number }>>({});
+  const [points,     setPoints]     = useState<Record<string, number>>({});
   const [selectedPlayerId, setSelectedPlayerId] = useState('');
 
   const [loadingTournament, setLoadingTournament] = useState(true);
@@ -118,14 +118,28 @@ export default function TournamentDetail() {
     setSelectedPlayerId('');
 
     const rec: Record<string, { w: number; l: number }> = {};
+    const defeated: Record<string, string[]> = {};
     for (const g of (gamesRes.data ?? [])) {
+      const loserId = g.winner_id === g.player1_id ? g.player2_id : g.player1_id;
       for (const pid of [g.player1_id, g.player2_id]) {
         if (!rec[pid]) rec[pid] = { w: 0, l: 0 };
         if (g.winner_id === pid) rec[pid].w++;
         else rec[pid].l++;
       }
+      if (g.winner_id) {
+        if (!defeated[g.winner_id]) defeated[g.winner_id] = [];
+        defeated[g.winner_id].push(loserId);
+      }
     }
     setRecords(rec);
+
+    const pts: Record<string, number> = {};
+    for (const pid of Object.keys(rec)) {
+      const bonus = (defeated[pid] ?? []).reduce((sum, oppId) => sum + (rec[oppId]?.w ?? 0), 0);
+      pts[pid] = 10 * rec[pid].w + bonus;
+    }
+    setPoints(pts);
+    setEnrolled(prev => [...prev].sort((a, b) => (pts[b.id] ?? 0) - (pts[a.id] ?? 0) || a.name.localeCompare(b.name)));
     setLoadingPlayers(false);
   }
 
@@ -194,8 +208,8 @@ export default function TournamentDetail() {
   // ─────────────────────────────────────────────────────────
   if (loadingTournament) return <Spinner />;
   if (!tournament) return (
-    <div style={{ fontFamily: '"IBM Plex Mono", monospace', color: 'var(--c-red)', fontSize: '0.8rem' }}>
-      Tournament not found. <Link to="/tournaments" style={{ color: 'var(--c-accent)' }}>← Back</Link>
+    <div style={{ fontFamily: '"IBM Plex Mono", monospace', color: 'var(--color-red)', fontSize: '0.8rem' }}>
+      Tournament not found. <Link to="/tournaments" style={{ color: 'var(--color-accent)' }}>← Back</Link>
     </div>
   );
 
@@ -204,7 +218,7 @@ export default function TournamentDetail() {
 
       {/* Back */}
       <div className="anim-0">
-        <Link to="/tournaments" style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.65rem', letterSpacing: '0.15em', color: 'var(--c-muted)', textTransform: 'uppercase' }}>
+        <Link to="/tournaments" style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.8rem', letterSpacing: '0.15em', color: 'var(--color-muted)', textTransform: 'uppercase' }}>
           ← Tournaments
         </Link>
       </div>
@@ -218,11 +232,11 @@ export default function TournamentDetail() {
               {tournament.name}
             </h1>
             {tournament.description && (
-              <p style={{ fontFamily: '"Crimson Text", serif', fontSize: '1rem', color: 'var(--c-muted)', margin: '0 0 0.75rem' }}>
+              <p style={{ fontFamily: '"Crimson Text", serif', fontSize: '1rem', color: 'var(--color-muted)', margin: '0 0 0.75rem' }}>
                 {tournament.description}
               </p>
             )}
-            <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap', fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.65rem', letterSpacing: '0.12em', color: 'var(--c-muted)' }}>
+            <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap', fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.8rem', letterSpacing: '0.12em', color: 'var(--color-muted)' }}>
               <span>Start: {tournament.start_date}</span>
               {tournament.end_date && <span>End: {tournament.end_date}</span>}
             </div>
@@ -233,11 +247,11 @@ export default function TournamentDetail() {
               onChange={e => handleStatusChange(e.target.value)}
               disabled={updatingStatus}
               style={{
-                background: 'var(--c-bg)',
+                background: 'var(--color-bg)',
                 color: tournamentStatusColor(tournament.status),
                 border: `1px solid ${tournamentStatusColor(tournament.status)}`,
                 fontFamily: '"IBM Plex Mono", monospace',
-                fontSize: '0.65rem',
+                fontSize: '0.8rem',
                 letterSpacing: '0.14em',
                 textTransform: 'uppercase',
                 padding: '0.25rem 1.75rem 0.25rem 0.6rem',
@@ -264,7 +278,7 @@ export default function TournamentDetail() {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
           <div className="section-label">
             Rounds
-            {!loadingRounds && <span style={{ color: 'var(--c-accent)', marginLeft: '0.5rem' }}>{rounds.length}</span>}
+            {!loadingRounds && <span style={{ color: 'var(--color-accent)', marginLeft: '0.5rem' }}>{rounds.length}</span>}
           </div>
           <button
             onClick={handleAddRound}
@@ -279,7 +293,7 @@ export default function TournamentDetail() {
         {loadingRounds ? (
           <div className="card" style={{ padding: '2rem' }}><Spinner inline /></div>
         ) : rounds.length === 0 ? (
-          <div className="card" style={{ padding: '2.5rem', textAlign: 'center', fontFamily: '"Crimson Text", serif', fontSize: '1rem', color: 'var(--c-muted-dim)' }}>
+          <div className="card" style={{ padding: '2.5rem', textAlign: 'center', fontFamily: '"Crimson Text", serif', fontSize: '1rem', color: 'var(--color-muted-dim)' }}>
             No rounds yet. Use + Round 1 above to get started.
           </div>
         ) : (
@@ -292,19 +306,19 @@ export default function TournamentDetail() {
                 gap: '0.6rem',
                 transition: 'background 0.15s ease',
               }}
-                onMouseEnter={e => (e.currentTarget as HTMLDivElement).style.background = 'var(--c-raised)'}
-                onMouseLeave={e => (e.currentTarget as HTMLDivElement).style.background = 'var(--c-surface)'}
+                onMouseEnter={e => (e.currentTarget as HTMLDivElement).style.background = 'var(--color-raised)'}
+                onMouseLeave={e => (e.currentTarget as HTMLDivElement).style.background = 'var(--color-surface)'}
               >
-                <div style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.55rem', letterSpacing: '0.2em', color: 'var(--c-accent)' }}>
+                <div style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.55rem', letterSpacing: '0.2em', color: 'var(--color-accent)' }}>
                   [R-{String(round.round_number).padStart(2, '0')}]
                 </div>
 
                 <div>
-                  <div style={{ fontFamily: '"Bebas Neue", sans-serif', fontSize: '1.75rem', letterSpacing: '0.06em', color: 'var(--c-text)', lineHeight: 1 }}>
+                  <div style={{ fontFamily: '"Bebas Neue", sans-serif', fontSize: '1.75rem', letterSpacing: '0.06em', color: 'var(--color-text)', lineHeight: 1 }}>
                     Round {round.round_number}
                   </div>
                   {round.name && (
-                    <div style={{ fontFamily: '"Crimson Text", serif', fontSize: '0.875rem', color: 'var(--c-muted)', marginTop: '0.2rem' }}>
+                    <div style={{ fontFamily: '"Crimson Text", serif', fontSize: '0.875rem', color: 'var(--color-muted)', marginTop: '0.2rem' }}>
                       {round.name}
                     </div>
                   )}
@@ -336,17 +350,17 @@ export default function TournamentDetail() {
 
       {/* ── ENROLLED PLAYERS ───────────────────────────────── */}
       <div className="card anim-4" style={{ padding: 0 }}>
-        <div style={{ padding: '1rem 1.25rem', borderBottom: '1px solid var(--c-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div style={{ padding: '1rem 1.25rem', borderBottom: '1px solid var(--color-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div className="section-label">
             Enrolled Players
-            {!loadingPlayers && <span style={{ color: 'var(--c-accent)', marginLeft: '0.5rem' }}>{enrolled.length}</span>}
+            {!loadingPlayers && <span style={{ color: 'var(--color-accent)', marginLeft: '0.5rem' }}>{enrolled.length}</span>}
           </div>
         </div>
 
         {loadingPlayers ? (
           <div style={{ padding: '2rem', display: 'flex', justifyContent: 'center' }}><Spinner inline /></div>
         ) : enrolled.length === 0 ? (
-          <div style={{ padding: '2.5rem', textAlign: 'center', fontFamily: '"Crimson Text", serif', fontSize: '1rem', color: 'var(--c-muted-dim)' }}>
+          <div style={{ padding: '2.5rem', textAlign: 'center', fontFamily: '"Crimson Text", serif', fontSize: '1rem', color: 'var(--color-muted-dim)' }}>
             No players enrolled yet.
           </div>
         ) : (
@@ -355,17 +369,20 @@ export default function TournamentDetail() {
               <div key={p.id} style={{
                 display: 'flex', alignItems: 'center', justifyContent: 'space-between',
                 gap: '0.5rem', padding: '0.5rem 0.6rem',
-                background: 'var(--c-bg)', border: '1px solid var(--c-border)',
+                background: 'var(--color-bg)', border: '1px solid var(--color-border)',
                 transition: 'border-color 0.15s ease',
               }}
-                onMouseEnter={e => (e.currentTarget as HTMLDivElement).style.borderColor = 'var(--c-border-bright)'}
-                onMouseLeave={e => (e.currentTarget as HTMLDivElement).style.borderColor = 'var(--c-border)'}
+                onMouseEnter={e => (e.currentTarget as HTMLDivElement).style.borderColor = 'var(--color-border-bright)'}
+                onMouseLeave={e => (e.currentTarget as HTMLDivElement).style.borderColor = 'var(--color-border)'}
               >
                 <div style={{ overflow: 'hidden', minWidth: 0 }}>
-                  <div style={{ fontFamily: '"Crimson Text", serif', fontSize: '0.95rem', color: 'var(--c-text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  <div style={{ fontFamily: '"Crimson Text", serif', fontSize: '0.95rem', color: 'var(--color-text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                     {p.name}
                   </div>
-                  <div style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.58rem', letterSpacing: '0.1em', color: 'var(--c-muted)', marginTop: '0.1rem' }}>
+                  <div style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.58rem', letterSpacing: '0.1em', color: 'var(--color-accent)', marginTop: '0.1rem' }}>
+                    {`${points[p.id] ?? 0} Points`}
+                  </div>
+                  <div style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.58rem', letterSpacing: '0.1em', color: 'var(--color-muted)' }}>
                     {(() => { const r = records[p.id] ?? { w: 0, l: 0 }; return `W/L ${r.w}-${r.l}`; })()}
                   </div>
                 </div>
@@ -375,28 +392,21 @@ export default function TournamentDetail() {
                       onClick={() => { setConfirmRemovePlayer(null); handleRemove(p.id); }}
                       disabled={removingId === p.id}
                       title="Confirm remove"
-                      style={{ background: 'var(--c-red-bg)', border: '1px solid var(--c-red)', color: 'var(--c-red-bright)', fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.6rem', padding: '0.2rem 0.35rem', cursor: 'pointer', lineHeight: 1 }}
-                    >
-                      {removingId === p.id ? '…' : '✓'}
-                    </button>
+                      style={{ background: 'var(--color-red-bg)', border: '1px solid var(--color-red)', color: 'var(--color-red-bright)', fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.6rem', padding: '0.2rem 0.35rem', cursor: 'pointer', lineHeight: 1 }}
+                    >{removingId === p.id ? '…' : '✓'}</button>
                     <button
                       onClick={() => setConfirmRemovePlayer(null)}
                       title="Cancel"
-                      style={{ background: 'transparent', border: '1px solid var(--c-border)', color: 'var(--c-muted)', fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.6rem', padding: '0.2rem 0.35rem', cursor: 'pointer', lineHeight: 1 }}
-                    >
-                      ✕
-                    </button>
+                      className="btn-secondary"
+                      style={{ padding: '0.2rem 0.35rem', fontSize: '0.6rem' }}
+                    >✕</button>
                   </div>
                 ) : (
                   <button
                     onClick={() => setConfirmRemovePlayer(p.id)}
                     title="Remove player"
-                    style={{ background: 'transparent', border: '1px solid transparent', color: 'var(--c-muted)', fontSize: '0.75rem', width: '22px', height: '22px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', flexShrink: 0, padding: 0, transition: 'all 0.15s ease', lineHeight: 1 }}
-                    onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = 'var(--c-red)'; (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--c-red-border)'; }}
-                    onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = 'var(--c-muted)'; (e.currentTarget as HTMLButtonElement).style.borderColor = 'transparent'; }}
-                  >
-                    ✕
-                  </button>
+                    className="icon-btn danger"
+                  >✕</button>
                 )}
               </div>
             ))}
@@ -415,9 +425,9 @@ export default function TournamentDetail() {
                 onChange={e => setSelectedPlayerId(e.target.value)}
                 required
                 style={{
-                  width: '100%', background: 'var(--c-bg)',
-                  color: selectedPlayerId ? 'var(--c-text)' : 'var(--c-muted)',
-                  border: '1px solid var(--c-border)',
+                  width: '100%', background: 'var(--color-bg)',
+                  color: selectedPlayerId ? 'var(--color-text)' : 'var(--color-muted)',
+                  border: '1px solid var(--color-border)',
                   fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.75rem',
                   letterSpacing: '0.06em', padding: '0.5rem 2rem 0.5rem 0.75rem',
                   outline: 'none', appearance: 'none', cursor: 'pointer',
@@ -428,7 +438,7 @@ export default function TournamentDetail() {
                   <option key={p.id} value={p.id}>{p.name}{p.location ? ` — ${p.location}` : ''}</option>
                 ))}
               </select>
-              <span style={{ position: 'absolute', right: '0.6rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--c-muted)', fontSize: '0.6rem', pointerEvents: 'none' }}>▼</span>
+              <span style={{ position: 'absolute', right: '0.6rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--color-muted)', fontSize: '0.6rem', pointerEvents: 'none' }}>▼</span>
             </div>
             <button
               type="submit"
@@ -441,7 +451,7 @@ export default function TournamentDetail() {
           </form>
 
           {error && (
-            <div style={{ marginTop: '0.75rem', padding: '0.6rem 0.75rem', background: 'rgba(139, 46, 46, 0.15)', border: '1px solid var(--c-red-border)', fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.7rem', color: 'var(--c-red)' }}>
+            <div className="error-box" style={{ marginTop: '0.75rem' }}>
               {error}
             </div>
           )}
@@ -449,7 +459,7 @@ export default function TournamentDetail() {
       )}
 
       {!loadingPlayers && roster.length === 0 && enrolled.length > 0 && (
-        <div style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.65rem', color: 'var(--c-muted-dim)', letterSpacing: '0.12em', textAlign: 'center', padding: '0.5rem' }}>
+        <div style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.8rem', color: 'var(--color-muted-dim)', letterSpacing: '0.12em', textAlign: 'center', padding: '0.5rem' }}>
           All players are enrolled in this tournament.
         </div>
       )}

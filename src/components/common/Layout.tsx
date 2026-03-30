@@ -11,7 +11,6 @@ const navigation = [
   { name: 'Dashboard', href: '/dashboard', code: 'DB' },
   { name: 'Players',   href: '/players',   code: 'PL' },
   { name: 'Tourney',   href: '/tournaments', code: 'TN' },
-  { name: 'Games',     href: '/games',     code: 'GM' },
   { name: 'Scenarios', href: '/scenarios', code: 'SC' },
   { name: 'Standings', href: '/standings', code: 'ST' },
 ];
@@ -36,37 +35,52 @@ export default function Layout({ children }: LayoutProps) {
 
       {/* ── Nav bar ── */}
       <header style={{
-        background: 'var(--c-bg-header)',
-        borderBottom: '1px solid var(--c-border)',
+        background: 'var(--color-bg-header)',
+        borderBottom: '1px solid var(--color-border)',
         position: 'sticky',
         top: 0,
         zIndex: 50,
       }}>
         {/* Thin amber accent line at top */}
-        <div style={{ height: '2px', background: 'linear-gradient(90deg, transparent 0%, var(--c-accent) 30%, var(--c-accent) 70%, transparent 100%)' }} />
+        <div style={{ height: '2px', background: 'linear-gradient(90deg, transparent 0%, var(--color-accent) 30%, var(--color-accent) 70%, transparent 100%)' }} />
 
         <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 1rem', display: 'flex', alignItems: 'center', height: '48px', gap: '1.5rem' }}>
 
           {/* Logo */}
           <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', flexShrink: 0 }}>
-            <div style={{
-              width: '28px',
-              height: '28px',
-              background: 'var(--c-accent)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              clipPath: 'polygon(0 0, calc(100% - 4px) 0, 100% 4px, 100% 100%, 4px 100%, 0 calc(100% - 4px))',
-            }}>
-              <span style={{ fontFamily: '"Bebas Neue", sans-serif', fontSize: '1rem', color: 'var(--c-bg)', letterSpacing: '0.05em' }}>T</span>
+            <div style={{ position: 'relative' }}>
+              <div style={{
+                width: '28px',
+                height: '28px',
+                background: 'var(--color-accent)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                clipPath: 'polygon(0 0, calc(100% - 4px) 0, 100% 4px, 100% 100%, 4px 100%, 0 calc(100% - 4px))',
+              }}>
+                <span style={{ fontFamily: '"Bebas Neue", sans-serif', fontSize: '1rem', color: 'var(--color-bg)', letterSpacing: '0.05em' }}>T</span>
+              </div>
+              {user && (
+                <div style={{
+                  position: 'absolute',
+                  bottom: '-1px',
+                  right: '-1px',
+                  width: '6px',
+                  height: '6px',
+                  borderRadius: '50%',
+                  background: 'var(--color-green)',
+                  border: '1px solid var(--color-bg-header)',
+                  animation: 'blink 2s step-end infinite',
+                }} />
+              )}
             </div>
-            <span style={{ fontFamily: '"Bebas Neue", sans-serif', fontSize: '1.1rem', letterSpacing: '0.12em', color: 'var(--c-text)' }}>
-              TOURNEY<span style={{ color: 'var(--c-accent)' }}>26</span>
+            <span style={{ fontFamily: '"Bebas Neue", sans-serif', fontSize: '1.1rem', letterSpacing: '0.12em', color: 'var(--color-text)' }}>
+              TOURNEY<span style={{ color: 'var(--color-accent)' }}>26</span>
             </span>
           </Link>
 
           {/* Separator */}
-          <div style={{ width: '1px', height: '20px', background: 'var(--c-border)', flexShrink: 0 }} />
+          <div style={{ width: '1px', height: '20px', background: 'var(--color-border)', flexShrink: 0 }} />
 
           {/* Nav links */}
           {user && (
@@ -83,13 +97,13 @@ export default function Layout({ children }: LayoutProps) {
                       letterSpacing: '0.14em',
                       textTransform: 'uppercase',
                       padding: '0.3rem 0.6rem',
-                      color: active ? 'var(--c-accent)' : 'var(--c-muted)',
-                      borderBottom: active ? '2px solid var(--c-accent)' : '2px solid transparent',
+                      color: active ? 'var(--color-accent)' : 'var(--color-muted)',
+                      borderBottom: active ? '2px solid var(--color-accent)' : '2px solid transparent',
                       transition: 'all 0.15s ease',
                       whiteSpace: 'nowrap',
                     }}
-                    onMouseEnter={e => { if (!active) (e.currentTarget as HTMLAnchorElement).style.color = 'var(--c-text)'; }}
-                    onMouseLeave={e => { if (!active) (e.currentTarget as HTMLAnchorElement).style.color = 'var(--c-muted)'; }}
+                    onMouseEnter={e => { if (!active) (e.currentTarget as HTMLAnchorElement).style.color = 'var(--color-text)'; }}
+                    onMouseLeave={e => { if (!active) (e.currentTarget as HTMLAnchorElement).style.color = 'var(--color-muted)'; }}
                   >
                     {item.name}
                   </Link>
@@ -104,15 +118,15 @@ export default function Layout({ children }: LayoutProps) {
           {/* User info */}
           {user && (
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexShrink: 0 }}>
-              <span style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.6rem', color: 'var(--c-muted)', letterSpacing: '0.08em', maxWidth: '160px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              <span style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.6rem', color: 'var(--color-muted)', letterSpacing: '0.08em', maxWidth: '160px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                 {user.name}
               </span>
               <button
                 onClick={() => setTheme(t => t === 'dark' ? 'light' : 'dark')}
                 style={{
                   background: 'transparent',
-                  border: '1px solid var(--c-border-bright)',
-                  color: 'var(--c-muted)',
+                  border: '1px solid var(--color-border-bright)',
+                  color: 'var(--color-muted)',
                   fontFamily: '"IBM Plex Mono", monospace',
                   fontSize: '0.6rem',
                   letterSpacing: '0.1em',
@@ -120,8 +134,8 @@ export default function Layout({ children }: LayoutProps) {
                   cursor: 'pointer',
                   transition: 'all 0.15s ease',
                 }}
-                onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--c-accent)'; (e.currentTarget as HTMLButtonElement).style.color = 'var(--c-accent)'; }}
-                onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--c-border-bright)'; (e.currentTarget as HTMLButtonElement).style.color = 'var(--c-muted)'; }}
+                onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--color-accent)'; (e.currentTarget as HTMLButtonElement).style.color = 'var(--color-accent)'; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--color-border-bright)'; (e.currentTarget as HTMLButtonElement).style.color = 'var(--color-muted)'; }}
               >
                 {theme === 'dark' ? '◑ Light' : '◑ Dark'}
               </button>
@@ -139,8 +153,8 @@ export default function Layout({ children }: LayoutProps) {
       </main>
 
       {/* ── Footer ── */}
-      <footer style={{ borderTop: '1px solid var(--c-raised)', padding: '0.75rem 1rem', textAlign: 'center' }}>
-        <span style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.6rem', color: 'var(--c-muted-dim)', letterSpacing: '0.15em' }}>
+      <footer style={{ borderTop: '1px solid var(--color-raised)', padding: '0.75rem 1rem', textAlign: 'center' }}>
+        <span style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.6rem', color: 'var(--color-muted-dim)', letterSpacing: '0.15em' }}>
           TOURNAMENT26 · {new Date().getFullYear()}
         </span>
       </footer>

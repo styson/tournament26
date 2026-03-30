@@ -49,7 +49,7 @@ export default function Scenarios() {
           <h1 style={{ fontFamily: '"Bebas Neue", sans-serif', fontSize: '2.4rem', letterSpacing: '0.06em', margin: 0 }}>
             Scenarios
             {!loading && (
-              <span style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.85rem', color: 'var(--c-accent)', marginLeft: '0.75rem', letterSpacing: '0.1em' }}>
+              <span style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.85rem', color: 'var(--color-accent)', marginLeft: '0.75rem', letterSpacing: '0.1em' }}>
                 {filtered.length}
               </span>
             )}
@@ -67,22 +67,20 @@ export default function Scenarios() {
 
       <div className="card anim-1" style={{ padding: 0, overflow: 'hidden' }}>
         {loading ? (
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '3rem', gap: '0.75rem' }}>
-            <div style={{ width: '20px', height: '20px', border: '2px solid var(--c-spin-track)', borderTopColor: 'var(--c-accent)', borderRadius: '50%', animation: 'spin 0.8s linear infinite', flexShrink: 0 }} />
-            <span style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.65rem', color: 'var(--c-muted)', letterSpacing: '0.15em', textTransform: 'uppercase' }}>Loading...</span>
-            <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+          <div className="row" style={{ justifyContent: 'center', padding: '3rem' }}>
+            <div className="spinner" /><span className="section-label">Loading...</span>
           </div>
         ) : error ? (
-          <div style={{ padding: '1.25rem', fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.7rem', color: 'var(--c-red)', border: '1px solid var(--c-red-border)' }}>
+          <div className="error-box" style={{ padding: '1.25rem' }}>
             {error}
           </div>
         ) : filtered.length === 0 ? (
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '4rem 2rem', gap: '1rem' }}>
-            <div style={{ fontFamily: '"Bebas Neue", sans-serif', fontSize: '4rem', color: 'var(--c-raised)', letterSpacing: '0.05em' }}>SC-00</div>
-            <h3 style={{ fontFamily: '"Bebas Neue", sans-serif', fontSize: '1.4rem', letterSpacing: '0.06em', color: 'var(--c-muted)', margin: 0 }}>
+            <div style={{ fontFamily: '"Bebas Neue", sans-serif', fontSize: '4rem', color: 'var(--color-raised)', letterSpacing: '0.05em' }}>SC-00</div>
+            <h3 style={{ fontFamily: '"Bebas Neue", sans-serif', fontSize: '1.4rem', letterSpacing: '0.06em', color: 'var(--color-muted)', margin: 0 }}>
               {search ? 'No Matches Found' : 'No Scenarios Loaded'}
             </h3>
-            <p style={{ fontFamily: '"Crimson Text", serif', fontSize: '0.95rem', color: 'var(--c-muted-dim)', margin: 0, textAlign: 'center' }}>
+            <p style={{ fontFamily: '"Crimson Text", serif', fontSize: '0.95rem', color: 'var(--color-muted-dim)', margin: 0, textAlign: 'center' }}>
               {search ? 'Try a different search term' : 'Import scenarios via the SQL migration'}
             </p>
           </div>
@@ -101,13 +99,13 @@ export default function Scenarios() {
               <tbody>
                 {filtered.map(s => (
                   <tr key={s.id}>
-                    <td style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.65rem', color: 'var(--c-accent)', letterSpacing: '0.08em', whiteSpace: 'nowrap' }}>
+                    <td style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.8rem', color: 'var(--color-accent)', letterSpacing: '0.08em', whiteSpace: 'nowrap' }}>
                       {s.scen_id ?? '—'}
                     </td>
-                    <td style={{ color: 'var(--c-text)', fontWeight: 500 }}>{s.title}</td>
-                    <td style={{ color: 'var(--c-red)', textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '0.06em' }}>{s.attacker_nationality}</td>
-                    <td style={{ color: 'var(--c-green)', textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '0.06em' }}>{s.defender_nationality}</td>
-                    <td style={{ color: 'var(--c-muted)', fontSize: '0.75rem' }}>{s.source ?? '—'}</td>
+                    <td style={{ color: 'var(--color-text)', fontWeight: 500 }}>{s.title}</td>
+                    <td style={{ color: 'var(--color-red)', textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '0.06em' }}>{s.attacker_nationality}</td>
+                    <td style={{ color: 'var(--color-green)', textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '0.06em' }}>{s.defender_nationality}</td>
+                    <td style={{ color: 'var(--color-muted)', fontSize: '0.75rem' }}>{s.source ?? '—'}</td>
                   </tr>
                 ))}
               </tbody>

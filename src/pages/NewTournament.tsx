@@ -107,9 +107,7 @@ export default function NewTournament() {
 
         {/* Error */}
         {error && (
-          <div style={{ padding: '0.6rem 0.75rem', background: 'rgba(139, 46, 46, 0.15)', border: '1px solid var(--c-red-border)', fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.7rem', color: 'var(--c-red)', letterSpacing: '0.05em' }}>
-            {error}
-          </div>
+          <div className="error-box">{error}</div>
         )}
 
         {/* Actions */}
