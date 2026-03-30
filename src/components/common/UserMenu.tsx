@@ -70,7 +70,7 @@ export default function UserMenu({ theme, onThemeChange }: UserMenuProps) {
           borderRadius: '50%',
           background: isOpen ? 'var(--color-raised)' : 'transparent',
           border: '1.5px solid var(--color-accent)',
-          color: 'var(--color-accent)',
+          color: '#ffffff',
           fontFamily: '"IBM Plex Mono", monospace',
           fontSize: '0.55rem',
           letterSpacing: '0.05em',
