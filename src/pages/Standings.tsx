@@ -1,5 +1,6 @@
 import { supabase } from '@/config/supabase';
 import { type StandingEntry, type PlayerRow, type GameResult, computeStandings } from '@/utils/standingsPdf';
+import { openPlayerReportPdf } from '@/utils/playerReportPdf';
 import { useEffect, useState } from 'react';
 import StandingsReportButton from '@/components/StandingsReport';
 
@@ -182,7 +183,19 @@ export default function Standings() {
                         </span>
                       </td>
                       <td style={{ color: 'var(--color-text)', fontFamily: '"IBM Plex Mono", monospace', fontSize: '1rem' }}>
-                        {s.player.name}
+                        <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                          {s.player.name}
+                          <button
+                            onClick={() => {
+                              const t = tournaments.find(x => x.id === selectedId);
+                              const playerById = Object.fromEntries(standings.map(x => [x.player.id, x.player.name]));
+                              openPlayerReportPdf(s.player.id, s.player.name, selectedId, t?.name ?? '', playerById);
+                            }}
+                            title="Player report"
+                            className="icon-btn"
+                            style={{ fontSize: '0.65rem', padding: '0.1rem 0.25rem', opacity: 0.6 }}
+                          >↗</button>
+                        </span>
                       </td>
                       <td style={{ textAlign: 'center', color: 'var(--color-green-dim)', fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.75rem' }}>
                         {s.wins}
