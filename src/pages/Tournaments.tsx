@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from '@tanstack/react-router';
 import { supabase } from '@/config/supabase';
+import { ArrowRight } from 'lucide-react';
 
 interface Tournament {
   id: string;
@@ -79,8 +80,8 @@ export default function Tournaments() {
                     {tournament.end_date && <span>→ {tournament.end_date}</span>}
                   </div>
                 </div>
-                <Link to="/tournaments/$id" params={{ id: tournament.id }} className="btn-secondary">
-                  View →
+                <Link to="/tournaments/$id" params={{ id: tournament.id }} className="btn-secondary" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}>
+                  View <ArrowRight size={14} />
                 </Link>
               </div>
             ))}

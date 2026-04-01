@@ -5,6 +5,7 @@ import { supabase } from '@/config/supabase';
 import { useEffect, useState } from 'react';
 import { useParams, Link } from '@tanstack/react-router';
 import StandingsReportButton from '@/components/StandingsReport';
+import { ArrowLeft, ArrowRight, Check, ChevronDown, ExternalLink, X } from 'lucide-react';
 
 interface Tournament {
   id: string;
@@ -220,7 +221,7 @@ export default function TournamentDetail() {
   if (loadingTournament) return <Spinner />;
   if (!tournament) return (
     <div style={{ fontFamily: '"IBM Plex Mono", monospace', color: 'var(--color-red)' }}>
-      Tournament not found. <Link to="/tournaments" style={{ color: 'var(--color-accent)' }}>← Back</Link>
+      Tournament not found. <Link to="/tournaments" style={{ color: 'var(--color-accent)', display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}><ArrowLeft size={14} /> Back</Link>
     </div>
   );
 
@@ -229,8 +230,8 @@ export default function TournamentDetail() {
 
       {/* Back */}
       <div className="anim-0">
-        <Link to="/tournaments" style={{ fontFamily: '"IBM Plex Mono", monospace', letterSpacing: '0.15em', color: 'var(--color-muted)', textTransform: 'uppercase' }}>
-          ← Tournaments
+        <Link to="/tournaments" style={{ fontFamily: '"IBM Plex Mono", monospace', letterSpacing: '0.15em', color: 'var(--color-muted)', textTransform: 'uppercase', display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}>
+          <ArrowLeft size={14} /> Tournaments
         </Link>
       </div>
 
@@ -280,7 +281,7 @@ export default function TournamentDetail() {
                   <option value="COMPLETED">COMPLETED</option>
                   <option value="CANCELLED">CANCELLED</option>
                 </select>
-                <span style={{ position: 'absolute', right: '0.5rem', top: '50%', transform: 'translateY(-50%)', color: tournamentStatusColor(tournament.status), pointerEvents: 'none' }}>▼</span>
+                <span style={{ position: 'absolute', right: '0.5rem', top: '50%', transform: 'translateY(-50%)', color: tournamentStatusColor(tournament.status), pointerEvents: 'none', display: 'inline-flex' }}><ChevronDown size={12} /></span>
               </div>
               <StandingsReportButton
                 standings={standings}
@@ -376,7 +377,7 @@ export default function TournamentDetail() {
                   className="btn-secondary"
                   style={{ marginTop: 'auto', justifyContent: 'center', padding: '0.3rem 0.5rem' }}
                 >
-                  View →
+                  View <ArrowRight size={14} />
                 </Link>
               </div>
             ))}
@@ -420,7 +421,7 @@ export default function TournamentDetail() {
                     title="Player report"
                     className="icon-btn"
                     style={{ fontSize: '0.65rem', flexShrink: 0 }}
-                  >↗</button>
+                  ><ExternalLink size={14} /></button>
                 </div>
                 <div style={{ fontFamily: '"IBM Plex Mono", monospace', letterSpacing: '0.1em', color: 'var(--color-accent)', marginTop: '0.1rem' }}>
                   {`${points[p.id] ?? 0} Points`}
@@ -439,7 +440,7 @@ export default function TournamentDetail() {
                           title="Cannot remove — player has played games"
                           className="icon-btn danger"
                           style={{ opacity: 0.25, cursor: 'not-allowed' }}
-                        >✕</button>
+                        ><X size={14} /></button>
                       );
                       return confirmRemovePlayer === p.id ? (
                         <>
@@ -448,20 +449,20 @@ export default function TournamentDetail() {
                             disabled={removingId === p.id}
                             title="Confirm remove"
                             style={{ background: 'var(--color-red-bg)', border: '1px solid var(--color-red)', color: 'var(--color-red-bright)', fontFamily: '"IBM Plex Mono", monospace', padding: '0.2rem 0.35rem', cursor: 'pointer', lineHeight: 1 }}
-                          >{removingId === p.id ? '…' : '✓'}</button>
+                          >{removingId === p.id ? '…' : <Check size={14} />}</button>
                           <button
                             onClick={() => setConfirmRemovePlayer(null)}
                             title="Cancel"
                             className="btn-secondary"
                             style={{ padding: '0.2rem 0.35rem' }}
-                          >✕</button>
+                          ><X size={14} /></button>
                         </>
                       ) : (
                         <button
                           onClick={() => setConfirmRemovePlayer(p.id)}
                           title="Remove player"
                           className="icon-btn danger"
-                        >✕</button>
+                        ><X size={14} /></button>
                       );
                     })()}
                   </div>
@@ -496,7 +497,7 @@ export default function TournamentDetail() {
                   <option key={p.id} value={p.id}>{p.name}{p.location ? ` — ${p.location}` : ''}</option>
                 ))}
               </select>
-              <span style={{ position: 'absolute', right: '0.6rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--color-muted)', pointerEvents: 'none' }}>▼</span>
+              <span style={{ position: 'absolute', right: '0.6rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--color-muted)', pointerEvents: 'none', display: 'inline-flex' }}><ChevronDown size={12} /></span>
             </div>
             <button
               type="submit"

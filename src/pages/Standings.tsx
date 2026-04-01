@@ -3,6 +3,7 @@ import { type StandingEntry, type PlayerRow, type GameResult, computeStandings }
 import { openPlayerReportPdf } from '@/utils/playerReportPdf';
 import { useEffect, useState } from 'react';
 import StandingsReportButton from '@/components/StandingsReport';
+import { ChevronDown, ExternalLink } from 'lucide-react';
 
 // ─── types ────────────────────────────────────────────────────
 
@@ -120,7 +121,7 @@ export default function Standings() {
               <option key={t.id} value={t.id}>{t.name}</option>
             ))}
           </select>
-          <span style={{ position: 'absolute', right: '0.6rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--color-muted)', fontSize: '0.6rem', pointerEvents: 'none' }}>▼</span>
+          <span style={{ position: 'absolute', right: '0.6rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--color-muted)', pointerEvents: 'none', display: 'inline-flex' }}><ChevronDown size={12} /></span>
         </div>
         {selectedId && !loading && (() => {
           const t = tournaments.find(x => x.id === selectedId);
@@ -194,7 +195,7 @@ export default function Standings() {
                             title="Player report"
                             className="icon-btn"
                             style={{ fontSize: '0.65rem', padding: '0.1rem 0.25rem', opacity: 0.6 }}
-                          >↗</button>
+                          ><ExternalLink size={14} /></button>
                         </span>
                       </td>
                       <td style={{ textAlign: 'center', color: 'var(--color-green-dim)', fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.75rem' }}>

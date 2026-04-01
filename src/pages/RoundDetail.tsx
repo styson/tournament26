@@ -10,6 +10,7 @@ import { Link, useParams } from '@tanstack/react-router';
 import { supabase } from '@/config/supabase';
 import { useEffect, useRef, useState } from 'react';
 import { openMatchReportPdf } from '@/utils/matchReportPdf';
+import { ArrowLeft, ArrowRight, Check, ChevronDown as ChevronDownIcon, X } from 'lucide-react';
 
 // ─── types ───────────────────────────────────────────────────
 
@@ -429,7 +430,7 @@ export default function RoundDetail() {
   if (loading) return <Spinner />;
   if (!round) return (
     <div style={{ fontFamily: '"IBM Plex Mono", monospace', color: 'var(--color-red)' }}>
-      Round not found. <Link to="/tournaments/$id" params={{ id: tournamentId }} style={{ color: 'var(--color-accent)' }}>← Back</Link>
+      Round not found. <Link to="/tournaments/$id" params={{ id: tournamentId }} style={{ color: 'var(--color-accent)', display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}><ArrowLeft size={14} /> Back</Link>
     </div>
   );
 
@@ -471,18 +472,18 @@ export default function RoundDetail() {
             <div style={{ display: 'flex', gap: '0.35rem' }}>
               {prev ? (
                 <Link to="/tournaments/$id/rounds/$roundId" params={{ id: tournamentId, roundId: prev.id }}
-                  style={btnStyle(true)}
+                  style={{ ...btnStyle(true), display: 'inline-flex', alignItems: 'center', gap: '0.3rem' }}
                   onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.borderColor = 'var(--color-accent)'; (e.currentTarget as HTMLAnchorElement).style.color = 'var(--color-accent)'; }}
                   onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.borderColor = 'var(--color-border)'; (e.currentTarget as HTMLAnchorElement).style.color = 'var(--color-muted)'; }}
-                >← R{prev.round_number}</Link>
-              ) : <span style={btnStyle(false)}>← R{round.round_number - 1 || '?'}</span>}
+                ><ArrowLeft size={14} /> R{prev.round_number}</Link>
+              ) : <span style={{ ...btnStyle(false), display: 'inline-flex', alignItems: 'center', gap: '0.3rem' }}><ArrowLeft size={14} /> R{round.round_number - 1 || '?'}</span>}
               {next ? (
                 <Link to="/tournaments/$id/rounds/$roundId" params={{ id: tournamentId, roundId: next.id }}
-                  style={btnStyle(true)}
+                  style={{ ...btnStyle(true), display: 'inline-flex', alignItems: 'center', gap: '0.3rem' }}
                   onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.borderColor = 'var(--color-accent)'; (e.currentTarget as HTMLAnchorElement).style.color = 'var(--color-accent)'; }}
                   onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.borderColor = 'var(--color-border)'; (e.currentTarget as HTMLAnchorElement).style.color = 'var(--color-muted)'; }}
-                >R{next.round_number} →</Link>
-              ) : <span style={btnStyle(false)}>R{round.round_number + 1} →</span>}
+                >R{next.round_number} <ArrowRight size={14} /></Link>
+              ) : <span style={{ ...btnStyle(false), display: 'inline-flex', alignItems: 'center', gap: '0.3rem' }}>R{round.round_number + 1} <ArrowRight size={14} /></span>}
             </div>
           );
         })()}
@@ -522,7 +523,7 @@ export default function RoundDetail() {
                   <option key={s.value} value={s.value}>{s.label}</option>
                 ))}
               </select>
-              <span style={{ position: 'absolute', right: '0.5rem', top: '50%', transform: 'translateY(-50%)', color: roundStatusColor(round.status), pointerEvents: 'none' }}>▼</span>
+              <span style={{ position: 'absolute', right: '0.5rem', top: '50%', transform: 'translateY(-50%)', color: roundStatusColor(round.status), pointerEvents: 'none', display: 'inline-flex' }}><ChevronDownIcon size={12} /></span>
             </div>
             {games.length > 0 && (
               <button
@@ -554,7 +555,7 @@ export default function RoundDetail() {
       {error && (
         <div className="error-box">
           {error}
-          <button onClick={() => setError('')} style={{ marginLeft: '1rem', background: 'none', border: 'none', color: 'var(--color-red)', cursor: 'pointer', fontFamily: '"IBM Plex Mono", monospace' }}>✕</button>
+          <button onClick={() => setError('')} style={{ marginLeft: '1rem', background: 'none', border: 'none', color: 'var(--color-red)', cursor: 'pointer', fontFamily: '"IBM Plex Mono", monospace', display: 'inline-flex', alignItems: 'center' }}><X size={14} /></button>
         </div>
       )}
 
@@ -727,13 +728,13 @@ export default function RoundDetail() {
                               disabled={removingGame}
                               title="Confirm remove"
                               style={{ background: 'var(--color-red-bg)', border: '1px solid var(--color-red)', color: 'var(--color-red-bright)', fontFamily: '"IBM Plex Mono", monospace', padding: '0.2rem 0.35rem', cursor: 'pointer', lineHeight: 1 }}
-                            >{removingGame ? '…' : '✓'}</button>
+                            >{removingGame ? '…' : <Check size={14} />}</button>
                             <button
                               onClick={() => setConfirmRemGame(null)}
                               title="Cancel"
                               className="btn-secondary"
                               style={{ padding: '0.2rem 0.35rem' }}
-                            >✕</button>
+                            ><X size={14} /></button>
                           </>
                         ) : (
                           <button
@@ -959,6 +960,6 @@ const selectStyle: React.CSSProperties = {
 
 function ChevronDown() {
   return (
-    <span style={{ position: 'absolute', right: '0.6rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--color-muted)', pointerEvents: 'none' }}>▼</span>
+    <span style={{ position: 'absolute', right: '0.6rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--color-muted)', pointerEvents: 'none', display: 'inline-flex' }}><ChevronDownIcon size={12} /></span>
   );
 }

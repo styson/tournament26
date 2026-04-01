@@ -1,5 +1,6 @@
 import { Link } from '@tanstack/react-router';
 import { useAuth } from '@/config/auth';
+import { ArrowRight } from 'lucide-react';
 
 const features = [
   {
@@ -189,10 +190,10 @@ export default function Home() {
         {/* CTA */}
         <div className="anim-3" style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
           {user ? (
-            <Link to="/dashboard" className="btn-primary">→ Enter Command Center</Link>
+            <Link to="/dashboard" className="btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}><ArrowRight size={14} /> Enter Command Center</Link>
           ) : (
             <>
-              <Link to="/login" className="btn-primary">→ Begin Mission</Link>
+              <Link to="/login" className="btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}><ArrowRight size={14} /> Begin Mission</Link>
               <Link to="/login" className="btn-secondary">Learn More</Link>
             </>
           )}
