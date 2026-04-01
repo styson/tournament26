@@ -7,6 +7,7 @@ import ProtectedRoute from './components/common/ProtectedRoute';
 import Dashboard from './pages/Dashboard';
 import Home from './pages/Home';
 import Login from './pages/Login';
+import EditTournament from './pages/EditTournament';
 import NewPlayer from './pages/NewPlayer';
 import NewTournament from './pages/NewTournament';
 import Players from './pages/Players';
@@ -119,6 +120,18 @@ const tournamentsNewRoute = createRoute({
   ),
 });
 
+const tournamentEditRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/tournaments/$id/edit',
+  component: () => (
+    <ProtectedRoute>
+      <Layout>
+        <EditTournament />
+      </Layout>
+    </ProtectedRoute>
+  ),
+});
+
 const tournamentDetailRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/tournaments/$id',
@@ -151,6 +164,7 @@ const routeTree = rootRoute.addChildren([
   playersNewRoute,
   tournamentsRoute,
   tournamentsNewRoute,
+  tournamentEditRoute,
   tournamentDetailRoute,
   roundDetailRoute,
   scenariosRoute,

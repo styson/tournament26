@@ -192,7 +192,7 @@ export default function Standings() {
                               const playerById = Object.fromEntries(standings.map(x => [x.player.id, x.player.name]));
                               openPlayerReportPdf(s.player.id, s.player.name, selectedId, t?.name ?? '', playerById);
                             }}
-                            title="Player report"
+                            title="View Player Report"
                             className="icon-btn"
                             style={{ fontSize: '0.65rem', padding: '0.1rem 0.25rem', opacity: 0.6 }}
                           ><ExternalLink size={14} /></button>

@@ -70,19 +70,35 @@ export default function Tournaments() {
                 onMouseLeave={e => (e.currentTarget as HTMLDivElement).style.background = 'var(--color-surface)'}
               >
                 <div>
-                  <h3 style={{ fontFamily: '"Bebas Neue", sans-serif', fontSize: '1.3rem', letterSpacing: '0.06em', margin: '0 0 0.35rem' }}>{tournament.name}</h3>
+                  <h3 style={{ fontFamily: '"Bebas Neue", sans-serif', fontSize: '1.3rem', letterSpacing: '0.06em', margin: '0 0 0.4rem' }}>{tournament.name}</h3>
                   {tournament.description && (
                     <p style={{ fontFamily: '"IBM Plex Mono", monospace', color: 'var(--color-muted)', margin: '0 0 0.5rem' }}>{tournament.description}</p>
                   )}
                   <div style={{ display: 'flex', gap: '1.5rem', fontFamily: '"IBM Plex Mono", monospace', letterSpacing: '0.1em', color: 'var(--color-muted)' }}>
-                    <span style={{ color: statusColor(tournament.status) }}>{tournament.status}</span>
                     <span>{tournament.start_date}</span>
                     {tournament.end_date && <span>→ {tournament.end_date}</span>}
                   </div>
                 </div>
-                <Link to="/tournaments/$id" params={{ id: tournament.id }} className="btn-secondary" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}>
-                  View <ArrowRight size={14} />
-                </Link>
+                <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'flex-start' }}>
+                  <span style={{
+                    fontFamily: '"IBM Plex Mono", monospace', letterSpacing: '0.12em',
+                    textTransform: 'uppercase', fontSize: '0.7rem',
+                    color: statusColor(tournament.status),
+                    border: `1px solid ${statusColor(tournament.status)}`,
+                    padding: '0.28rem 0.4rem',
+                    whiteSpace: 'nowrap',
+                  }}>
+                    {tournament.status}
+                  </span>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', alignItems: 'stretch' }}>
+                    <Link to="/tournaments/$id" params={{ id: tournament.id }} className="btn-sm" style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '0.35rem', justifyContent: 'center' }}>
+                      View <ArrowRight size={14} />
+                    </Link>
+                    <Link to="/tournaments/$id/edit" params={{ id: tournament.id }} className="btn-sm" style={{ textDecoration: 'none', textAlign: 'center' }}>
+                      Edit
+                    </Link>
+                  </div>
+                </div>
               </div>
             ))}
           </div>

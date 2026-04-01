@@ -5,7 +5,7 @@ import { supabase } from '@/config/supabase';
 import { useEffect, useState } from 'react';
 import { useParams, Link } from '@tanstack/react-router';
 import StandingsReportButton from '@/components/StandingsReport';
-import { ArrowLeft, ArrowRight, Check, ChevronDown, ExternalLink, X } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Check, ChevronDown, ExternalLink, LogIn, X } from 'lucide-react';
 
 interface Tournament {
   id: string;
@@ -226,7 +226,7 @@ export default function TournamentDetail() {
   );
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', maxWidth: '960px' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
 
       {/* Back */}
       <div className="anim-0">
@@ -253,63 +253,42 @@ export default function TournamentDetail() {
               {tournament.end_date && <span>End: {tournament.end_date}</span>}
             </div>
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.4rem' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-              <div style={{ position: 'relative' }}>
-                <select
-                  value={tournament.status}
-                  onChange={e => handleStatusChange(e.target.value)}
-                  disabled={updatingStatus}
-                  style={{
-                    background: 'var(--color-bg)',
-                    color: tournamentStatusColor(tournament.status),
-                    border: `1px solid ${tournamentStatusColor(tournament.status)}`,
-                    fontFamily: '"IBM Plex Mono", monospace',
-                    letterSpacing: '0.14em',
-                    textTransform: 'uppercase',
-                    padding: '0.25rem 1.75rem 0.25rem 0.6rem',
-                    outline: 'none',
-                    appearance: 'none',
-                    cursor: updatingStatus ? 'wait' : 'pointer',
-                    opacity: updatingStatus ? 0.6 : 1,
-                    transition: 'opacity 0.15s ease',
-                  }}
-                >
-                  <option value="DRAFT">DRAFT</option>
-                  <option value="ACTIVE">ACTIVE</option>
-                  <option value="IN_PROGRESS">IN PROGRESS</option>
-                  <option value="COMPLETED">COMPLETED</option>
-                  <option value="CANCELLED">CANCELLED</option>
-                </select>
-                <span style={{ position: 'absolute', right: '0.5rem', top: '50%', transform: 'translateY(-50%)', color: tournamentStatusColor(tournament.status), pointerEvents: 'none', display: 'inline-flex' }}><ChevronDown size={12} /></span>
-              </div>
+          <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.6rem' }}>
+            <div style={{ position: 'relative' }}>
+              <select
+                value={tournament.status}
+                onChange={e => handleStatusChange(e.target.value)}
+                disabled={updatingStatus}
+                className="btn-sm"
+                style={{
+                  color: tournamentStatusColor(tournament.status),
+                  borderColor: tournamentStatusColor(tournament.status),
+                  paddingRight: '1.75rem',
+                  appearance: 'none',
+                  cursor: updatingStatus ? 'wait' : 'pointer',
+                  opacity: updatingStatus ? 0.6 : 1,
+                }}
+              >
+                <option value="DRAFT">DRAFT</option>
+                <option value="ACTIVE">ACTIVE</option>
+                <option value="IN_PROGRESS">IN PROGRESS</option>
+                <option value="COMPLETED">COMPLETED</option>
+                <option value="CANCELLED">CANCELLED</option>
+              </select>
+              <span style={{ position: 'absolute', right: '0.5rem', top: '50%', transform: 'translateY(-50%)', color: tournamentStatusColor(tournament.status), pointerEvents: 'none', display: 'inline-flex' }}><ChevronDown size={12} /></span>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'stretch', gap: '0.4rem' }}>
               <StandingsReportButton
                 standings={standings}
                 tournamentName={tournament.name}
-                style={{ padding: '0.25rem 0.6rem' }}
               />
+              <button
+                onClick={() => openScenarioReportPdf(id!, tournament.name)}
+                className="btn-sm"
+              >
+                Scenario Report
+              </button>
             </div>
-            <button
-              onClick={() => openScenarioReportPdf(id!, tournament.name)}
-              style={{
-                background: 'transparent',
-                color: 'var(--color-text-dim)',
-                border: '1px solid var(--color-border-bright)',
-                fontFamily: '"IBM Plex Mono", monospace',
-                fontSize: '0.7rem',
-                letterSpacing: '0.14em',
-                textTransform: 'uppercase',
-                padding: '0.25rem 0.6rem',
-                cursor: 'pointer',
-                whiteSpace: 'nowrap',
-                transition: 'all 0.15s ease',
-                alignSelf: 'flex-end',
-              }}
-              onMouseEnter={e => { const b = e.currentTarget; b.style.borderColor = 'var(--color-accent)'; b.style.color = 'var(--color-accent)'; }}
-              onMouseLeave={e => { const b = e.currentTarget; b.style.borderColor = 'var(--color-border-bright)'; b.style.color = 'var(--color-text-dim)'; }}
-            >
-              Scenario Report
-            </button>
           </div>
         </div>
       </div>
@@ -325,6 +304,7 @@ export default function TournamentDetail() {
             onClick={handleAddRound}
             className="btn-primary"
             disabled={addingRound}
+            title="Add Round"
             style={{ opacity: addingRound ? 0.5 : 1, cursor: addingRound ? 'wait' : 'pointer' }}
           >
             {addingRound ? 'Adding...' : `+ Round ${rounds.length + 1}`}
@@ -340,25 +320,36 @@ export default function TournamentDetail() {
         ) : (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.75rem' }}>
             {rounds.map((round) => (
-              <div key={round.id} className="card" style={{
-                padding: '1rem',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '0.6rem',
-                transition: 'background 0.15s ease',
-              }}
-                onMouseEnter={e => (e.currentTarget as HTMLDivElement).style.background = 'var(--color-raised)'}
-                onMouseLeave={e => (e.currentTarget as HTMLDivElement).style.background = 'var(--color-surface)'}
+              <Link
+                key={round.id}
+                to="/tournaments/$id/rounds/$roundId"
+                params={{ id: tournament.id, roundId: round.id }}
+                className="card"
+                title="Click to open"
+                style={{
+                  padding: '1rem',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '0.6rem',
+                  transition: 'background 0.15s ease',
+                  textDecoration: 'none',
+                  cursor: 'pointer',
+                }}
+                onMouseEnter={e => (e.currentTarget as HTMLAnchorElement).style.background = 'var(--color-raised)'}
+                onMouseLeave={e => (e.currentTarget as HTMLAnchorElement).style.background = 'var(--color-surface)'}
               >
-                <div>
-                  <div style={{ fontFamily: '"Bebas Neue", sans-serif', fontSize: '1.75rem', letterSpacing: '0.06em', color: 'var(--color-text)', lineHeight: 1 }}>
-                    Round {round.round_number}
-                  </div>
-                  {round.name && (
-                    <div style={{ fontFamily: '"IBM Plex Mono", monospace', color: 'var(--color-muted)', marginTop: '0.2rem' }}>
-                      {round.name}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                  <div>
+                    <div style={{ fontFamily: '"Bebas Neue", sans-serif', fontSize: '1.75rem', letterSpacing: '0.06em', color: 'var(--color-text)', lineHeight: 1 }}>
+                      Round {round.round_number}
                     </div>
-                  )}
+                    {round.name && (
+                      <div style={{ fontFamily: '"IBM Plex Mono", monospace', color: 'var(--color-muted)', marginTop: '0.2rem' }}>
+                        {round.name}
+                      </div>
+                    )}
+                  </div>
+                  <LogIn size={16} style={{ color: 'var(--color-muted)', flexShrink: 0, marginTop: '0.2rem' }} />
                 </div>
 
                 <span style={{
@@ -370,16 +361,7 @@ export default function TournamentDetail() {
                 }}>
                   {roundStatusLabel(round.status)}
                 </span>
-
-                <Link
-                  to="/tournaments/$id/rounds/$roundId"
-                  params={{ id: tournament.id, roundId: round.id }}
-                  className="btn-secondary"
-                  style={{ marginTop: 'auto', justifyContent: 'center', padding: '0.3rem 0.5rem' }}
-                >
-                  View <ArrowRight size={14} />
-                </Link>
-              </div>
+              </Link>
             ))}
           </div>
         )}
@@ -418,7 +400,7 @@ export default function TournamentDetail() {
                   </div>
                   <button
                     onClick={() => openPlayerReportPdf(p.id, p.name, id!, tournament?.name ?? '', Object.fromEntries(enrolled.map(e => [e.id, e.name])))}
-                    title="Player report"
+                    title="View Player Report"
                     className="icon-btn"
                     style={{ fontSize: '0.65rem', flexShrink: 0 }}
                   ><ExternalLink size={14} /></button>
