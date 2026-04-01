@@ -403,54 +403,68 @@ export default function TournamentDetail() {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.5rem', padding: '1rem 1.25rem' }}>
             {enrolled.map(p => (
               <div key={p.id} style={{
-                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                gap: '0.5rem', padding: '0.5rem 0.6rem',
+                display: 'flex', flexDirection: 'column',
+                padding: '0.5rem 0.6rem',
                 background: 'var(--color-bg)', border: '1px solid var(--color-border)',
                 transition: 'border-color 0.15s ease',
               }}
                 onMouseEnter={e => (e.currentTarget as HTMLDivElement).style.borderColor = 'var(--color-border-bright)'}
                 onMouseLeave={e => (e.currentTarget as HTMLDivElement).style.borderColor = 'var(--color-border)'}
               >
-                <div style={{ overflow: 'hidden', minWidth: 0 }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                   <div style={{ fontFamily: '"IBM Plex Mono", monospace', color: 'var(--color-text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                     {p.name}
                   </div>
-                  <div style={{ fontFamily: '"IBM Plex Mono", monospace', letterSpacing: '0.1em', color: 'var(--color-accent)', marginTop: '0.1rem' }}>
-                    {`${points[p.id] ?? 0} Points`}
-                  </div>
-                  <div style={{ fontFamily: '"IBM Plex Mono", monospace', letterSpacing: '0.1em', color: 'var(--color-muted)' }}>
-                    {(() => { const r = records[p.id] ?? { w: 0, l: 0 }; return `W/L ${r.w}-${r.l}`; })()}
-                  </div>
-                </div>
-                <div style={{ display: 'flex', gap: '0.2rem', flexShrink: 0, alignItems: 'center' }}>
                   <button
                     onClick={() => openPlayerReportPdf(p.id, p.name, id!, tournament?.name ?? '', Object.fromEntries(enrolled.map(e => [e.id, e.name])))}
                     title="Player report"
                     className="icon-btn"
-                    style={{ fontSize: '0.75rem' }}
+                    style={{ fontSize: '0.65rem', flexShrink: 0 }}
                   >↗</button>
-                  {confirmRemovePlayer === p.id ? (
-                    <>
-                      <button
-                        onClick={() => { setConfirmRemovePlayer(null); handleRemove(p.id); }}
-                        disabled={removingId === p.id}
-                        title="Confirm remove"
-                        style={{ background: 'var(--color-red-bg)', border: '1px solid var(--color-red)', color: 'var(--color-red-bright)', fontFamily: '"IBM Plex Mono", monospace', padding: '0.2rem 0.35rem', cursor: 'pointer', lineHeight: 1 }}
-                      >{removingId === p.id ? '…' : '✓'}</button>
-                      <button
-                        onClick={() => setConfirmRemovePlayer(null)}
-                        title="Cancel"
-                        className="btn-secondary"
-                        style={{ padding: '0.2rem 0.35rem' }}
-                      >✕</button>
-                    </>
-                  ) : (
-                    <button
-                      onClick={() => setConfirmRemovePlayer(p.id)}
-                      title="Remove player"
-                      className="icon-btn danger"
-                    >✕</button>
-                  )}
+                </div>
+                <div style={{ fontFamily: '"IBM Plex Mono", monospace', letterSpacing: '0.1em', color: 'var(--color-accent)', marginTop: '0.1rem' }}>
+                  {`${points[p.id] ?? 0} Points`}
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <div style={{ fontFamily: '"IBM Plex Mono", monospace', letterSpacing: '0.1em', color: 'var(--color-muted)' }}>
+                    {(() => { const r = records[p.id] ?? { w: 0, l: 0 }; return `W/L ${r.w}-${r.l}`; })()}
+                  </div>
+                  <div style={{ display: 'flex', gap: '0.2rem', flexShrink: 0, alignItems: 'center' }}>
+                    {(() => {
+                      const r = records[p.id] ?? { w: 0, l: 0 };
+                      const hasPlayed = r.w + r.l > 0;
+                      if (hasPlayed) return (
+                        <button
+                          disabled
+                          title="Cannot remove — player has played games"
+                          className="icon-btn danger"
+                          style={{ opacity: 0.25, cursor: 'not-allowed' }}
+                        >✕</button>
+                      );
+                      return confirmRemovePlayer === p.id ? (
+                        <>
+                          <button
+                            onClick={() => { setConfirmRemovePlayer(null); handleRemove(p.id); }}
+                            disabled={removingId === p.id}
+                            title="Confirm remove"
+                            style={{ background: 'var(--color-red-bg)', border: '1px solid var(--color-red)', color: 'var(--color-red-bright)', fontFamily: '"IBM Plex Mono", monospace', padding: '0.2rem 0.35rem', cursor: 'pointer', lineHeight: 1 }}
+                          >{removingId === p.id ? '…' : '✓'}</button>
+                          <button
+                            onClick={() => setConfirmRemovePlayer(null)}
+                            title="Cancel"
+                            className="btn-secondary"
+                            style={{ padding: '0.2rem 0.35rem' }}
+                          >✕</button>
+                        </>
+                      ) : (
+                        <button
+                          onClick={() => setConfirmRemovePlayer(p.id)}
+                          title="Remove player"
+                          className="icon-btn danger"
+                        >✕</button>
+                      );
+                    })()}
+                  </div>
                 </div>
               </div>
             ))}
