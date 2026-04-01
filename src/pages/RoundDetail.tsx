@@ -5,10 +5,11 @@
  *   player1_id, player2_id, player1_attacks bool, winner_id (nullable), status
  */
 
-import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Link, useParams } from '@tanstack/react-router';
 import { supabase } from '@/config/supabase';
+import { useEffect, useRef, useState } from 'react';
+import { openMatchReportPdf } from '@/utils/matchReportPdf';
 
 // ─── types ───────────────────────────────────────────────────
 
@@ -411,11 +412,23 @@ export default function RoundDetail() {
   const unassignedScens = allScenarios.filter(s => !roundScenIds.has(s.id));
   const atScenLimit     = roundScenarios.length >= 5;
 
+  // ── PDF report ───────────────────────────────────────────
+
+  const generateMatchReport = () => {
+    openMatchReportPdf(
+      games,
+      playerById,
+      scenarioById,
+      tournament?.name ?? 'Tournament',
+      round?.round_number ?? '',
+    );
+  };
+
   // ── render ────────────────────────────────────────────────
 
   if (loading) return <Spinner />;
   if (!round) return (
-    <div style={{ fontFamily: '"IBM Plex Mono", monospace', color: 'var(--color-red)', padding: '1rem' }}>
+    <div style={{ fontFamily: '"IBM Plex Mono", monospace', color: 'var(--color-red)' }}>
       Round not found. <Link to="/tournaments/$id" params={{ id: tournamentId }} style={{ color: 'var(--color-accent)' }}>← Back</Link>
     </div>
   );
@@ -484,31 +497,55 @@ export default function RoundDetail() {
               {round.name && <span style={{ color: 'var(--color-muted)', marginLeft: '0.5rem', fontSize: '1.4rem' }}>— {round.name}</span>}
             </h1>
           </div>
-          <div style={{ position: 'relative' }}>
-            <select
-              value={round.status}
-              onChange={e => handleStatusChange(e.target.value)}
-              disabled={updatingStatus}
-              style={{
-                background: 'var(--color-bg)',
-                color: roundStatusColor(round.status),
-                border: `1px solid ${roundStatusColor(round.status)}`,
-                fontFamily: '"IBM Plex Mono", monospace',
-                letterSpacing: '0.14em',
-                textTransform: 'uppercase',
-                padding: '0.3rem 1.75rem 0.3rem 0.6rem',
-                outline: 'none',
-                appearance: 'none',
-                cursor: updatingStatus ? 'wait' : 'pointer',
-                opacity: updatingStatus ? 0.6 : 1,
-                transition: 'opacity 0.15s ease',
-              }}
-            >
-              {ROUND_STATUSES.map(s => (
-                <option key={s.value} value={s.value}>{s.label}</option>
-              ))}
-            </select>
-            <span style={{ position: 'absolute', right: '0.5rem', top: '50%', transform: 'translateY(-50%)', color: roundStatusColor(round.status), pointerEvents: 'none' }}>▼</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+            <div style={{ position: 'relative' }}>
+              <select
+                value={round.status}
+                onChange={e => handleStatusChange(e.target.value)}
+                disabled={updatingStatus}
+                style={{
+                  background: 'var(--color-bg)',
+                  color: roundStatusColor(round.status),
+                  border: `1px solid ${roundStatusColor(round.status)}`,
+                  fontFamily: '"IBM Plex Mono", monospace',
+                  letterSpacing: '0.14em',
+                  textTransform: 'uppercase',
+                  padding: '0.3rem 1.75rem 0.3rem 0.6rem',
+                  outline: 'none',
+                  appearance: 'none',
+                  cursor: updatingStatus ? 'wait' : 'pointer',
+                  opacity: updatingStatus ? 0.6 : 1,
+                  transition: 'opacity 0.15s ease',
+                }}
+              >
+                {ROUND_STATUSES.map(s => (
+                  <option key={s.value} value={s.value}>{s.label}</option>
+                ))}
+              </select>
+              <span style={{ position: 'absolute', right: '0.5rem', top: '50%', transform: 'translateY(-50%)', color: roundStatusColor(round.status), pointerEvents: 'none' }}>▼</span>
+            </div>
+            {games.length > 0 && (
+              <button
+                onClick={generateMatchReport}
+                style={{
+                  background: 'transparent',
+                  color: 'var(--color-text-dim)',
+                  border: '1px solid var(--color-border-bright)',
+                  fontFamily: '"IBM Plex Mono", monospace',
+                  fontSize: 'inherit',
+                  letterSpacing: '0.14em',
+                  textTransform: 'uppercase',
+                  padding: '0.3rem 0.6rem',
+                  cursor: 'pointer',
+                  whiteSpace: 'nowrap',
+                  transition: 'all 0.15s ease',
+                }}
+                onMouseEnter={e => { const b = e.currentTarget as HTMLButtonElement; b.style.borderColor = 'var(--color-accent)'; b.style.color = 'var(--color-accent)'; }}
+                onMouseLeave={e => { const b = e.currentTarget as HTMLButtonElement; b.style.borderColor = 'var(--color-border-bright)'; b.style.color = 'var(--color-text-dim)'; }}
+              >
+                View Round Report
+              </button>
+            )}
           </div>
         </div>
       </div>
@@ -625,7 +662,6 @@ export default function RoundDetail() {
 
         {games.length === 0 ? (
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '3rem 2rem', gap: '0.75rem' }}>
-            <div style={{ fontFamily: '"Bebas Neue", sans-serif', fontSize: '3rem', color: 'var(--color-raised)', letterSpacing: '0.05em' }}>GM-00</div>
             <p style={{ fontFamily: '"IBM Plex Mono", monospace', color: 'var(--color-muted-dim)', margin: 0, textAlign: 'center' }}>
               No games scheduled yet. Create the first pairing below.
             </p>

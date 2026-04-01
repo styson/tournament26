@@ -76,7 +76,6 @@ export default function Scenarios() {
           </div>
         ) : filtered.length === 0 ? (
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '4rem 2rem', gap: '1rem' }}>
-            <div style={{ fontFamily: '"Bebas Neue", sans-serif', fontSize: '4rem', color: 'var(--color-raised)', letterSpacing: '0.05em' }}>SC-00</div>
             <h3 style={{ fontFamily: '"Bebas Neue", sans-serif', fontSize: '1.4rem', letterSpacing: '0.06em', color: 'var(--color-muted)', margin: 0 }}>
               {search ? 'No Matches Found' : 'No Scenarios Loaded'}
             </h3>

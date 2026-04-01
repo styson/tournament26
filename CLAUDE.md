@@ -5,8 +5,8 @@ A modern, sleek web app for a tournament director (TD) to track players, games, 
 
 ## Tech Stack
 - **Frontend:** React + Vite + TypeScript
-- **Backend:** AWS (Amplify, Cognito, AppSync or API Gateway, DynamoDB)
-- **Auth:** Google OAuth via AWS Amplify Authentication
+- **Backend:** AWS (Amplify), Supabase db
+- **Auth:** Supabase (username/password) — Google OAuth was removed
 - **CI/CD:** GitHub Actions → AWS Amplify Hosting
 - **Repo:** `tournament26` on GitHub
 
@@ -45,12 +45,11 @@ Each player tracks: wins, losses, opponents faced, opponent W/L record at time o
 - **Rounds** — manage rounds, select available scenarios, set pairings
 - **Games** — record game results (scenario, roles, outcome)
 - **Standings** — live standings table with opponent records
-- **Auth** — Google sign-in via AWS Amplify
+- **Auth** — Supabase sign-in with UserMenu (avatar, dropdown, password reset)
 
 ## Development Guidelines
 - Use TypeScript strictly throughout
 - Component-first architecture; colocate styles and tests
 - Avoid inline styles
-- AWS Amplify CLI for backend provisioning
-- GitHub Actions workflow triggers on push to `main` for Amplify 
-- don't include Calude in commit messages
+- AWS Amplify for hosting/CI; Supabase for database
+- don't include Claude in commit messages

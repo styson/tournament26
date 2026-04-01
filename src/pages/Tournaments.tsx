@@ -57,7 +57,6 @@ export default function Tournaments() {
           <div className="card error-box" style={{ padding: '1.25rem' }}>{error}</div>
         ) : tournaments.length === 0 ? (
           <div className="card empty-state">
-            <div className="empty-state-code">TN-00</div>
             <h3 style={{ fontFamily: '"Bebas Neue", sans-serif', fontSize: '1.4rem', letterSpacing: '0.06em', color: 'var(--color-muted)', margin: 0 }}>No Tournaments Active</h3>
             <p className="serif-body" style={{ margin: 0 }}>Launch your first tournament to get boots on the ground</p>
             <Link to="/tournaments/new" className="btn-primary" style={{ marginTop: '0.5rem' }}>+ Launch First Tournament</Link>

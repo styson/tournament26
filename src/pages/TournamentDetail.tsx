@@ -1,6 +1,8 @@
+import { computeStandings, type GameResult, type StandingEntry } from "@/utils/standingsPdf";
+import { supabase } from '@/config/supabase';
 import { useEffect, useState } from 'react';
 import { useParams, Link } from '@tanstack/react-router';
-import { supabase } from '@/config/supabase';
+import StandingsReportButton from '@/components/StandingsReport';
 
 interface Tournament {
   id: string;
@@ -73,6 +75,7 @@ export default function TournamentDetail() {
   const [rounds,     setRounds]     = useState<Round[]>([]);
   const [records,    setRecords]    = useState<Record<string, { w: number; l: number }>>({});
   const [points,     setPoints]     = useState<Record<string, number>>({});
+  const [standings,  setStandings]  = useState<StandingEntry[]>([]);
   const [selectedPlayerId, setSelectedPlayerId] = useState('');
 
   const [loadingTournament, setLoadingTournament] = useState(true);
@@ -140,6 +143,12 @@ export default function TournamentDetail() {
     }
     setPoints(pts);
     setEnrolled(prev => [...prev].sort((a, b) => (pts[b.id] ?? 0) - (pts[a.id] ?? 0) || a.name.localeCompare(b.name)));
+
+    const standingsResult = computeStandings(
+      enrolledPlayers.map(p => ({ id: p.id, name: p.name })),
+      (gamesRes.data ?? []) as GameResult[],
+    );
+    setStandings(standingsResult);
     setLoadingPlayers(false);
   }
 
@@ -241,33 +250,40 @@ export default function TournamentDetail() {
               {tournament.end_date && <span>End: {tournament.end_date}</span>}
             </div>
           </div>
-          <div style={{ position: 'relative' }}>
-            <select
-              value={tournament.status}
-              onChange={e => handleStatusChange(e.target.value)}
-              disabled={updatingStatus}
-              style={{
-                background: 'var(--color-bg)',
-                color: tournamentStatusColor(tournament.status),
-                border: `1px solid ${tournamentStatusColor(tournament.status)}`,
-                fontFamily: '"IBM Plex Mono", monospace',
-                letterSpacing: '0.14em',
-                textTransform: 'uppercase',
-                padding: '0.25rem 1.75rem 0.25rem 0.6rem',
-                outline: 'none',
-                appearance: 'none',
-                cursor: updatingStatus ? 'wait' : 'pointer',
-                opacity: updatingStatus ? 0.6 : 1,
-                transition: 'opacity 0.15s ease',
-              }}
-            >
-              <option value="DRAFT">DRAFT</option>
-              <option value="ACTIVE">ACTIVE</option>
-              <option value="IN_PROGRESS">IN PROGRESS</option>
-              <option value="COMPLETED">COMPLETED</option>
-              <option value="CANCELLED">CANCELLED</option>
-            </select>
-            <span style={{ position: 'absolute', right: '0.5rem', top: '50%', transform: 'translateY(-50%)', color: tournamentStatusColor(tournament.status), pointerEvents: 'none' }}>▼</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+            <div style={{ position: 'relative' }}>
+              <select
+                value={tournament.status}
+                onChange={e => handleStatusChange(e.target.value)}
+                disabled={updatingStatus}
+                style={{
+                  background: 'var(--color-bg)',
+                  color: tournamentStatusColor(tournament.status),
+                  border: `1px solid ${tournamentStatusColor(tournament.status)}`,
+                  fontFamily: '"IBM Plex Mono", monospace',
+                  letterSpacing: '0.14em',
+                  textTransform: 'uppercase',
+                  padding: '0.25rem 1.75rem 0.25rem 0.6rem',
+                  outline: 'none',
+                  appearance: 'none',
+                  cursor: updatingStatus ? 'wait' : 'pointer',
+                  opacity: updatingStatus ? 0.6 : 1,
+                  transition: 'opacity 0.15s ease',
+                }}
+              >
+                <option value="DRAFT">DRAFT</option>
+                <option value="ACTIVE">ACTIVE</option>
+                <option value="IN_PROGRESS">IN PROGRESS</option>
+                <option value="COMPLETED">COMPLETED</option>
+                <option value="CANCELLED">CANCELLED</option>
+              </select>
+              <span style={{ position: 'absolute', right: '0.5rem', top: '50%', transform: 'translateY(-50%)', color: tournamentStatusColor(tournament.status), pointerEvents: 'none' }}>▼</span>
+            </div>
+            <StandingsReportButton
+              standings={standings}
+              tournamentName={tournament.name}
+              style={{ padding: '0.25rem 0.6rem' }}
+            />
           </div>
         </div>
       </div>
@@ -308,10 +324,6 @@ export default function TournamentDetail() {
                 onMouseEnter={e => (e.currentTarget as HTMLDivElement).style.background = 'var(--color-raised)'}
                 onMouseLeave={e => (e.currentTarget as HTMLDivElement).style.background = 'var(--color-surface)'}
               >
-                <div style={{ fontFamily: '"IBM Plex Mono", monospace', letterSpacing: '0.2em', color: 'var(--color-accent)' }}>
-                  [R-{String(round.round_number).padStart(2, '0')}]
-                </div>
-
                 <div>
                   <div style={{ fontFamily: '"Bebas Neue", sans-serif', fontSize: '1.75rem', letterSpacing: '0.06em', color: 'var(--color-text)', lineHeight: 1 }}>
                     Round {round.round_number}

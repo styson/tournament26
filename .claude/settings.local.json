@@ -20,7 +20,8 @@
       "Bash(scripts/start-server.sh --project-dir /c/projects/tourney26)",
       "Bash(cat /c/projects/tourney26/.superpowers/brainstorm/*/state/server-info)",
       "Bash(rm -rf /c/projects/tourney26/.superpowers/brainstorm/21616-1774878532)",
-      "Bash(/c/Users/styso/.claude/plugins/cache/claude-plugins-official/superpowers/5.0.6/skills/brainstorming/scripts/start-server.sh --project-dir /c/projects/tourney26)"
+      "Bash(/c/Users/styso/.claude/plugins/cache/claude-plugins-official/superpowers/5.0.6/skills/brainstorming/scripts/start-server.sh --project-dir /c/projects/tourney26)",
+      "Skill(claude-md-management:revise-claude-md)"
     ]
   }
 }

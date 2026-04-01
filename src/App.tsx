@@ -4,17 +4,17 @@ import Layout from './components/common/Layout';
 import ProtectedRoute from './components/common/ProtectedRoute';
 
 // Pages
+import Dashboard from './pages/Dashboard';
 import Home from './pages/Home';
 import Login from './pages/Login';
-import Dashboard from './pages/Dashboard';
+import NewPlayer from './pages/NewPlayer';
+import NewTournament from './pages/NewTournament';
 import Players from './pages/Players';
-import Tournaments from './pages/Tournaments';
+import RoundDetail from './pages/RoundDetail';
 import Scenarios from './pages/Scenarios';
 import Standings from './pages/Standings';
-import NewTournament from './pages/NewTournament';
-import NewPlayer from './pages/NewPlayer';
 import TournamentDetail from './pages/TournamentDetail';
-import RoundDetail from './pages/RoundDetail';
+import Tournaments from './pages/Tournaments';
 
 // Create React Query client
 const queryClient = new QueryClient({
@@ -29,7 +29,7 @@ const queryClient = new QueryClient({
 
 const rootRoute = createRootRoute({
   component: () => <Outlet />,
-  notFoundComponent: () => <Navigate to="/" />,
+  notFoundComponent: () => <Navigate to='/' />,
 });
 
 const indexRoute = createRoute({ getParentRoute: () => rootRoute, path: '/', component: Home });
@@ -38,57 +38,109 @@ const loginRoute = createRoute({ getParentRoute: () => rootRoute, path: '/login'
 const dashboardRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/dashboard',
-  component: () => <ProtectedRoute><Layout><Dashboard /></Layout></ProtectedRoute>,
+  component: () => (
+    <ProtectedRoute>
+      <Layout>
+        <Dashboard />
+      </Layout>
+    </ProtectedRoute>
+  ),
 });
 
 const playersRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/players',
-  component: () => <ProtectedRoute><Layout><Players /></Layout></ProtectedRoute>,
+  component: () => (
+    <ProtectedRoute>
+      <Layout>
+        <Players />
+      </Layout>
+    </ProtectedRoute>
+  ),
 });
 
 const tournamentsRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/tournaments',
-  component: () => <ProtectedRoute><Layout><Tournaments /></Layout></ProtectedRoute>,
+  component: () => (
+    <ProtectedRoute>
+      <Layout>
+        <Tournaments />
+      </Layout>
+    </ProtectedRoute>
+  ),
 });
-
 
 const scenariosRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/scenarios',
-  component: () => <ProtectedRoute><Layout><Scenarios /></Layout></ProtectedRoute>,
+  component: () => (
+    <ProtectedRoute>
+      <Layout>
+        <Scenarios />
+      </Layout>
+    </ProtectedRoute>
+  ),
 });
 
 const standingsRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/standings',
-  component: () => <ProtectedRoute><Layout><Standings /></Layout></ProtectedRoute>,
+  component: () => (
+    <ProtectedRoute>
+      <Layout>
+        <Standings />
+      </Layout>
+    </ProtectedRoute>
+  ),
 });
 
 const playersNewRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/players/new',
-  component: () => <ProtectedRoute><Layout><NewPlayer /></Layout></ProtectedRoute>,
+  component: () => (
+    <ProtectedRoute>
+      <Layout>
+        <NewPlayer />
+      </Layout>
+    </ProtectedRoute>
+  ),
 });
 
 const tournamentsNewRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/tournaments/new',
-  component: () => <ProtectedRoute><Layout><NewTournament /></Layout></ProtectedRoute>,
+  component: () => (
+    <ProtectedRoute>
+      <Layout>
+        <NewTournament />
+      </Layout>
+    </ProtectedRoute>
+  ),
 });
 
 const tournamentDetailRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/tournaments/$id',
-  component: () => <ProtectedRoute><Layout><TournamentDetail /></Layout></ProtectedRoute>,
+  component: () => (
+    <ProtectedRoute>
+      <Layout>
+        <TournamentDetail />
+      </Layout>
+    </ProtectedRoute>
+  ),
 });
-
 
 const roundDetailRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/tournaments/$id/rounds/$roundId',
-  component: () => <ProtectedRoute><Layout><RoundDetail /></Layout></ProtectedRoute>,
+  component: () => (
+    <ProtectedRoute>
+      <Layout>
+        <RoundDetail />
+      </Layout>
+    </ProtectedRoute>
+  ),
 });
 
 const routeTree = rootRoute.addChildren([
