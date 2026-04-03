@@ -10,10 +10,10 @@ interface LayoutProps {
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', code: 'DB' },
-  { name: 'Players',   href: '/players',   code: 'PL' },
-  { name: 'Tourney',   href: '/tournaments', code: 'TN' },
-  { name: 'Scenarios', href: '/scenarios', code: 'SC' },
+  { name: 'Tournaments', href: '/tournaments', code: 'TN' },
   { name: 'Standings', href: '/standings', code: 'ST' },
+  { name: 'Players', href: '/players', code: 'PL' },
+  { name: 'Scenarios', href: '/scenarios', code: 'SC' },
 ];
 
 export default function Layout({ children }: LayoutProps) {
@@ -33,49 +33,71 @@ export default function Layout({ children }: LayoutProps) {
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-
       {/* ── Nav bar ── */}
-      <header style={{
-        background: 'var(--color-bg-header)',
-        borderBottom: '1px solid var(--color-border)',
-        position: 'sticky',
-        top: 0,
-        zIndex: 50,
-      }}>
+      <header
+        style={{
+          background: 'var(--color-bg-header)',
+          borderBottom: '1px solid var(--color-border)',
+          position: 'sticky',
+          top: 0,
+          zIndex: 50,
+        }}
+      >
         {/* Thin amber accent line at top */}
-        <div style={{ height: '2px', background: 'linear-gradient(90deg, transparent 0%, var(--color-accent) 30%, var(--color-accent) 70%, transparent 100%)' }} />
+        <div
+          style={{
+            height: '2px',
+            background:
+              'linear-gradient(90deg, transparent 0%, var(--color-accent) 30%, var(--color-accent) 70%, transparent 100%)',
+          }}
+        />
 
-        <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 1rem', display: 'flex', alignItems: 'center', height: '48px', gap: '1.5rem' }}>
-
+        <div
+          style={{
+            maxWidth: '1280px',
+            margin: '0 auto',
+            padding: '0 1rem',
+            display: 'flex',
+            alignItems: 'center',
+            height: '48px',
+            gap: '1.5rem',
+          }}
+        >
           {/* Logo */}
-          <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', flexShrink: 0 }}>
+          <Link to='/' style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', flexShrink: 0 }}>
             <div style={{ position: 'relative' }}>
-              <div style={{
-                width: '28px',
-                height: '28px',
-                background: 'var(--color-accent)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                clipPath: 'polygon(0 0, calc(100% - 4px) 0, 100% 4px, 100% 100%, 4px 100%, 0 calc(100% - 4px))',
-              }}>
-                <span className="font-display" style={{ color: 'var(--color-bg)', letterSpacing: '0.05em' }}>T</span>
+              <div
+                style={{
+                  width: '28px',
+                  height: '28px',
+                  background: 'var(--color-accent)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  clipPath: 'polygon(0 0, calc(100% - 4px) 0, 100% 4px, 100% 100%, 4px 100%, 0 calc(100% - 4px))',
+                }}
+              >
+                <span className='font-display' style={{ color: 'var(--color-bg)', letterSpacing: '0.05em' }}>
+                  T
+                </span>
               </div>
               {user && (
-                <div style={{
-                  position: 'absolute',
-                  bottom: '-1px',
-                  right: '-1px',
-                  width: '6px',
-                  height: '6px',
-                  borderRadius: '50%',
-                  background: 'var(--color-green)',
-                  border: '1px solid var(--color-bg-header)',
-                  animation: 'blink 2s step-end infinite',
-                }} />
+                <div
+                  style={{
+                    position: 'absolute',
+                    bottom: '-1px',
+                    right: '-1px',
+                    width: '6px',
+                    height: '6px',
+                    borderRadius: '50%',
+                    background: 'var(--color-green)',
+                    border: '1px solid var(--color-bg-header)',
+                    animation: 'blink 2s step-end infinite',
+                  }}
+                />
               )}
             </div>
-            <span className="font-display" style={{ letterSpacing: '0.12em', color: 'var(--color-text)' }}>
+            <span className='font-display' style={{ letterSpacing: '0.12em', color: 'var(--color-text)' }}>
               TOURNEY<span style={{ color: 'var(--color-accent)' }}>26</span>
             </span>
           </Link>
@@ -101,8 +123,12 @@ export default function Layout({ children }: LayoutProps) {
                       transition: 'all 0.15s ease',
                       whiteSpace: 'nowrap',
                     }}
-                    onMouseEnter={e => { if (!active) (e.currentTarget as HTMLAnchorElement).style.color = 'var(--color-text)'; }}
-                    onMouseLeave={e => { if (!active) (e.currentTarget as HTMLAnchorElement).style.color = 'var(--color-muted)'; }}
+                    onMouseEnter={(e) => {
+                      if (!active) (e.currentTarget as HTMLAnchorElement).style.color = 'var(--color-text)';
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!active) (e.currentTarget as HTMLAnchorElement).style.color = 'var(--color-muted)';
+                    }}
                   >
                     {item.name}
                   </Link>
@@ -115,22 +141,16 @@ export default function Layout({ children }: LayoutProps) {
           {!user && <div style={{ flex: 1 }} />}
 
           {/* User menu */}
-          {user && (
-            <UserMenu theme={theme} onThemeChange={setTheme} />
-          )}
+          {user && <UserMenu theme={theme} onThemeChange={setTheme} />}
         </div>
       </header>
 
       {/* ── Page content ── */}
-      <main style={{ flex: 1, maxWidth: '1280px', width: '100%', margin: '0 auto', padding: '1.5rem 1rem' }}>
-        {children}
-      </main>
+      <main style={{ flex: 1, maxWidth: '1280px', width: '100%', margin: '0 auto', padding: '1.5rem 1rem' }}>{children}</main>
 
       {/* ── Footer ── */}
       <footer style={{ borderTop: '1px solid var(--color-raised)', padding: '0.75rem 1rem', textAlign: 'center' }}>
-        <span style={{ color: 'var(--color-muted-dim)', letterSpacing: '0.15em' }}>
-          TOURNAMENT26 · {new Date().getFullYear()}
-        </span>
+        <span style={{ color: 'var(--color-muted-dim)', letterSpacing: '0.15em' }}>TOURNAMENT26 · {new Date().getFullYear()}</span>
       </footer>
     </div>
   );
