@@ -3,6 +3,7 @@ import { type StandingEntry, type PlayerRow, type GameResult, computeStandings }
 import { openPlayerReportPdf } from '@/utils/playerReportPdf';
 import { useEffect, useState } from 'react';
 import StandingsReportButton from '@/components/StandingsReport';
+import CrosstableReportButton from '@/components/CrosstableReport';
 import { ChevronDown, ExternalLink } from 'lucide-react';
 
 // ─── types ────────────────────────────────────────────────────
@@ -126,11 +127,19 @@ export default function Standings() {
         {selectedId && !loading && (() => {
           const t = tournaments.find(x => x.id === selectedId);
           return t ? (
-            <StandingsReportButton
-              standings={standings}
-              tournamentName={t.name}
-              style={{ fontSize: '0.7rem', padding: '0.4rem 0.9rem' }}
-            />
+            <>
+              <StandingsReportButton
+                standings={standings}
+                tournamentName={t.name}
+                style={{ fontSize: '0.7rem', padding: '0.4rem 0.9rem' }}
+              />
+              <CrosstableReportButton
+                standings={standings}
+                tournamentId={selectedId}
+                tournamentName={t.name}
+                style={{ fontSize: '0.7rem', padding: '0.4rem 0.9rem' }}
+              />
+            </>
           ) : null;
         })()}
         </div>

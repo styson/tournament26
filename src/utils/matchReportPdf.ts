@@ -1,5 +1,6 @@
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { toTitleCase } from './format';
 
 // ─── types ───────────────────────────────────────────────────
 
@@ -69,8 +70,8 @@ export function openMatchReportPdf(
       const sidesRow: string[] = [];
       if (!noWinner && scenario) {
         const winnerAttacks = p1Wins ? game.player1_attacks : !game.player1_attacks;
-        const winnerRole  = winnerAttacks ? scenario.attacker_nationality : scenario.defender_nationality;
-        const loserRole   = winnerAttacks ? scenario.defender_nationality : scenario.attacker_nationality;
+        const winnerRole  = toTitleCase(winnerAttacks ? scenario.attacker_nationality : scenario.defender_nationality);
+        const loserRole   = toTitleCase(winnerAttacks ? scenario.defender_nationality : scenario.attacker_nationality);
         sidesRow.push(`  as ${winnerRole} (${winnerAttacks ? 'atk' : 'def'})`, '', `  as ${loserRole} (${!winnerAttacks ? 'atk' : 'def'})`, '', '');
       }
 

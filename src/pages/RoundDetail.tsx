@@ -10,6 +10,7 @@ import { Link, useParams } from '@tanstack/react-router';
 import { supabase } from '@/config/supabase';
 import { useEffect, useRef, useState } from 'react';
 import { openMatchReportPdf } from '@/utils/matchReportPdf';
+import { toTitleCase } from '@/utils/format';
 import { ArrowLeft, ArrowRight, Check, ChevronDown as ChevronDownIcon, X } from 'lucide-react';
 
 // ─── types ───────────────────────────────────────────────────
@@ -159,7 +160,7 @@ function ScenarioPicker({
               )}
               <span style={{ fontFamily: '"IBM Plex Mono", monospace', color: 'var(--color-text-dim)' }}>{s.title}</span>
               <span style={{ fontFamily: '"IBM Plex Mono", monospace', color: 'var(--color-muted-dim)', marginLeft: 'auto', whiteSpace: 'nowrap', flexShrink: 0 }}>
-                {s.attacker_nationality} vs {s.defender_nationality}
+                {toTitleCase(s.attacker_nationality)} vs {toTitleCase(s.defender_nationality)}
               </span>
             </div>
           )) : (
@@ -590,7 +591,7 @@ export default function RoundDetail() {
                     {s.title}
                   </span>
                   <span style={{ fontFamily: '"IBM Plex Mono", monospace', color: 'var(--color-muted-dim)', letterSpacing: '0.08em', whiteSpace: 'nowrap', flexShrink: 0 }}>
-                    {s.attacker_nationality} vs {s.defender_nationality}
+                    {toTitleCase(s.attacker_nationality)} vs {toTitleCase(s.defender_nationality)}
                   </span>
                 </div>
                 {confirmRemScen === s.id ? (
@@ -698,7 +699,7 @@ export default function RoundDetail() {
                         </span>
                         {scenario && (
                           <span style={{ fontFamily: '"IBM Plex Mono", monospace', color: 'var(--color-muted-dim)', letterSpacing: '0.08em', whiteSpace: 'nowrap' }}>
-                            {scenario.attacker_nationality} vs {scenario.defender_nationality}
+                            {toTitleCase(scenario.attacker_nationality)} vs {toTitleCase(scenario.defender_nationality)}
                           </span>
                         )}
                       </div>
@@ -897,7 +898,7 @@ export default function RoundDetail() {
                     <option value="">TBD</option>
                     {roundScenarios.map(s => (
                       <option key={s.id} value={s.id}>
-                        {s.scen_id ? `${s.scen_id} — ` : ''}{s.title} ({s.attacker_nationality} vs {s.defender_nationality})
+                        {s.scen_id ? `${s.scen_id} — ` : ''}{s.title} ({toTitleCase(s.attacker_nationality)} vs {toTitleCase(s.defender_nationality)})
                       </option>
                     ))}
                   </select>

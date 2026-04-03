@@ -5,7 +5,7 @@ import { supabase } from '@/config/supabase';
 import { useEffect, useState } from 'react';
 import { useParams, Link } from '@tanstack/react-router';
 import StandingsReportButton from '@/components/StandingsReport';
-import { ArrowLeft, ArrowRight, Check, ChevronDown, ExternalLink, LogIn, X } from 'lucide-react';
+import { ArrowLeft, Check, ChevronDown, ExternalLink, LogIn, X } from 'lucide-react';
 
 interface Tournament {
   id: string;

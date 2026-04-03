@@ -1,6 +1,7 @@
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { supabase } from '@/config/supabase';
+import { toTitleCase } from './format';
 
 export async function openPlayerReportPdf(
   playerId:       string,
@@ -12,9 +13,9 @@ export async function openPlayerReportPdf(
   const { data, error } = await supabase
     .from('games')
     .select(`
-      player1_id, player2_id, winner_id,
+      player1_id, player2_id, player1_attacks, winner_id,
       rounds!inner(round_number, tournament_id),
-      scenarios(title, scen_id)
+      scenarios(title, scen_id, attacker_nationality, defender_nationality)
     `)
     .eq('rounds.tournament_id', tournamentId)
     .or(`player1_id.eq.${playerId},player2_id.eq.${playerId}`)
@@ -41,11 +42,19 @@ export async function openPlayerReportPdf(
     const roundNum     = g.rounds?.round_number ?? '?';
     const scenTitle    = g.scenarios?.title ?? '—';
     const result       = g.winner_id === playerId ? 'Win' : 'Loss';
-    return [roundNum, opponentName, scenTitle, result];
+
+    const isPlayer1    = g.player1_id === playerId;
+    const isAttacker   = isPlayer1 ? g.player1_attacks : !g.player1_attacks;
+    const role         = isAttacker ? 'Attacker' : 'Defender';
+    const nationality  = toTitleCase(isAttacker
+      ? (g.scenarios?.attacker_nationality ?? '—')
+      : (g.scenarios?.defender_nationality ?? '—'));
+
+    return [roundNum, opponentName, scenTitle, role, nationality, result];
   });
 
   autoTable(doc, {
-    head: [['Round', 'Opponent', 'Scenario', 'Win']],
+    head: [['Round', 'Opponent', 'Scenario', 'Role', 'Side', 'Result']],
     body: rows,
     startY: 72,
     theme: 'striped',
@@ -53,7 +62,9 @@ export async function openPlayerReportPdf(
     styles: { font: 'helvetica', fontSize: 10 },
     columnStyles: {
       0: { cellWidth: 45 },
-      3: { cellWidth: 50 },
+      3: { cellWidth: 60 },
+      4: { cellWidth: 80 },
+      5: { cellWidth: 50 },
     },
   });
 

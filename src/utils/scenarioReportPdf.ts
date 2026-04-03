@@ -1,6 +1,7 @@
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { supabase } from '@/config/supabase';
+import { toTitleCase } from './format';
 
 export async function openScenarioReportPdf(
   tournamentId:   string,
@@ -68,8 +69,8 @@ export async function openScenarioReportPdf(
     head: [['Scenario', 'Attacker', 'Defender']],
     body: rows.map(r => [
       r.title,
-      `${r.attacker_nationality}\n${r.attackerWins}`,
-      `${r.defender_nationality}\n${r.defenderWins}`,
+      `${toTitleCase(r.attacker_nationality)}\n${r.attackerWins}`,
+      `${toTitleCase(r.defender_nationality)}\n${r.defenderWins}`,
     ]),
     startY: 72,
     theme: 'striped',

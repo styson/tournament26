@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '@/config/supabase';
+import { toTitleCase } from '@/utils/format';
 
 interface Scenario {
   id: string;
@@ -102,8 +103,8 @@ export default function Scenarios() {
                       {s.scen_id ?? '—'}
                     </td>
                     <td style={{ color: 'var(--color-text)', fontWeight: 500 }}>{s.title}</td>
-                    <td style={{ color: 'var(--color-red)', textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '0.06em' }}>{s.attacker_nationality}</td>
-                    <td style={{ color: 'var(--color-green)', textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '0.06em' }}>{s.defender_nationality}</td>
+                    <td style={{ color: 'var(--color-red)', fontSize: '0.75rem', letterSpacing: '0.06em' }}>{toTitleCase(s.attacker_nationality)}</td>
+                    <td style={{ color: 'var(--color-green)', fontSize: '0.75rem', letterSpacing: '0.06em' }}>{toTitleCase(s.defender_nationality)}</td>
                     <td style={{ color: 'var(--color-muted)', fontSize: '0.75rem' }}>{s.source ?? '—'}</td>
                   </tr>
                 ))}
