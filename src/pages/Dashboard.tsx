@@ -120,6 +120,7 @@ export default function Dashboard() {
 
   const quickActions = [
     { name: 'Add Player',     link: '/players/new',     symbol: '+' },
+    { name: 'Add Scenario',   link: '/scenarios/new',   symbol: '+' },
     { name: 'New Tournament', link: '/tournaments/new', symbol: '◈' },
     { name: 'Standings',      link: '/standings',       symbol: '≡' },
   ];

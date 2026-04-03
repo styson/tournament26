@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link } from '@tanstack/react-router';
+import { Link, useNavigate } from '@tanstack/react-router';
 import { supabase } from '@/config/supabase';
 
 interface Player {
@@ -14,6 +14,7 @@ export default function Players() {
   const [players, setPlayers] = useState<Player[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     supabase
@@ -73,6 +74,7 @@ export default function Players() {
                   <th>Email</th>
                   <th>Phone</th>
                   <th>Location</th>
+                  <th></th>
                 </tr>
               </thead>
               <tbody>
@@ -82,6 +84,14 @@ export default function Players() {
                     <td>{p.email ?? '—'}</td>
                     <td>{p.phone ?? '—'}</td>
                     <td>{p.location ?? '—'}</td>
+                    <td>
+                      <button
+                        className="btn-secondary btn-sm"
+                        onClick={() => navigate({ to: '/players/$id/edit', params: { id: p.id } })}
+                      >
+                        Edit
+                      </button>
+                    </td>
                   </tr>
                 ))}
               </tbody>

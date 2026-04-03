@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate, Link } from '@tanstack/react-router';
 import { supabase } from '@/config/supabase';
 import { toTitleCase } from '@/utils/format';
 
@@ -16,6 +17,7 @@ export default function Scenarios() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [search, setSearch] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     supabase
@@ -56,14 +58,17 @@ export default function Scenarios() {
             )}
           </h1>
         </div>
-        <input
-          type="text"
-          placeholder="Search scenarios..."
-          value={search}
-          onChange={e => setSearch(e.target.value)}
-          className="input"
-          style={{ width: '220px' }}
-        />
+        <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+          <input
+            type="text"
+            placeholder="Search scenarios..."
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            className="input"
+            style={{ width: '220px' }}
+          />
+          <Link to="/scenarios/new" className="btn-primary">+ Add Scenario</Link>
+        </div>
       </div>
 
       <div className="card anim-1" style={{ padding: 0, overflow: 'hidden' }}>
@@ -94,6 +99,7 @@ export default function Scenarios() {
                   <th>Attacker</th>
                   <th>Defender</th>
                   <th>Source</th>
+                  <th></th>
                 </tr>
               </thead>
               <tbody>
@@ -106,6 +112,14 @@ export default function Scenarios() {
                     <td style={{ color: 'var(--color-text)', letterSpacing: '0.06em' }}>{toTitleCase(s.attacker_nationality)}</td>
                     <td style={{ color: 'var(--color-text)', letterSpacing: '0.06em' }}>{toTitleCase(s.defender_nationality)}</td>
                     <td style={{ color: 'var(--color-muted)' }}>{s.source ?? '—'}</td>
+                    <td>
+                      <button
+                        className="btn-secondary btn-sm"
+                        onClick={() => navigate({ to: '/scenarios/$id/edit', params: { id: s.id } })}
+                      >
+                        Edit
+                      </button>
+                    </td>
                   </tr>
                 ))}
               </tbody>

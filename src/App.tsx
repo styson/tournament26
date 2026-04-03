@@ -5,6 +5,9 @@ import ProtectedRoute from './components/common/ProtectedRoute';
 
 // Pages
 import Dashboard from './pages/Dashboard';
+import EditPlayer from './pages/EditPlayer';
+import EditScenario from './pages/EditScenario';
+import NewScenario from './pages/NewScenario';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import EditTournament from './pages/EditTournament';
@@ -132,6 +135,42 @@ const tournamentEditRoute = createRoute({
   ),
 });
 
+const playerEditRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/players/$id/edit',
+  component: () => (
+    <ProtectedRoute>
+      <Layout>
+        <EditPlayer />
+      </Layout>
+    </ProtectedRoute>
+  ),
+});
+
+const scenariosNewRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/scenarios/new',
+  component: () => (
+    <ProtectedRoute>
+      <Layout>
+        <NewScenario />
+      </Layout>
+    </ProtectedRoute>
+  ),
+});
+
+const scenarioEditRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/scenarios/$id/edit',
+  component: () => (
+    <ProtectedRoute>
+      <Layout>
+        <EditScenario />
+      </Layout>
+    </ProtectedRoute>
+  ),
+});
+
 const tournamentDetailRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/tournaments/$id',
@@ -162,12 +201,15 @@ const routeTree = rootRoute.addChildren([
   dashboardRoute,
   playersRoute,
   playersNewRoute,
+  playerEditRoute,
   tournamentsRoute,
   tournamentsNewRoute,
   tournamentEditRoute,
   tournamentDetailRoute,
   roundDetailRoute,
   scenariosRoute,
+  scenariosNewRoute,
+  scenarioEditRoute,
   standingsRoute,
 ]);
 
