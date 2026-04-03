@@ -65,7 +65,6 @@ function StatCard({ label, value, link, code, delay = 0 }: StatCardProps) {
       }} />
 
       <div style={{
-        fontFamily: '"IBM Plex Mono", monospace',
         letterSpacing: '0.2em',
         color: 'var(--color-muted)',
         marginBottom: '0.5rem',
@@ -76,8 +75,7 @@ function StatCard({ label, value, link, code, delay = 0 }: StatCardProps) {
         <span style={{ color: 'var(--color-muted-dim)' }}>[{code}]</span>
       </div>
 
-      <div style={{
-        fontFamily: '"Bebas Neue", sans-serif',
+      <div className="font-display" style={{
         fontSize: '2.75rem',
         lineHeight: 1,
         color: value === 'Err' ? 'var(--color-red)' : 'var(--color-accent)',
@@ -133,7 +131,7 @@ export default function Dashboard() {
       <div className="anim-0" style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem' }}>
         <div>
           <div className="section-label" style={{ marginBottom: '0.3rem' }}>Command Center</div>
-          <h1 style={{ fontFamily: '"Bebas Neue", sans-serif', fontSize: '2.4rem', letterSpacing: '0.06em', margin: 0 }}>
+          <h1 style={{ fontSize: '2.4rem', letterSpacing: '0.06em', margin: 0 }}>
             Welcome, <span style={{ color: 'var(--color-accent)' }}>{user?.name?.split(' ')[0] ?? 'Director'}</span>
           </h1>
         </div>
@@ -143,7 +141,7 @@ export default function Dashboard() {
             <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--color-green)', animation: 'blink 2s step-end infinite' }} />
             <div style={{ position: 'absolute', inset: 0, borderRadius: '50%', background: 'var(--color-green)', animation: 'pulseRing 2s ease-out infinite' }} />
           </div>
-          <span style={{ fontFamily: '"IBM Plex Mono", monospace', color: 'var(--color-muted-dim)', letterSpacing: '0.12em' }}>
+          <span style={{ color: 'var(--color-muted-dim)', letterSpacing: '0.12em' }}>
             {new Date().toLocaleDateString('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' }).toUpperCase()}
           </span>
         </div>
@@ -186,8 +184,8 @@ export default function Dashboard() {
                     d.style.background = 'transparent';
                   }}
                 >
-                  <span style={{ fontFamily: '"IBM Plex Mono", monospace', color: 'var(--color-accent)', lineHeight: 1 }}>{action.symbol}</span>
-                  <span style={{ fontFamily: '"IBM Plex Mono", monospace', letterSpacing: '0.1em', color: 'var(--color-text-dim)', textTransform: 'uppercase' }}>{action.name}</span>
+                  <span style={{ color: 'var(--color-accent)', lineHeight: 1 }}>{action.symbol}</span>
+                  <span style={{ letterSpacing: '0.1em', color: 'var(--color-text-dim)', textTransform: 'uppercase' }}>{action.name}</span>
                 </div>
               </Link>
             ))}
@@ -198,8 +196,8 @@ export default function Dashboard() {
         <div className="card anim-3">
           <div className="section-label" style={{ marginBottom: '0.75rem' }}>Recent Activity</div>
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '2rem 0', gap: '0.5rem' }}>
-            <div style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '1.5rem', color: 'var(--color-border)' }}>—</div>
-            <p style={{ fontFamily: '"IBM Plex Mono", monospace', color: 'var(--color-muted-dim)', letterSpacing: '0.12em', textTransform: 'uppercase', margin: 0 }}>
+            <div style={{ fontSize: '1.5rem', color: 'var(--color-border)' }}>—</div>
+            <p style={{ color: 'var(--color-muted-dim)', letterSpacing: '0.12em', textTransform: 'uppercase', margin: 0 }}>
               No recent activity
             </p>
           </div>

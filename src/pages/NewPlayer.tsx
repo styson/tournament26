@@ -44,7 +44,7 @@ export default function NewPlayer() {
       {/* Header */}
       <div className="anim-0">
         <div className="section-label" style={{ marginBottom: '0.3rem' }}>Players</div>
-        <h1 style={{ fontFamily: '"Bebas Neue", sans-serif', fontSize: '2.4rem', letterSpacing: '0.06em', margin: 0 }}>
+        <h1 style={{ fontSize: '2.4rem', letterSpacing: '0.06em', margin: 0 }}>
           Enlist Player
         </h1>
       </div>

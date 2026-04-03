@@ -154,17 +154,17 @@ function ScenarioPicker({
               onMouseLeave={e => (e.currentTarget as HTMLDivElement).style.background = 'transparent'}
             >
               {s.scen_id && (
-                <span style={{ fontFamily: '"IBM Plex Mono", monospace', color: 'var(--color-accent)', letterSpacing: '0.08em', whiteSpace: 'nowrap', flexShrink: 0 }}>
+                <span style={{ color: 'var(--color-accent)', letterSpacing: '0.08em', whiteSpace: 'nowrap', flexShrink: 0 }}>
                   {s.scen_id}
                 </span>
               )}
-              <span style={{ fontFamily: '"IBM Plex Mono", monospace', color: 'var(--color-text-dim)' }}>{s.title}</span>
-              <span style={{ fontFamily: '"IBM Plex Mono", monospace', color: 'var(--color-muted-dim)', marginLeft: 'auto', whiteSpace: 'nowrap', flexShrink: 0 }}>
+              <span style={{ color: 'var(--color-text-dim)' }}>{s.title}</span>
+              <span style={{ color: 'var(--color-muted-dim)', marginLeft: 'auto', whiteSpace: 'nowrap', flexShrink: 0 }}>
                 {toTitleCase(s.attacker_nationality)} vs {toTitleCase(s.defender_nationality)}
               </span>
             </div>
           )) : (
-            <div style={{ padding: '0.6rem 0.75rem', fontFamily: '"IBM Plex Mono", monospace', color: 'var(--color-muted-dim)', letterSpacing: '0.1em' }}>
+            <div style={{ padding: '0.6rem 0.75rem', color: 'var(--color-muted-dim)', letterSpacing: '0.1em' }}>
               No matches
             </div>
           )}
@@ -430,7 +430,7 @@ export default function RoundDetail() {
 
   if (loading) return <Spinner />;
   if (!round) return (
-    <div style={{ fontFamily: '"IBM Plex Mono", monospace', color: 'var(--color-red)' }}>
+    <div style={{ color: 'var(--color-red)' }}>
       Round not found. <Link to="/tournaments/$id" params={{ id: tournamentId }} style={{ color: 'var(--color-accent)', display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}><ArrowLeft size={14} /> Back</Link>
     </div>
   );
@@ -444,7 +444,7 @@ export default function RoundDetail() {
 
       {/* Breadcrumb + round nav */}
       <div className="anim-0" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.75rem', flexWrap: 'wrap' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontFamily: '"IBM Plex Mono", monospace', letterSpacing: '0.14em', color: 'var(--color-muted)', textTransform: 'uppercase' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', letterSpacing: '0.14em', color: 'var(--color-muted)', textTransform: 'uppercase' }}>
           <Link to="/tournaments" style={{ color: 'var(--color-muted)' }}>Tournaments</Link>
           <span style={{ color: 'var(--color-muted-dim)' }}>›</span>
           <Link to="/tournaments/$id" params={{ id: tournamentId }} style={{ color: 'var(--color-muted)' }}>
@@ -458,7 +458,6 @@ export default function RoundDetail() {
           const prev = allRounds[idx - 1];
           const next = allRounds[idx + 1];
           const btnStyle = (enabled: boolean): React.CSSProperties => ({
-            fontFamily: '"IBM Plex Mono", monospace',
             letterSpacing: '0.12em',
             textTransform: 'uppercase',
             padding: '0.25rem 0.6rem',
@@ -494,7 +493,7 @@ export default function RoundDetail() {
       <div className="card anim-1">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '0.75rem' }}>
           <div>
-            <h1 style={{ fontFamily: '"Bebas Neue", sans-serif', fontSize: '2.2rem', letterSpacing: '0.06em', margin: 0 }}>
+            <h1 style={{ fontSize: '2.2rem', letterSpacing: '0.06em', margin: 0 }}>
               Round {round.round_number}
               {round.name && <span style={{ color: 'var(--color-muted)', marginLeft: '0.5rem', fontSize: '1.4rem' }}>— {round.name}</span>}
             </h1>
@@ -509,7 +508,6 @@ export default function RoundDetail() {
                   background: 'var(--color-bg)',
                   color: roundStatusColor(round.status),
                   border: `1px solid ${roundStatusColor(round.status)}`,
-                  fontFamily: '"IBM Plex Mono", monospace',
                   letterSpacing: '0.14em',
                   textTransform: 'uppercase',
                   padding: '0.3rem 1.75rem 0.3rem 0.6rem',
@@ -533,7 +531,6 @@ export default function RoundDetail() {
                   background: 'transparent',
                   color: 'var(--color-text-dim)',
                   border: '1px solid var(--color-border-bright)',
-                  fontFamily: '"IBM Plex Mono", monospace',
                   fontSize: 'inherit',
                   letterSpacing: '0.14em',
                   textTransform: 'uppercase',
@@ -556,7 +553,7 @@ export default function RoundDetail() {
       {error && (
         <div className="error-box">
           {error}
-          <button onClick={() => setError('')} style={{ marginLeft: '1rem', background: 'none', border: 'none', color: 'var(--color-red)', cursor: 'pointer', fontFamily: '"IBM Plex Mono", monospace', display: 'inline-flex', alignItems: 'center' }}><X size={14} /></button>
+          <button onClick={() => setError('')} style={{ marginLeft: '1rem', background: 'none', border: 'none', color: 'var(--color-red)', cursor: 'pointer', display: 'inline-flex', alignItems: 'center' }}><X size={14} /></button>
         </div>
       )}
 
@@ -575,7 +572,7 @@ export default function RoundDetail() {
 
         {scenOpen && <div style={{ padding: '0.875rem 1.25rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
           {roundScenarios.length === 0 ? (
-            <p style={{ fontFamily: '"IBM Plex Mono", monospace', color: 'var(--color-muted-dim)', margin: '0 0 0.5rem' }}>
+            <p style={{ color: 'var(--color-muted-dim)', margin: '0 0 0.5rem' }}>
               No scenarios assigned yet.
             </p>
           ) : (
@@ -583,14 +580,14 @@ export default function RoundDetail() {
               <div key={s.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.75rem' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', minWidth: 0 }}>
                   {s.scen_id && (
-                    <span style={{ fontFamily: '"IBM Plex Mono", monospace', color: 'var(--color-accent)', letterSpacing: '0.08em', whiteSpace: 'nowrap', flexShrink: 0 }}>
+                    <span style={{ color: 'var(--color-accent)', letterSpacing: '0.08em', whiteSpace: 'nowrap', flexShrink: 0 }}>
                       {s.scen_id}
                     </span>
                   )}
-                  <span style={{ fontFamily: '"IBM Plex Mono", monospace', color: 'var(--color-text-dim)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  <span style={{ color: 'var(--color-text-dim)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                     {s.title}
                   </span>
-                  <span style={{ fontFamily: '"IBM Plex Mono", monospace', color: 'var(--color-muted-dim)', letterSpacing: '0.08em', whiteSpace: 'nowrap', flexShrink: 0 }}>
+                  <span style={{ color: 'var(--color-muted-dim)', letterSpacing: '0.08em', whiteSpace: 'nowrap', flexShrink: 0 }}>
                     {toTitleCase(s.attacker_nationality)} vs {toTitleCase(s.defender_nationality)}
                   </span>
                 </div>
@@ -599,13 +596,13 @@ export default function RoundDetail() {
                     <button
                       onClick={() => handleRemoveScenario(s.id)}
                       disabled={removingScen === s.id}
-                      style={{ background: 'var(--color-red-bg)', border: '1px solid var(--color-red)', color: 'var(--color-red-bright)', fontFamily: '"IBM Plex Mono", monospace', letterSpacing: '0.1em', padding: '0.25rem 0.5rem', cursor: 'pointer' }}
+                      style={{ background: 'var(--color-red-bg)', border: '1px solid var(--color-red)', color: 'var(--color-red-bright)', letterSpacing: '0.1em', padding: '0.25rem 0.5rem', cursor: 'pointer' }}
                     >
                       {removingScen === s.id ? '...' : 'Confirm'}
                     </button>
                     <button
                       onClick={() => setConfirmRemScen(null)}
-                      style={{ background: 'transparent', border: '1px solid var(--color-border)', color: 'var(--color-muted)', fontFamily: '"IBM Plex Mono", monospace', padding: '0.25rem 0.5rem', cursor: 'pointer' }}
+                      style={{ background: 'transparent', border: '1px solid var(--color-border)', color: 'var(--color-muted)', padding: '0.25rem 0.5rem', cursor: 'pointer' }}
                     >
                       Cancel
                     </button>
@@ -613,7 +610,7 @@ export default function RoundDetail() {
                 ) : (
                   <button
                     onClick={() => setConfirmRemScen(s.id)}
-                    style={{ background: 'transparent', border: '1px solid var(--color-red-border)', color: 'var(--color-red)', fontFamily: '"IBM Plex Mono", monospace', letterSpacing: '0.1em', textTransform: 'uppercase', padding: '0.25rem 0.5rem', cursor: 'pointer', flexShrink: 0, transition: 'all 0.15s ease' }}
+                    style={{ background: 'transparent', border: '1px solid var(--color-red-border)', color: 'var(--color-red)', letterSpacing: '0.1em', textTransform: 'uppercase', padding: '0.25rem 0.5rem', cursor: 'pointer', flexShrink: 0, transition: 'all 0.15s ease' }}
                     onMouseEnter={e => (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--color-red-bright)'}
                     onMouseLeave={e => (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--color-red-border)'}
                   >
@@ -643,7 +640,7 @@ export default function RoundDetail() {
             </div>
           )}
           {atScenLimit && (
-            <div style={{ fontFamily: '"IBM Plex Mono", monospace', color: 'var(--color-accent)', letterSpacing: '0.1em', marginTop: '0.25rem' }}>
+            <div style={{ color: 'var(--color-accent)', letterSpacing: '0.1em', marginTop: '0.25rem' }}>
               MAX 5 SCENARIOS REACHED
             </div>
           )}
@@ -657,14 +654,14 @@ export default function RoundDetail() {
             Games
             <span style={{ color: 'var(--color-accent)', marginLeft: '0.5rem' }}>{games.length}</span>
           </div>
-          <span style={{ fontFamily: '"IBM Plex Mono", monospace', color: 'var(--color-muted-dim)', letterSpacing: '0.12em' }}>
+          <span style={{ color: 'var(--color-muted-dim)', letterSpacing: '0.12em' }}>
             {games.filter(g => g.status === 'COMPLETED').length}/{games.length} COMPLETED
           </span>
         </div>
 
         {games.length === 0 ? (
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '3rem 2rem', gap: '0.75rem' }}>
-            <p style={{ fontFamily: '"IBM Plex Mono", monospace', color: 'var(--color-muted-dim)', margin: 0, textAlign: 'center' }}>
+            <p style={{ color: 'var(--color-muted-dim)', margin: 0, textAlign: 'center' }}>
               No games scheduled yet. Create the first pairing below.
             </p>
           </div>
@@ -690,29 +687,29 @@ export default function RoundDetail() {
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                         {scenario?.scen_id && (
-                          <span style={{ fontFamily: '"IBM Plex Mono", monospace', color: 'var(--color-accent)', letterSpacing: '0.08em', flexShrink: 0 }}>
+                          <span style={{ color: 'var(--color-accent)', letterSpacing: '0.08em', flexShrink: 0 }}>
                             {scenario.scen_id}
                           </span>
                         )}
-                        <span style={{ fontFamily: '"IBM Plex Mono", monospace', color: 'var(--color-text)', fontWeight: 600 }}>
+                        <span style={{ color: 'var(--color-text)', fontWeight: 600 }}>
                           {scenario?.title ?? '—'}
                         </span>
                         {scenario && (
-                          <span style={{ fontFamily: '"IBM Plex Mono", monospace', color: 'var(--color-muted-dim)', letterSpacing: '0.08em', whiteSpace: 'nowrap' }}>
+                          <span style={{ color: 'var(--color-muted-dim)', letterSpacing: '0.08em', whiteSpace: 'nowrap' }}>
                             {toTitleCase(scenario.attacker_nationality)} vs {toTitleCase(scenario.defender_nationality)}
                           </span>
                         )}
                       </div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
                         <PlayerSideTag name={p1?.name ?? '—'} role={p1Role} isWinner={game.winner_id === game.player1_id} isCompleted={game.status === 'COMPLETED'} points={p1 ? playerPoints[p1.id] : undefined} />
-                        <span style={{ fontFamily: '"IBM Plex Mono", monospace', color: 'var(--color-muted-dim)' }}>vs</span>
+                        <span style={{ color: 'var(--color-muted-dim)' }}>vs</span>
                         <PlayerSideTag name={p2?.name ?? '—'} role={p2Role} isWinner={game.winner_id === game.player2_id} isCompleted={game.status === 'COMPLETED'} points={p2 ? playerPoints[p2.id] : undefined} />
                       </div>
                     </div>
 
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.5rem' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                        <span style={{ fontFamily: '"IBM Plex Mono", monospace', letterSpacing: '0.12em', textTransform: 'uppercase', color: gameStatusColor(game.status), border: `1px solid ${gameStatusColor(game.status)}`, padding: '0.2rem 0.5rem' }}>
+                        <span style={{ letterSpacing: '0.12em', textTransform: 'uppercase', color: gameStatusColor(game.status), border: `1px solid ${gameStatusColor(game.status)}`, padding: '0.2rem 0.5rem' }}>
                           {game.status === 'COMPLETED' ? 'Complete' : 'Scheduled'}
                         </span>
                         {game.status === 'COMPLETED' && !roundComplete && (
@@ -728,7 +725,7 @@ export default function RoundDetail() {
                               onClick={() => handleRemoveGame(game.id)}
                               disabled={removingGame}
                               title="Confirm remove"
-                              style={{ background: 'var(--color-red-bg)', border: '1px solid var(--color-red)', color: 'var(--color-red-bright)', fontFamily: '"IBM Plex Mono", monospace', padding: '0.2rem 0.35rem', cursor: 'pointer', lineHeight: 1 }}
+                              style={{ background: 'var(--color-red-bg)', border: '1px solid var(--color-red)', color: 'var(--color-red-bright)', padding: '0.2rem 0.35rem', cursor: 'pointer', lineHeight: 1 }}
                             >{removingGame ? '…' : <Check size={14} />}</button>
                             <button
                               onClick={() => setConfirmRemGame(null)}
@@ -746,7 +743,7 @@ export default function RoundDetail() {
                         ))}
                       </div>
                       {game.status === 'COMPLETED' && winner && (
-                        <span style={{ fontFamily: '"IBM Plex Mono", monospace', color: 'var(--color-green-dim)', letterSpacing: '0.1em' }}>
+                        <span style={{ color: 'var(--color-green-dim)', letterSpacing: '0.1em' }}>
                           ✓ {winner.name}
                         </span>
                       )}
@@ -785,14 +782,14 @@ export default function RoundDetail() {
                         <button
                           type="button"
                           onClick={() => setResultSidesFlipped(f => !f)}
-                          style={{ background: 'transparent', border: '1px solid var(--color-border-bright)', color: 'var(--color-text-dim)', fontFamily: '"IBM Plex Mono", monospace', letterSpacing: '0.1em', textTransform: 'uppercase', padding: '0.2rem 0.5rem', cursor: 'pointer', transition: 'all 0.15s ease' }}
+                          style={{ background: 'transparent', border: '1px solid var(--color-border-bright)', color: 'var(--color-text-dim)', letterSpacing: '0.1em', textTransform: 'uppercase', padding: '0.2rem 0.5rem', cursor: 'pointer', transition: 'all 0.15s ease' }}
                           onMouseEnter={e => { const b = e.currentTarget as HTMLButtonElement; b.style.borderColor = 'var(--color-accent)'; b.style.color = 'var(--color-accent)'; }}
                           onMouseLeave={e => { const b = e.currentTarget as HTMLButtonElement; b.style.borderColor = 'var(--color-border-bright)'; b.style.color = 'var(--color-text-dim)'; }}
                         >
                           ⇄ Swap
                         </button>
                       </div>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', fontFamily: '"IBM Plex Mono", monospace', background: 'var(--color-surface)', border: '1px solid var(--color-border)', padding: '0.5rem 0.75rem' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', background: 'var(--color-surface)', border: '1px solid var(--color-border)', padding: '0.5rem 0.75rem' }}>
                         <span style={{ color: 'var(--color-text)' }}>{p1?.name ?? '—'}</span>
                         <span style={{ color: 'var(--color-accent)', letterSpacing: '0.12em' }}>{effP1Role === 'Attacker' ? 'ATK' : 'DEF'}</span>
                         <span style={{ color: 'var(--color-muted-dim)' }}>vs</span>
@@ -809,7 +806,7 @@ export default function RoundDetail() {
                             key={id}
                             onClick={() => handleRecordResult(game.id, id, effP1Attacks)}
                             disabled={savingResult}
-                            style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border)', color: 'var(--color-text)', fontFamily: '"IBM Plex Mono", monospace', letterSpacing: '0.1em', padding: '0.5rem 1rem', cursor: savingResult ? 'wait' : 'pointer', transition: 'all 0.15s ease', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '0.15rem', opacity: savingResult ? 0.5 : 1 }}
+                            style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border)', color: 'var(--color-text)', letterSpacing: '0.1em', padding: '0.5rem 1rem', cursor: savingResult ? 'wait' : 'pointer', transition: 'all 0.15s ease', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '0.15rem', opacity: savingResult ? 0.5 : 1 }}
                             onMouseEnter={e => { const b = e.currentTarget as HTMLButtonElement; b.style.borderColor = 'var(--color-accent)'; b.style.color = 'var(--color-accent)'; }}
                             onMouseLeave={e => { const b = e.currentTarget as HTMLButtonElement; b.style.borderColor = 'var(--color-border)'; b.style.color = 'var(--color-text)'; }}
                           >
@@ -833,7 +830,7 @@ export default function RoundDetail() {
           <div className="section-label" style={{ marginBottom: '0.875rem' }}>Schedule a Game</div>
 
           {availablePlayers.length < 2 ? (
-            <p style={{ fontFamily: '"IBM Plex Mono", monospace', color: 'var(--color-muted-dim)', margin: 0 }}>
+            <p style={{ color: 'var(--color-muted-dim)', margin: 0 }}>
               {availablePlayers.length === 0
                 ? 'All enrolled players already have a game this round.'
                 : `Only ${availablePlayers.length} player available — need at least 2 to schedule a game.`}
@@ -856,7 +853,7 @@ export default function RoundDetail() {
                   <label className="field-label" style={{ whiteSpace: 'nowrap' }}>P1 Side</label>
                   <div style={{ display: 'flex', border: '1px solid var(--color-border)', overflow: 'hidden' }}>
                     {(['attacker', 'defender'] as const).map(side => (
-                      <button key={side} type="button" onClick={() => setP1Side(side)} style={{ background: p1Side === side ? 'var(--color-accent)' : 'var(--color-bg)', color: p1Side === side ? 'var(--color-bg)' : 'var(--color-muted)', border: 'none', borderRight: side === 'attacker' ? '1px solid var(--color-border)' : 'none', fontFamily: '"IBM Plex Mono", monospace', letterSpacing: '0.12em', textTransform: 'uppercase', padding: '0.35rem 0.6rem', cursor: 'pointer', transition: 'all 0.15s ease' }}>
+                      <button key={side} type="button" onClick={() => setP1Side(side)} style={{ background: p1Side === side ? 'var(--color-accent)' : 'var(--color-bg)', color: p1Side === side ? 'var(--color-bg)' : 'var(--color-muted)', border: 'none', borderRight: side === 'attacker' ? '1px solid var(--color-border)' : 'none', letterSpacing: '0.12em', textTransform: 'uppercase', padding: '0.35rem 0.6rem', cursor: 'pointer', transition: 'all 0.15s ease' }}>
                         {side}
                       </button>
                     ))}
@@ -877,7 +874,7 @@ export default function RoundDetail() {
 
               {p1 && p2 && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-                  <div style={{ background: 'var(--color-bg)', border: '1px solid var(--color-border)', padding: '0.6rem 0.875rem', display: 'flex', alignItems: 'center', gap: '1rem', fontFamily: '"IBM Plex Mono", monospace', letterSpacing: '0.1em' }}>
+                  <div style={{ background: 'var(--color-bg)', border: '1px solid var(--color-border)', padding: '0.6rem 0.875rem', display: 'flex', alignItems: 'center', gap: '1rem', letterSpacing: '0.1em' }}>
                     <span style={{ color: 'var(--color-muted)' }}>PREVIEW</span>
                     <span style={{ color: 'var(--color-text)' }}>{p1.name}</span>
                     <span style={{ color: 'var(--color-accent)' }}>{p1Side === 'attacker' ? 'ATK' : 'DEF'}</span>
@@ -892,7 +889,7 @@ export default function RoundDetail() {
               )}
 
               <div>
-                <label className="field-label">Scenario <span style={{ fontFamily: '"IBM Plex Mono", monospace', color: 'var(--color-muted-dim)', letterSpacing: '0.08em', textTransform: 'none' }}>(optional — can be set when recording result)</span></label>
+                <label className="field-label">Scenario <span style={{ color: 'var(--color-muted-dim)', letterSpacing: '0.08em', textTransform: 'none' }}>(optional — can be set when recording result)</span></label>
                 <div style={{ position: 'relative' }}>
                   <select value={gameScenId} onChange={e => setGameScenId(e.target.value)} style={selectStyle}>
                     <option value="">TBD</option>
@@ -917,7 +914,7 @@ export default function RoundDetail() {
       )}
 
       {roundComplete && (
-        <div style={{ fontFamily: '"IBM Plex Mono", monospace', color: 'var(--color-muted-dim)', letterSpacing: '0.12em', textAlign: 'center', padding: '0.25rem' }}>
+        <div style={{ color: 'var(--color-muted-dim)', letterSpacing: '0.12em', textAlign: 'center', padding: '0.25rem' }}>
           Round is complete. Change status to Upcoming or Started to modify games or scenarios.
         </div>
       )}
@@ -930,13 +927,13 @@ export default function RoundDetail() {
 function PlayerSideTag({ name, role, isWinner, isCompleted, points }: { name: string; role: string; isWinner: boolean; isCompleted: boolean; points?: number }) {
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-      <span style={{ fontFamily: '"IBM Plex Mono", monospace', letterSpacing: '0.12em', textTransform: 'uppercase', color: role === 'Attacker' ? 'var(--color-accent)' : 'var(--color-muted)', border: `1px solid ${role === 'Attacker' ? 'var(--color-accent-dim)' : 'var(--color-border)'}`, padding: '0.1rem 0.35rem', flexShrink: 0 }}>
+      <span style={{ letterSpacing: '0.12em', textTransform: 'uppercase', color: role === 'Attacker' ? 'var(--color-accent)' : 'var(--color-muted)', border: `1px solid ${role === 'Attacker' ? 'var(--color-accent-dim)' : 'var(--color-border)'}`, padding: '0.1rem 0.35rem', flexShrink: 0 }}>
         {role === 'Attacker' ? 'ATK' : 'DEF'}
       </span>
-      <span style={{ fontFamily: '"IBM Plex Mono", monospace', color: isCompleted && isWinner ? 'var(--color-green-dim)' : isCompleted ? 'var(--color-muted)' : 'var(--color-text-dim)', fontWeight: isWinner ? 600 : 400 }}>
+      <span style={{ color: isCompleted && isWinner ? 'var(--color-green-dim)' : isCompleted ? 'var(--color-muted)' : 'var(--color-text-dim)', fontWeight: isWinner ? 600 : 400 }}>
         {name}
         {points !== undefined && (
-          <sup style={{ fontFamily: '"IBM Plex Mono", monospace', letterSpacing: '0.05em', color: 'var(--color-muted)', marginLeft: '0.15em', verticalAlign: 'super', lineHeight: 0 }}>
+          <sup style={{ letterSpacing: '0.05em', color: 'var(--color-muted)', marginLeft: '0.15em', verticalAlign: 'super', lineHeight: 0 }}>
             {points}
           </sup>
         )}
@@ -951,7 +948,6 @@ const selectStyle: React.CSSProperties = {
   background: 'var(--color-bg)',
   color: 'var(--color-text)',
   border: '1px solid var(--color-border)',
-  fontFamily: '"IBM Plex Mono", monospace',
   letterSpacing: '0.06em',
   padding: '0.5rem 2rem 0.5rem 0.75rem',
   outline: 'none',

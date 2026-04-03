@@ -40,7 +40,7 @@ export default function Tournaments() {
       <div className="anim-0" style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.75rem' }}>
         <div>
           <div className="section-label" style={{ marginBottom: '0.3rem' }}>Tournaments</div>
-          <h1 style={{ fontFamily: '"Bebas Neue", sans-serif', fontSize: '2.4rem', letterSpacing: '0.06em', margin: 0 }}>
+          <h1 style={{ fontSize: '2.4rem', letterSpacing: '0.06em', margin: 0 }}>
             Tournaments
           </h1>
         </div>
@@ -58,7 +58,7 @@ export default function Tournaments() {
           <div className="card error-box" style={{ padding: '1.25rem' }}>{error}</div>
         ) : tournaments.length === 0 ? (
           <div className="card empty-state">
-            <h3 style={{ fontFamily: '"Bebas Neue", sans-serif', fontSize: '1.4rem', letterSpacing: '0.06em', color: 'var(--color-muted)', margin: 0 }}>No Tournaments Active</h3>
+            <h3 style={{ fontSize: '1.4rem', letterSpacing: '0.06em', color: 'var(--color-muted)', margin: 0 }}>No Tournaments Active</h3>
             <p className="serif-body" style={{ margin: 0 }}>Launch your first tournament to get boots on the ground</p>
             <Link to="/tournaments/new" className="btn-primary" style={{ marginTop: '0.5rem' }}>+ Launch First Tournament</Link>
           </div>
@@ -70,18 +70,18 @@ export default function Tournaments() {
                 onMouseLeave={e => (e.currentTarget as HTMLDivElement).style.background = 'var(--color-surface)'}
               >
                 <div>
-                  <h3 style={{ fontFamily: '"Bebas Neue", sans-serif', fontSize: '1.3rem', letterSpacing: '0.06em', margin: '0 0 0.4rem' }}>{tournament.name}</h3>
+                  <h3 style={{ fontSize: '1.3rem', letterSpacing: '0.06em', margin: '0 0 0.4rem' }}>{tournament.name}</h3>
                   {tournament.description && (
-                    <p style={{ fontFamily: '"IBM Plex Mono", monospace', color: 'var(--color-muted)', margin: '0 0 0.5rem' }}>{tournament.description}</p>
+                    <p style={{ color: 'var(--color-muted)', margin: '0 0 0.5rem' }}>{tournament.description}</p>
                   )}
-                  <div style={{ display: 'flex', gap: '1.5rem', fontFamily: '"IBM Plex Mono", monospace', letterSpacing: '0.1em', color: 'var(--color-muted)' }}>
+                  <div style={{ display: 'flex', gap: '1.5rem', letterSpacing: '0.1em', color: 'var(--color-muted)' }}>
                     <span>{tournament.start_date}</span>
                     {tournament.end_date && <span>→ {tournament.end_date}</span>}
                   </div>
                 </div>
                 <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'flex-start' }}>
                   <span style={{
-                    fontFamily: '"IBM Plex Mono", monospace', letterSpacing: '0.12em',
+                    letterSpacing: '0.12em',
                     textTransform: 'uppercase', fontSize: '0.7rem',
                     color: statusColor(tournament.status),
                     border: `1px solid ${statusColor(tournament.status)}`,

@@ -65,12 +65,12 @@ export default function Login() {
         <div className="anim-0" style={{ textAlign: 'center', marginBottom: '2rem' }}>
           {/* Badge */}
           <div style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '52px', height: '52px', background: 'var(--color-accent)', clipPath: 'polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px))', marginBottom: '1rem' }}>
-            <span style={{ fontFamily: '"Bebas Neue", sans-serif', fontSize: '1.5rem', color: 'var(--color-bg)', letterSpacing: '0.05em' }}>T</span>
+            <span className="font-display" style={{ fontSize: '1.5rem', color: 'var(--color-bg)', letterSpacing: '0.05em' }}>T</span>
           </div>
-          <h1 style={{ fontFamily: '"Bebas Neue", sans-serif', fontSize: '2.2rem', letterSpacing: '0.1em', color: 'var(--color-text)', margin: 0 }}>
+          <h1 style={{ fontSize: '2.2rem', letterSpacing: '0.1em', color: 'var(--color-text)', margin: 0 }}>
             TOURNEY<span style={{ color: 'var(--color-accent)' }}>26</span>
           </h1>
-          <p style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.6rem', letterSpacing: '0.2em', color: 'var(--color-muted)', textTransform: 'uppercase', marginTop: '0.4rem' }}>
+          <p style={{ fontSize: '0.6rem', letterSpacing: '0.2em', color: 'var(--color-muted)', textTransform: 'uppercase', marginTop: '0.4rem' }}>
             Secure Access Required
           </p>
         </div>
@@ -120,7 +120,7 @@ export default function Login() {
           </form>
         </div>
 
-        <p style={{ textAlign: 'center', fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.58rem', color: 'var(--color-muted-dim)', letterSpacing: '0.12em', marginTop: '1.25rem', textTransform: 'uppercase' }}>
+        <p style={{ textAlign: 'center', fontSize: '0.58rem', color: 'var(--color-muted-dim)', letterSpacing: '0.12em', marginTop: '1.25rem', textTransform: 'uppercase' }}>
           Authorized Personnel Only
         </p>
       </div>

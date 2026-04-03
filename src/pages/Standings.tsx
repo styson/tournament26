@@ -92,7 +92,7 @@ export default function Standings() {
       <div className="anim-0" style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.75rem' }}>
         <div>
           <div className="section-label" style={{ marginBottom: '0.3rem' }}>Field Report</div>
-          <h1 style={{ fontFamily: '"Bebas Neue", sans-serif', fontSize: '2.4rem', letterSpacing: '0.06em', margin: 0 }}>
+          <h1 style={{ fontSize: '2.4rem', letterSpacing: '0.06em', margin: 0 }}>
             Standings
           </h1>
         </div>
@@ -106,7 +106,6 @@ export default function Standings() {
               background: 'var(--color-bg)',
               color: selectedId ? 'var(--color-text)' : 'var(--color-muted)',
               border: '1px solid var(--color-border)',
-              fontFamily: '"IBM Plex Mono", monospace',
               fontSize: '0.7rem',
               letterSpacing: '0.1em',
               padding: '0.4rem 2rem 0.4rem 0.75rem',
@@ -183,7 +182,6 @@ export default function Standings() {
                     <tr key={s.player.id}>
                       <td style={{ textAlign: 'center' }}>
                         <span style={{
-                          fontFamily: '"IBM Plex Mono", monospace',
                           fontSize: '0.8rem',
                           letterSpacing: '0.1em',
                           color: rankAccent(s.rank),
@@ -192,7 +190,7 @@ export default function Standings() {
                           {rankLabel(s.rank)}{isTied ? '=' : ''}
                         </span>
                       </td>
-                      <td style={{ color: 'var(--color-text)', fontFamily: '"IBM Plex Mono", monospace', fontSize: '1rem' }}>
+                      <td style={{ color: 'var(--color-text)', fontSize: '1rem' }}>
                         <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
                           {s.player.name}
                           <button
@@ -207,25 +205,25 @@ export default function Standings() {
                           ><ExternalLink size={14} /></button>
                         </span>
                       </td>
-                      <td style={{ textAlign: 'center', color: 'var(--color-green-dim)', fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.75rem' }}>
+                      <td style={{ textAlign: 'center', color: 'var(--color-green-dim)' }}>
                         {s.wins}
                       </td>
-                      <td style={{ textAlign: 'center', color: 'var(--color-red)', fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.75rem' }}>
+                      <td style={{ textAlign: 'center', color: 'var(--color-red)' }}>
                         {s.losses}
                       </td>
-                      <td style={{ textAlign: 'right', fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.75rem', color: 'var(--color-muted)' }}>
+                      <td style={{ textAlign: 'right', color: 'var(--color-muted)' }}>
                         {base}
                       </td>
-                      <td style={{ textAlign: 'right', fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.75rem', color: 'var(--color-muted)' }}>
+                      <td style={{ textAlign: 'right', color: 'var(--color-muted)' }}>
                         +{bonus}
                       </td>
-                      <td style={{ textAlign: 'right', fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.85rem', color: 'var(--color-accent)', fontWeight: 600 }}>
+                      <td style={{ textAlign: 'right', fontSize: '0.85rem', color: 'var(--color-accent)', fontWeight: 600 }}>
                         {s.points}
                       </td>
-                      <td style={{ textAlign: 'right', fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.7rem', color: 'var(--color-text-dim)' }}>
+                      <td style={{ textAlign: 'right', fontSize: '0.7rem', color: 'var(--color-text-dim)' }}>
                         {s.tb1}
                       </td>
-                      <td style={{ textAlign: 'right', fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.7rem', color: 'var(--color-text-dim)' }}>
+                      <td style={{ textAlign: 'right', fontSize: '0.7rem', color: 'var(--color-text-dim)' }}>
                         {s.tb2}
                       </td>
                     </tr>
@@ -239,7 +237,7 @@ export default function Standings() {
 
       {/* Scoring legend */}
       {selectedId && !loading && standings.length > 0 && (
-        <div style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.6rem', letterSpacing: '0.1em', color: 'var(--color-muted)', display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
+        <div style={{ fontSize: '0.8rem', letterSpacing: '0.1em', color: 'var(--color-muted)', display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
           <span><span style={{ color: 'var(--color-accent)' }}>PTS</span> = 10 per win + 1 per win earned by each defeated opponent</span>
           <span><span style={{ color: 'var(--color-text-dim)' }}>TB1</span> = sum of defeated opponents' final points</span>
           <span><span style={{ color: 'var(--color-text-dim)' }}>TB2</span> = sum of victorious opponents' final points</span>

@@ -47,10 +47,10 @@ export default function Scenarios() {
       <div className="anim-0" style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.75rem' }}>
         <div>
           <div className="section-label" style={{ marginBottom: '0.3rem' }}>Scenario Library</div>
-          <h1 style={{ fontFamily: '"Bebas Neue", sans-serif', fontSize: '2.4rem', letterSpacing: '0.06em', margin: 0 }}>
+          <h1 style={{ fontSize: '2.4rem', letterSpacing: '0.06em', margin: 0 }}>
             Scenarios
             {!loading && (
-              <span style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.85rem', color: 'var(--color-accent)', marginLeft: '0.75rem', letterSpacing: '0.1em' }}>
+              <span className="mono" style={{ fontSize: '0.85rem', color: 'var(--color-accent)', marginLeft: '0.75rem', letterSpacing: '0.1em' }}>
                 {filtered.length}
               </span>
             )}
@@ -72,15 +72,15 @@ export default function Scenarios() {
             <div className="spinner" /><span className="section-label">Loading...</span>
           </div>
         ) : error ? (
-          <div className="error-box" style={{ padding: '1.25rem' }}>
+          <div className="error-box">
             {error}
           </div>
         ) : filtered.length === 0 ? (
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '4rem 2rem', gap: '1rem' }}>
-            <h3 style={{ fontFamily: '"Bebas Neue", sans-serif', fontSize: '1.4rem', letterSpacing: '0.06em', color: 'var(--color-muted)', margin: 0 }}>
+            <h3 style={{ fontSize: '1.4rem', letterSpacing: '0.06em', color: 'var(--color-muted)', margin: 0 }}>
               {search ? 'No Matches Found' : 'No Scenarios Loaded'}
             </h3>
-            <p style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.95rem', color: 'var(--color-muted-dim)', margin: 0, textAlign: 'center' }}>
+            <p style={{ fontSize: '0.95rem', color: 'var(--color-muted-dim)', margin: 0, textAlign: 'center' }}>
               {search ? 'Try a different search term' : 'Import scenarios via the SQL migration'}
             </p>
           </div>
@@ -99,13 +99,13 @@ export default function Scenarios() {
               <tbody>
                 {filtered.map(s => (
                   <tr key={s.id}>
-                    <td style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.8rem', color: 'var(--color-accent)', letterSpacing: '0.08em', whiteSpace: 'nowrap' }}>
+                    <td style={{ color: 'var(--color-accent)', letterSpacing: '0.08em', whiteSpace: 'nowrap' }}>
                       {s.scen_id ?? '—'}
                     </td>
                     <td style={{ color: 'var(--color-text)', fontWeight: 500 }}>{s.title}</td>
-                    <td style={{ color: 'var(--color-red)', fontSize: '0.75rem', letterSpacing: '0.06em' }}>{toTitleCase(s.attacker_nationality)}</td>
-                    <td style={{ color: 'var(--color-green)', fontSize: '0.75rem', letterSpacing: '0.06em' }}>{toTitleCase(s.defender_nationality)}</td>
-                    <td style={{ color: 'var(--color-muted)', fontSize: '0.75rem' }}>{s.source ?? '—'}</td>
+                    <td style={{ color: 'var(--color-text)', letterSpacing: '0.06em' }}>{toTitleCase(s.attacker_nationality)}</td>
+                    <td style={{ color: 'var(--color-text)', letterSpacing: '0.06em' }}>{toTitleCase(s.defender_nationality)}</td>
+                    <td style={{ color: 'var(--color-muted)' }}>{s.source ?? '—'}</td>
                   </tr>
                 ))}
               </tbody>

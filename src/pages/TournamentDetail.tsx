@@ -220,7 +220,7 @@ export default function TournamentDetail() {
   // ─────────────────────────────────────────────────────────
   if (loadingTournament) return <Spinner />;
   if (!tournament) return (
-    <div style={{ fontFamily: '"IBM Plex Mono", monospace', color: 'var(--color-red)' }}>
+    <div style={{ color: 'var(--color-red)' }}>
       Tournament not found. <Link to="/tournaments" style={{ color: 'var(--color-accent)', display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}><ArrowLeft size={14} /> Back</Link>
     </div>
   );
@@ -230,7 +230,7 @@ export default function TournamentDetail() {
 
       {/* Back */}
       <div className="anim-0">
-        <Link to="/tournaments" style={{ fontFamily: '"IBM Plex Mono", monospace', letterSpacing: '0.15em', color: 'var(--color-muted)', textTransform: 'uppercase', display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}>
+        <Link to="/tournaments" style={{ letterSpacing: '0.15em', color: 'var(--color-muted)', textTransform: 'uppercase', display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}>
           <ArrowLeft size={14} /> Tournaments
         </Link>
       </div>
@@ -240,15 +240,15 @@ export default function TournamentDetail() {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '0.75rem' }}>
           <div>
             <div className="section-label" style={{ marginBottom: '0.3rem' }}>Tournament</div>
-            <h1 style={{ fontFamily: '"Bebas Neue", sans-serif', fontSize: '2.2rem', letterSpacing: '0.06em', margin: '0 0 0.5rem' }}>
+            <h1 style={{ fontSize: '2.2rem', letterSpacing: '0.06em', margin: '0 0 0.5rem' }}>
               {tournament.name}
             </h1>
             {tournament.description && (
-              <p style={{ fontFamily: '"IBM Plex Mono", monospace', color: 'var(--color-muted)', margin: '0 0 0.75rem' }}>
+              <p style={{ color: 'var(--color-muted)', margin: '0 0 0.75rem' }}>
                 {tournament.description}
               </p>
             )}
-            <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap', fontFamily: '"IBM Plex Mono", monospace', letterSpacing: '0.12em', color: 'var(--color-muted)' }}>
+            <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap', letterSpacing: '0.12em', color: 'var(--color-muted)' }}>
               <span>Start: {tournament.start_date}</span>
               {tournament.end_date && <span>End: {tournament.end_date}</span>}
             </div>
@@ -314,7 +314,7 @@ export default function TournamentDetail() {
         {loadingRounds ? (
           <div className="card" style={{ padding: '2rem' }}><Spinner inline /></div>
         ) : rounds.length === 0 ? (
-          <div className="card" style={{ padding: '2.5rem', textAlign: 'center', fontFamily: '"IBM Plex Mono", monospace', color: 'var(--color-muted-dim)' }}>
+          <div className="card" style={{ padding: '2.5rem', textAlign: 'center', color: 'var(--color-muted-dim)' }}>
             No rounds yet. Use + Round 1 above to get started.
           </div>
         ) : (
@@ -340,11 +340,11 @@ export default function TournamentDetail() {
               >
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                   <div>
-                    <div style={{ fontFamily: '"Bebas Neue", sans-serif', fontSize: '1.75rem', letterSpacing: '0.06em', color: 'var(--color-text)', lineHeight: 1 }}>
+                    <div className="font-display" style={{ fontSize: '1.75rem', letterSpacing: '0.06em', color: 'var(--color-text)', lineHeight: 1 }}>
                       Round {round.round_number}
                     </div>
                     {round.name && (
-                      <div style={{ fontFamily: '"IBM Plex Mono", monospace', color: 'var(--color-muted)', marginTop: '0.2rem' }}>
+                      <div style={{ color: 'var(--color-muted)', marginTop: '0.2rem' }}>
                         {round.name}
                       </div>
                     )}
@@ -353,7 +353,7 @@ export default function TournamentDetail() {
                 </div>
 
                 <span style={{
-                  fontFamily: '"IBM Plex Mono", monospace', letterSpacing: '0.12em',
+                  letterSpacing: '0.12em',
                   textTransform: 'uppercase', color: roundStatusColor(round.status),
                   border: `1px solid ${roundStatusColor(round.status)}`,
                   padding: '0.15rem 0.4rem',
@@ -379,7 +379,7 @@ export default function TournamentDetail() {
         {loadingPlayers ? (
           <div style={{ padding: '2rem', display: 'flex', justifyContent: 'center' }}><Spinner inline /></div>
         ) : enrolled.length === 0 ? (
-          <div style={{ padding: '2.5rem', textAlign: 'center', fontFamily: '"IBM Plex Mono", monospace', color: 'var(--color-muted-dim)' }}>
+          <div style={{ padding: '2.5rem', textAlign: 'center', color: 'var(--color-muted-dim)' }}>
             No players enrolled yet.
           </div>
         ) : (
@@ -395,7 +395,7 @@ export default function TournamentDetail() {
                 onMouseLeave={e => (e.currentTarget as HTMLDivElement).style.borderColor = 'var(--color-border)'}
               >
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                  <div style={{ fontFamily: '"IBM Plex Mono", monospace', color: 'var(--color-text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  <div style={{ color: 'var(--color-text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                     {p.name}
                   </div>
                   <button
@@ -405,11 +405,11 @@ export default function TournamentDetail() {
                     style={{ fontSize: '0.65rem', flexShrink: 0 }}
                   ><ExternalLink size={14} /></button>
                 </div>
-                <div style={{ fontFamily: '"IBM Plex Mono", monospace', letterSpacing: '0.1em', color: 'var(--color-accent)', marginTop: '0.1rem' }}>
+                <div style={{ letterSpacing: '0.1em', color: 'var(--color-accent)', marginTop: '0.1rem' }}>
                   {`${points[p.id] ?? 0} Points`}
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                  <div style={{ fontFamily: '"IBM Plex Mono", monospace', letterSpacing: '0.1em', color: 'var(--color-muted)' }}>
+                  <div style={{ letterSpacing: '0.1em', color: 'var(--color-muted)' }}>
                     {(() => { const r = records[p.id] ?? { w: 0, l: 0 }; return `W/L ${r.w}-${r.l}`; })()}
                   </div>
                   <div style={{ display: 'flex', gap: '0.2rem', flexShrink: 0, alignItems: 'center' }}>
@@ -430,7 +430,7 @@ export default function TournamentDetail() {
                             onClick={() => { setConfirmRemovePlayer(null); handleRemove(p.id); }}
                             disabled={removingId === p.id}
                             title="Confirm remove"
-                            style={{ background: 'var(--color-red-bg)', border: '1px solid var(--color-red)', color: 'var(--color-red-bright)', fontFamily: '"IBM Plex Mono", monospace', padding: '0.2rem 0.35rem', cursor: 'pointer', lineHeight: 1 }}
+                            style={{ background: 'var(--color-red-bg)', border: '1px solid var(--color-red)', color: 'var(--color-red-bright)', padding: '0.2rem 0.35rem', cursor: 'pointer', lineHeight: 1 }}
                           >{removingId === p.id ? '…' : <Check size={14} />}</button>
                           <button
                             onClick={() => setConfirmRemovePlayer(null)}
@@ -469,7 +469,6 @@ export default function TournamentDetail() {
                   width: '100%', background: 'var(--color-bg)',
                   color: selectedPlayerId ? 'var(--color-text)' : 'var(--color-muted)',
                   border: '1px solid var(--color-border)',
-                  fontFamily: '"IBM Plex Mono", monospace',
                   letterSpacing: '0.06em', padding: '0.5rem 2rem 0.5rem 0.75rem',
                   outline: 'none', appearance: 'none', cursor: 'pointer',
                 }}
@@ -492,7 +491,7 @@ export default function TournamentDetail() {
           </form>
 
           {error && (
-            <div className="error-box" style={{ marginTop: '0.75rem' }}>
+            <div className="error-box">
               {error}
             </div>
           )}
@@ -500,7 +499,7 @@ export default function TournamentDetail() {
       )}
 
       {!loadingPlayers && roster.length === 0 && enrolled.length > 0 && (
-        <div style={{ fontFamily: '"IBM Plex Mono", monospace', color: 'var(--color-muted-dim)', letterSpacing: '0.12em', textAlign: 'center', padding: '0.5rem' }}>
+        <div style={{ color: 'var(--color-muted-dim)', letterSpacing: '0.12em', textAlign: 'center', padding: '0.5rem' }}>
           All players are enrolled in this tournament.
         </div>
       )}

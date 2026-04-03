@@ -38,7 +38,7 @@ export default function Players() {
       <div className="anim-0" style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.75rem' }}>
         <div>
           <div className="section-label" style={{ marginBottom: '0.3rem' }}>Personnel Records</div>
-          <h1 style={{ fontFamily: '"Bebas Neue", sans-serif', fontSize: '2.4rem', letterSpacing: '0.06em', margin: 0 }}>
+          <h1 style={{ fontSize: '2.4rem', letterSpacing: '0.06em', margin: 0 }}>
             Players
           </h1>
         </div>
@@ -51,15 +51,15 @@ export default function Players() {
             <div className="spinner" /><span className="section-label">Loading...</span>
           </div>
         ) : error ? (
-          <div className="error-box" style={{ padding: '1.25rem' }}>
+          <div className="error-box">
             {error}
           </div>
         ) : players.length === 0 ? (
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '4rem 2rem', gap: '1rem' }}>
-            <h3 style={{ fontFamily: '"Bebas Neue", sans-serif', fontSize: '1.4rem', letterSpacing: '0.06em', color: 'var(--color-muted)', margin: 0 }}>
+            <h3 style={{ fontSize: '1.4rem', letterSpacing: '0.06em', color: 'var(--color-muted)', margin: 0 }}>
               No Personnel on Record
             </h3>
-            <p style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '0.95rem', color: 'var(--color-muted-dim)', margin: 0, textAlign: 'center' }}>
+            <p style={{ fontSize: '0.95rem', color: 'var(--color-muted-dim)', margin: 0, textAlign: 'center' }}>
               Enlist your first player to begin building the roster
             </p>
             <Link to="/players/new" className="btn-primary" style={{ marginTop: '0.5rem' }}>+ Enlist First Player</Link>

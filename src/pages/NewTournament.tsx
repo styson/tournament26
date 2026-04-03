@@ -45,7 +45,7 @@ export default function NewTournament() {
       {/* Header */}
       <div className="anim-0">
         <div className="section-label" style={{ marginBottom: '0.3rem' }}>Tournaments</div>
-        <h1 style={{ fontFamily: '"Bebas Neue", sans-serif', fontSize: '2.4rem', letterSpacing: '0.06em', margin: 0 }}>
+        <h1 style={{ fontSize: '2.4rem', letterSpacing: '0.06em', margin: 0 }}>
           New Tournament
         </h1>
       </div>
@@ -76,7 +76,7 @@ export default function NewTournament() {
             value={description}
             onChange={e => setDescription(e.target.value)}
             rows={3}
-            style={{ resize: 'vertical', fontFamily: '"IBM Plex Mono", monospace', fontSize: '1rem', lineHeight: 1.6 }}
+            style={{ resize: 'vertical', fontSize: '1rem', lineHeight: 1.6 }}
           />
         </div>
 
