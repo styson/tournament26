@@ -10,6 +10,7 @@ export default function NewScenario() {
   const [attackerNationality, setAttackerNationality] = useState('');
   const [defenderNationality, setDefenderNationality] = useState('');
   const [source,              setSource]              = useState('');
+  const [archiveId,           setArchiveId]           = useState('');
   const [saving,              setSaving]              = useState(false);
   const [error,               setError]               = useState('');
 
@@ -24,6 +25,7 @@ export default function NewScenario() {
       attacker_nationality: attackerNationality.trim(),
       defender_nationality: defenderNationality.trim(),
       source:               source.trim() || null,
+      archive_id:           archiveId.trim() || null,
     });
 
     setSaving(false);
@@ -95,6 +97,18 @@ export default function NewScenario() {
               type="text"
               value={defenderNationality}
               onChange={e => setDefenderNationality(e.target.value)}
+            />
+          </div>
+        </div>
+
+        <div>
+          <div>
+            <label className="field-label">Scenario Archive Id</label>
+            <input
+              className="input"
+              type="text"
+              value={archiveId}
+              onChange={e => setArchiveId(e.target.value)}
             />
           </div>
         </div>

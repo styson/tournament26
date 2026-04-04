@@ -11,6 +11,7 @@ export default function EditScenario() {
   const [attackerNationality, setAttackerNationality] = useState('');
   const [defenderNationality, setDefenderNationality] = useState('');
   const [source,              setSource]              = useState('');
+  const [archiveId,           setArchiveId]           = useState('');
   const [loading,             setLoading]             = useState(true);
   const [saving,              setSaving]              = useState(false);
   const [error,               setError]               = useState('');
@@ -25,6 +26,7 @@ export default function EditScenario() {
           setAttackerNationality(data.attacker_nationality);
           setDefenderNationality(data.defender_nationality);
           setSource(data.source ?? '');
+          setArchiveId(data.archive_id ?? '');
         }
         setLoading(false);
       });
@@ -41,6 +43,7 @@ export default function EditScenario() {
       attacker_nationality: attackerNationality.trim(),
       defender_nationality: defenderNationality.trim(),
       source:               source.trim() || null,
+      archive_id:           archiveId.trim() || null,
     }).eq('id', id);
 
     setSaving(false);
@@ -119,6 +122,16 @@ export default function EditScenario() {
                 onChange={e => setDefenderNationality(e.target.value)}
               />
             </div>
+          </div>
+
+          <div>
+            <label className="field-label">Scenario Archive Id</label>
+            <input
+              className="input"
+              type="text"
+              value={archiveId}
+              onChange={e => setArchiveId(e.target.value)}
+            />
           </div>
 
           {error && <div className="error-box">{error}</div>}
