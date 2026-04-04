@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams, Link } from '@tanstack/react-router';
+import { useNavigate, useParams, useSearch, Link } from '@tanstack/react-router';
 import { supabase } from '@/config/supabase';
 
 export default function EditPlayer() {
   const { id } = useParams({ strict: false });
   const navigate = useNavigate();
+  const { q } = useSearch({ from: '/players/$id/edit' });
 
   const [name,     setName]     = useState('');
   const [email,    setEmail]    = useState('');
@@ -12,6 +13,7 @@ export default function EditPlayer() {
   const [location, setLocation] = useState('');
   const [loading,  setLoading]  = useState(true);
   const [saving,   setSaving]   = useState(false);
+  const [deleting, setDeleting] = useState(false);
   const [error,    setError]    = useState('');
 
   useEffect(() => {
@@ -43,7 +45,38 @@ export default function EditPlayer() {
     setSaving(false);
 
     if (error) { setError(error.message); return; }
-    navigate({ to: '/players' });
+    navigate({ to: '/players', search: { q } });
+  }
+
+  async function handleDelete(e: React.MouseEvent) {
+    const [{ count: gameCount }, { count: tourneyCount }] = await Promise.all([
+      supabase
+        .from('games')
+        .select('id', { count: 'exact', head: true })
+        .or(`attacker_id.eq.${id},defender_id.eq.${id},winner_id.eq.${id}`),
+      supabase
+        .from('tournament_players')
+        .select('player_id', { count: 'exact', head: true })
+        .eq('player_id', id),
+    ]);
+
+    const reasons: string[] = [];
+    if (gameCount && gameCount > 0)
+      reasons.push(`${gameCount} game${gameCount === 1 ? '' : 's'}`);
+    if (tourneyCount && tourneyCount > 0)
+      reasons.push(`${tourneyCount} tournament${tourneyCount === 1 ? '' : 's'}`);
+
+    if (reasons.length > 0) {
+      setError(`Cannot delete — this player appears in ${reasons.join(' and ')}.`);
+      return;
+    }
+
+    if (!e.shiftKey && !confirm('Delete this player? This cannot be undone.')) return;
+    setDeleting(true);
+    const { error } = await supabase.from('players').delete().eq('id', id);
+    setDeleting(false);
+    if (error) { setError(error.message); return; }
+    navigate({ to: '/players', search: { q } });
   }
 
   return (
@@ -112,12 +145,21 @@ export default function EditPlayer() {
             <button
               type="submit"
               className="btn-primary"
-              disabled={saving}
+              disabled={saving || deleting}
               style={{ opacity: saving ? 0.6 : 1, cursor: saving ? 'wait' : 'pointer' }}
             >
               {saving ? 'Saving...' : 'Save Changes'}
             </button>
-            <Link to="/players" className="btn-secondary">Cancel</Link>
+            <Link to="/players" search={{ q }} className="btn-secondary">Cancel</Link>
+            <button
+              type="button"
+              className="btn-danger"
+              onClick={handleDelete}
+              disabled={deleting || saving}
+              style={{ marginLeft: 'auto', opacity: deleting ? 0.6 : 1, cursor: deleting ? 'wait' : 'pointer' }}
+            >
+              {deleting ? 'Deleting...' : 'Delete'}
+            </button>
           </div>
         </form>
       )}

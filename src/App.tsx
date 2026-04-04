@@ -54,6 +54,9 @@ const dashboardRoute = createRoute({
 const playersRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/players',
+  validateSearch: (search: Record<string, unknown>) => ({
+    q: typeof search.q === 'string' ? search.q : '',
+  }),
   component: () => (
     <ProtectedRoute>
       <Layout>
@@ -78,6 +81,9 @@ const tournamentsRoute = createRoute({
 const scenariosRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/scenarios',
+  validateSearch: (search: Record<string, unknown>) => ({
+    q: typeof search.q === 'string' ? search.q : '',
+  }),
   component: () => (
     <ProtectedRoute>
       <Layout>
@@ -138,6 +144,9 @@ const tournamentEditRoute = createRoute({
 const playerEditRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/players/$id/edit',
+  validateSearch: (search: Record<string, unknown>) => ({
+    q: typeof search.q === 'string' ? search.q : '',
+  }),
   component: () => (
     <ProtectedRoute>
       <Layout>
@@ -162,6 +171,9 @@ const scenariosNewRoute = createRoute({
 const scenarioEditRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/scenarios/$id/edit',
+  validateSearch: (search: Record<string, unknown>) => ({
+    q: typeof search.q === 'string' ? search.q : '',
+  }),
   component: () => (
     <ProtectedRoute>
       <Layout>

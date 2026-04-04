@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Link, useNavigate } from '@tanstack/react-router';
+import { Link, useNavigate, useSearch } from '@tanstack/react-router';
 import { supabase } from '@/config/supabase';
 
 const PAGE_SIZE = 20;
@@ -17,14 +17,13 @@ function buildQuery(search: string, page: number) {
   let q = supabase
     .from('players')
     .select('id, name, email, phone, location')
-    .order('name');
+    .order('name')
+    .range(page * PAGE_SIZE, page * PAGE_SIZE + PAGE_SIZE - 1);
 
   if (term) {
     q = q.or(
       `name.ilike.%${term}%,email.ilike.%${term}%,location.ilike.%${term}%`
-    ).limit(PAGE_SIZE);
-  } else {
-    q = q.range(page * PAGE_SIZE, page * PAGE_SIZE + PAGE_SIZE - 1);
+    );
   }
 
   return q;
@@ -36,18 +35,24 @@ export default function Players() {
   const [loadingMore, setLoadingMore] = useState(false);
   const [hasMore, setHasMore] = useState(false);
   const [error, setError] = useState('');
-  const [search, setSearch] = useState('');
   const navigate = useNavigate();
+  const { q } = useSearch({ from: '/players' });
+  const search = q ?? '';
+
+  function setSearch(value: string) {
+    navigate({ to: '/players', search: { q: value }, replace: true });
+  }
 
   const pageRef = useRef(0);
   const searchRef = useRef('');
   const loadingMoreRef = useRef(false);
+  const hasMoreRef = useRef(false);
   const observerRef = useRef<IntersectionObserver | null>(null);
 
   useEffect(() => {
     const term = search;
+    searchRef.current = term; // sync immediately so the observer sees it right away
     const timer = setTimeout(async () => {
-      searchRef.current = term;
       pageRef.current = 0;
       setLoading(true);
       setError('');
@@ -58,8 +63,10 @@ export default function Players() {
       if (error) { setError(error.message); setLoading(false); return; }
 
       const rows = data ?? [];
+      const more = rows.length === PAGE_SIZE;
       setPlayers(rows);
-      setHasMore(!term.trim() && rows.length === PAGE_SIZE);
+      setHasMore(more);
+      hasMoreRef.current = more;
       setLoading(false);
     }, search ? 300 : 0);
 
@@ -73,14 +80,14 @@ export default function Players() {
 
     observerRef.current = new IntersectionObserver(async ([entry]) => {
       if (!entry.isIntersecting) return;
-      if (searchRef.current.trim()) return;
+      if (!hasMoreRef.current) return;
       if (loadingMoreRef.current) return;
 
       loadingMoreRef.current = true;
       setLoadingMore(true);
 
       const nextPage = pageRef.current + 1;
-      const { data, error } = await buildQuery('', nextPage);
+      const { data, error } = await buildQuery(searchRef.current, nextPage);
 
       if (error) { setError(error.message); }
       else {
@@ -89,7 +96,9 @@ export default function Players() {
           setPlayers(prev => [...prev, ...rows]);
           pageRef.current = nextPage;
         }
-        setHasMore(rows.length === PAGE_SIZE);
+        const more = rows.length === PAGE_SIZE;
+        setHasMore(more);
+        hasMoreRef.current = more;
       }
 
       loadingMoreRef.current = false;
@@ -167,7 +176,7 @@ export default function Players() {
                     <td>
                       <button
                         className="btn-secondary btn-sm"
-                        onClick={() => navigate({ to: '/players/$id/edit', params: { id: p.id } })}
+                        onClick={() => navigate({ to: '/players/$id/edit', params: { id: p.id }, search: { q: search } })}
                       >
                         Edit
                       </button>

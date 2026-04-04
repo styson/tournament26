@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useNavigate, Link } from '@tanstack/react-router';
+import { useNavigate, useSearch, Link } from '@tanstack/react-router';
 import { supabase } from '@/config/supabase';
 import { toTitleCase } from '@/utils/format';
 
@@ -20,15 +20,14 @@ function buildQuery(search: string, page: number) {
   let q = supabase
     .from('scenarios')
     .select('id, scen_id, title, attacker_nationality, defender_nationality, source, archive_id')
-    .order('title');
+    .order('title')
+    .range(page * PAGE_SIZE, page * PAGE_SIZE + PAGE_SIZE - 1);
 
   if (term) {
     q = q.or(
       `title.ilike.%${term}%,scen_id.ilike.%${term}%,source.ilike.%${term}%,` +
       `attacker_nationality.ilike.%${term}%,defender_nationality.ilike.%${term}%`
-    ).limit(PAGE_SIZE);
-  } else {
-    q = q.range(page * PAGE_SIZE, page * PAGE_SIZE + PAGE_SIZE - 1);
+    );
   }
 
   return q;
@@ -40,19 +39,25 @@ export default function Scenarios() {
   const [loadingMore, setLoadingMore] = useState(false);
   const [hasMore, setHasMore] = useState(false);
   const [error, setError] = useState('');
-  const [search, setSearch] = useState('');
   const navigate = useNavigate();
+  const { q } = useSearch({ from: '/scenarios' });
+  const search = q ?? '';
+
+  function setSearch(value: string) {
+    navigate({ to: '/scenarios', search: { q: value }, replace: true });
+  }
 
   const pageRef = useRef(0);
   const searchRef = useRef('');
   const loadingMoreRef = useRef(false);
+  const hasMoreRef = useRef(false);
   const observerRef = useRef<IntersectionObserver | null>(null);
 
   // Load first page whenever search changes (debounced)
   useEffect(() => {
     const term = search;
+    searchRef.current = term; // sync immediately so the observer sees it right away
     const timer = setTimeout(async () => {
-      searchRef.current = term;
       pageRef.current = 0;
       setLoading(true);
       setError('');
@@ -63,8 +68,10 @@ export default function Scenarios() {
       if (error) { setError(error.message); setLoading(false); return; }
 
       const rows = data ?? [];
+      const more = rows.length === PAGE_SIZE;
       setScenarios(rows);
-      setHasMore(!term.trim() && rows.length === PAGE_SIZE);
+      setHasMore(more);
+      hasMoreRef.current = more;
       setLoading(false);
     }, search ? 300 : 0);
 
@@ -79,14 +86,14 @@ export default function Scenarios() {
 
     observerRef.current = new IntersectionObserver(async ([entry]) => {
       if (!entry.isIntersecting) return;
-      if (searchRef.current.trim()) return;
+      if (!hasMoreRef.current) return;
       if (loadingMoreRef.current) return;
 
       loadingMoreRef.current = true;
       setLoadingMore(true);
 
       const nextPage = pageRef.current + 1;
-      const { data, error } = await buildQuery('', nextPage);
+      const { data, error } = await buildQuery(searchRef.current, nextPage);
 
       if (error) { setError(error.message); }
       else {
@@ -95,7 +102,9 @@ export default function Scenarios() {
           setScenarios(prev => [...prev, ...rows]);
           pageRef.current = nextPage;
         }
-        setHasMore(rows.length === PAGE_SIZE);
+        const more = rows.length === PAGE_SIZE;
+        setHasMore(more);
+        hasMoreRef.current = more;
       }
 
       loadingMoreRef.current = false;
@@ -178,7 +187,7 @@ export default function Scenarios() {
                     <td>
                       <button
                         className="btn-secondary btn-sm"
-                        onClick={() => navigate({ to: '/scenarios/$id/edit', params: { id: s.id } })}
+                        onClick={() => navigate({ to: '/scenarios/$id/edit', params: { id: s.id }, search: { q: search } })}
                       >
                         Edit
                       </button>
