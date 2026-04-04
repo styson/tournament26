@@ -74,11 +74,13 @@ export type RoundStatus = typeof RoundStatus[keyof typeof RoundStatus];
 // Scenario Types
 export interface Scenario {
   id: string;
+  scenId?: string;
   title: string;
   description?: string;
   defenderNationality: Nationality;
   attackerNationality: Nationality;
   source?: string; // e.g., "Core Rulebook", "Expansion Pack 1"
+  archiveId: string;
   createdAt: Date;
 }
 

@@ -1,6 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from '@tanstack/react-router';
 import { supabase } from '@/config/supabase';
+
+const PAGE_SIZE = 20;
 
 interface Player {
   id: string;
@@ -10,26 +12,91 @@ interface Player {
   location: string | null;
 }
 
+function buildQuery(search: string, page: number) {
+  const term = search.trim();
+  let q = supabase
+    .from('players')
+    .select('id, name, email, phone, location')
+    .order('name');
+
+  if (term) {
+    q = q.or(
+      `name.ilike.%${term}%,email.ilike.%${term}%,location.ilike.%${term}%`
+    ).limit(PAGE_SIZE);
+  } else {
+    q = q.range(page * PAGE_SIZE, page * PAGE_SIZE + PAGE_SIZE - 1);
+  }
+
+  return q;
+}
+
 export default function Players() {
   const [players, setPlayers] = useState<Player[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [hasMore, setHasMore] = useState(false);
   const [error, setError] = useState('');
+  const [search, setSearch] = useState('');
   const navigate = useNavigate();
 
+  const pageRef = useRef(0);
+  const searchRef = useRef('');
+  const loadingMoreRef = useRef(false);
+  const observerRef = useRef<IntersectionObserver | null>(null);
+
   useEffect(() => {
-    supabase
-      .from('players')
-      .select('*')
-      .order('name')
-      .then(({ data, error }) => {
-        if (error) {
-          console.error(error);
-          setError(error.message);
-        } else {
-          setPlayers(data ?? []);
+    const term = search;
+    const timer = setTimeout(async () => {
+      searchRef.current = term;
+      pageRef.current = 0;
+      setLoading(true);
+      setError('');
+
+      const { data, error } = await buildQuery(term, 0);
+
+      if (searchRef.current !== term) return;
+      if (error) { setError(error.message); setLoading(false); return; }
+
+      const rows = data ?? [];
+      setPlayers(rows);
+      setHasMore(!term.trim() && rows.length === PAGE_SIZE);
+      setLoading(false);
+    }, search ? 300 : 0);
+
+    return () => clearTimeout(timer);
+  }, [search]);
+
+  const sentinelRef = useCallback((node: HTMLDivElement | null) => {
+    observerRef.current?.disconnect();
+    observerRef.current = null;
+    if (!node) return;
+
+    observerRef.current = new IntersectionObserver(async ([entry]) => {
+      if (!entry.isIntersecting) return;
+      if (searchRef.current.trim()) return;
+      if (loadingMoreRef.current) return;
+
+      loadingMoreRef.current = true;
+      setLoadingMore(true);
+
+      const nextPage = pageRef.current + 1;
+      const { data, error } = await buildQuery('', nextPage);
+
+      if (error) { setError(error.message); }
+      else {
+        const rows = data ?? [];
+        if (rows.length > 0) {
+          setPlayers(prev => [...prev, ...rows]);
+          pageRef.current = nextPage;
         }
-        setLoading(false);
-      });
+        setHasMore(rows.length === PAGE_SIZE);
+      }
+
+      loadingMoreRef.current = false;
+      setLoadingMore(false);
+    }, { rootMargin: '300px' });
+
+    observerRef.current.observe(node);
   }, []);
 
   return (
@@ -41,9 +108,24 @@ export default function Players() {
           <div className="section-label" style={{ marginBottom: '0.3rem' }}>Personnel Records</div>
           <h1 style={{ fontSize: '2.4rem', letterSpacing: '0.06em', margin: 0 }}>
             Players
+            {!loading && (
+              <span className="mono" style={{ fontSize: '0.85rem', color: 'var(--color-accent)', marginLeft: '0.75rem', letterSpacing: '0.1em' }}>
+                {players.length}{hasMore ? '+' : ''}
+              </span>
+            )}
           </h1>
         </div>
-        <Link to="/players/new" className="btn-primary">+ Enlist Player</Link>
+        <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+          <input
+            type="text"
+            placeholder="Search players..."
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            className="input"
+            style={{ width: '220px' }}
+          />
+          <Link to="/players/new" className="btn-primary">+ Enlist Player</Link>
+        </div>
       </div>
 
       <div className="card anim-1" style={{ padding: 0, overflow: 'hidden' }}>
@@ -52,18 +134,16 @@ export default function Players() {
             <div className="spinner" /><span className="section-label">Loading...</span>
           </div>
         ) : error ? (
-          <div className="error-box">
-            {error}
-          </div>
+          <div className="error-box">{error}</div>
         ) : players.length === 0 ? (
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '4rem 2rem', gap: '1rem' }}>
             <h3 style={{ fontSize: '1.4rem', letterSpacing: '0.06em', color: 'var(--color-muted)', margin: 0 }}>
-              No Personnel on Record
+              {search ? 'No Matches Found' : 'No Personnel on Record'}
             </h3>
             <p style={{ fontSize: '0.95rem', color: 'var(--color-muted-dim)', margin: 0, textAlign: 'center' }}>
-              Enlist your first player to begin building the roster
+              {search ? 'Try a different search term' : 'Enlist your first player to begin building the roster'}
             </p>
-            <Link to="/players/new" className="btn-primary" style={{ marginTop: '0.5rem' }}>+ Enlist First Player</Link>
+            {!search && <Link to="/players/new" className="btn-primary" style={{ marginTop: '0.5rem' }}>+ Enlist First Player</Link>}
           </div>
         ) : (
           <div style={{ overflowX: 'auto' }}>
@@ -96,6 +176,12 @@ export default function Players() {
                 ))}
               </tbody>
             </table>
+            <div ref={sentinelRef} style={{ height: 1 }} />
+            {loadingMore && (
+              <div className="row" style={{ justifyContent: 'center', padding: '1rem' }}>
+                <div className="spinner" /><span className="section-label">Loading...</span>
+              </div>
+            )}
           </div>
         )}
       </div>
