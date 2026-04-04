@@ -98,6 +98,8 @@ export default function EditScenario() {
     e.preventDefault();
     if (!archiveId.trim()) return;
 
+    const autoApplyAndSave = e.ctrlKey;
+
     setSearching(true);
     setArchiveError('');
     setArchiveData(null);
@@ -111,6 +113,21 @@ export default function EditScenario() {
 
       if (data.scenario_id === archiveId.trim()) {
         setArchiveData(data);
+
+        if (autoApplyAndSave) {
+          setSaving(true);
+          const { error } = await supabase.from('scenarios').update({
+            scen_id:              data.sc_id,
+            title:                data.title,
+            attacker_nationality: data.attacker,
+            defender_nationality: data.defender,
+            source:               data.pub_name,
+            archive_id:           archiveId.trim() || null,
+          }).eq('id', id);
+          setSaving(false);
+          if (error) { setError(error.message); return; }
+          navigate({ to: '/scenarios', search: { q } });
+        }
       } else {
         setArchiveError('No matching scenario found in the archive.');
       }

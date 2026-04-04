@@ -6,6 +6,7 @@ import autoTable from 'jspdf-autotable';
 export interface PlayerRow {
   id: string;
   name: string;
+  seed?: number | null;
 }
 
 export interface GameResult {
@@ -46,8 +47,8 @@ export function computeStandings(players: PlayerRow[], games: GameResult[]): Sta
   for (const p of players) { defeated[p.id] = []; lostTo[p.id] = []; }
   for (const g of completed) {
     const loserId = g.winner_id === g.player1_id ? g.player2_id : g.player1_id;
-    defeated[g.winner_id!].push(loserId);
-    lostTo[loserId].push(g.winner_id!);
+    (defeated[g.winner_id!] ??= []).push(loserId);
+    (lostTo[loserId]        ??= []).push(g.winner_id!);
   }
 
   const points: Record<string, number> = {};
@@ -63,11 +64,10 @@ export function computeStandings(players: PlayerRow[], games: GameResult[]): Sta
     return { player: p, wins: wins[p.id] ?? 0, losses: losses[p.id] ?? 0, points: points[p.id] ?? 0, tb1, tb2, rank: 0 };
   });
 
-  // Sort: points desc, tb1 desc, tb2 desc, name asc
+  // Sort: points desc, seed asc (unseeded last), name asc
   entries.sort((a, b) =>
     b.points - a.points ||
-    b.tb1    - a.tb1    ||
-    b.tb2    - a.tb2    ||
+    (a.player.seed ?? 999) - (b.player.seed ?? 999) ||
     a.player.name.localeCompare(b.player.name)
   );
 
@@ -89,12 +89,6 @@ export function computeStandings(players: PlayerRow[], games: GameResult[]): Sta
 
 // ─── PDF generation ───────────────────────────────────────────
 
-function rankLabel(rank: number) {
-  if (rank === 1) return '1st';
-  if (rank === 2) return '2nd';
-  if (rank === 3) return '3rd';
-  return `${rank}th`;
-}
 
 export function downloadStandingsPdf(standings: StandingEntry[], tournamentName: string): void {
   const doc = new jsPDF({ orientation: 'p', unit: 'pt', format: 'letter' });
@@ -102,14 +96,13 @@ export function downloadStandingsPdf(standings: StandingEntry[], tournamentName:
   if (standings.length === 0) {
     doc.text('No standings yet.', 20, 20);
   } else {
-    doc.text(`${tournamentName} Standings`, 40, 30);
+    doc.text(`${tournamentName}  —  Point Details`, 40, 30);
     const headers = ['#', 'Player', 'W', 'L', 'Base', 'Bonus', 'Pts', 'TB1', 'TB2'];
-    const rows = standings.map(s => {
+    const rows = standings.map((s, idx) => {
       const base  = s.wins * 10;
       const bonus = s.points - base;
-      const isTied = standings.filter(x => x.rank === s.rank).length > 1;
       return [
-        `${rankLabel(s.rank)}${isTied ? '=' : ''}`,
+        idx + 1,
         s.player.name,
         s.wins,
         s.losses,

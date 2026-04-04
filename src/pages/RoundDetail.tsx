@@ -43,20 +43,6 @@ interface GameRow {
   status: string;
 }
 
-// ─── scenario cache (session-level) ─────────────────────────
-
-let _scenarioCache: ScenarioRow[] | null = null;
-
-async function loadAllScenarios(): Promise<ScenarioRow[]> {
-  if (_scenarioCache?.length) return _scenarioCache;
-  const { data, error } = await supabase
-    .from('scenarios')
-    .select('id, scen_id, title, attacker_nationality, defender_nationality')
-    .order('title');
-  if (error) { console.error(error); return []; }
-  _scenarioCache = data ?? [];
-  return _scenarioCache;
-}
 
 // ─── constants ───────────────────────────────────────────────
 
@@ -80,28 +66,21 @@ function gameStatusColor(s: string) {
 // ─── scenario search combobox ────────────────────────────────
 
 function ScenarioPicker({
-  available, value, onChange, currentCount,
+  excludeIds, value, onChange, currentCount,
 }: {
-  available: ScenarioRow[];
+  excludeIds: Set<string>;
   value: string;
   onChange: (id: string) => void;
   currentCount: number;
 }) {
-  const [inputVal, setInputVal] = useState('');
-  const [open, setOpen] = useState(false);
+  const [inputVal, setInputVal]   = useState('');
+  const [results,  setResults]    = useState<ScenarioRow[]>([]);
+  const [open,     setOpen]       = useState(false);
   const [dropStyle, setDropStyle] = useState<React.CSSProperties>({});
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef  = useRef<HTMLInputElement>(null);
+  const timerRef  = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => { if (!value) setInputVal(''); }, [value]);
-
-  const filtered = inputVal.trim().length > 0
-    ? available
-        .filter(s =>
-          (s.scen_id ?? '').toLowerCase().includes(inputVal.toLowerCase()) ||
-          s.title.toLowerCase().includes(inputVal.toLowerCase())
-        )
-        .sort((a, b) => (a.scen_id ?? '').localeCompare(b.scen_id ?? '', undefined, { numeric: true }))
-    : [];
 
   function updateDropPos() {
     if (inputRef.current) {
@@ -118,9 +97,21 @@ function ScenarioPicker({
 
   function handleChange(val: string) {
     setInputVal(val);
-    if (!val) onChange('');
+    if (!val) { onChange(''); setResults([]); setOpen(false); return; }
     updateDropPos();
     setOpen(true);
+    if (timerRef.current) clearTimeout(timerRef.current);
+    timerRef.current = setTimeout(async () => {
+      const term = val.trim();
+      if (!term) return;
+      const { data } = await supabase
+        .from('scenarios')
+        .select('id, scen_id, title, attacker_nationality, defender_nationality')
+        .or(`title.ilike.%${term}%,scen_id.ilike.%${term}%`)
+        .order('scen_id', { nullsFirst: false })
+        .limit(50);
+      setResults((data ?? []).filter(s => !excludeIds.has(s.id)));
+    }, 250);
   }
 
   return (
@@ -132,7 +123,7 @@ function ScenarioPicker({
         onChange={e => handleChange(e.target.value)}
         onFocus={() => { updateDropPos(); inputVal.trim() && setOpen(true); }}
         onBlur={() => setTimeout(() => setOpen(false), 150)}
-        placeholder={`Search by ID or title… (${currentCount}/5)`}
+        placeholder={`Search by ID or title… (${currentCount}/10)`}
         className="input"
         style={{ width: '100%' }}
         autoComplete="off"
@@ -145,7 +136,7 @@ function ScenarioPicker({
           boxShadow: '0 8px 24px rgba(0,0,0,0.6)',
           ...dropStyle,
         }}>
-          {filtered.length > 0 ? filtered.map(s => (
+          {results.length > 0 ? results.map(s => (
             <div
               key={s.id}
               onMouseDown={() => handleSelect(s)}
@@ -194,7 +185,6 @@ export default function RoundDetail() {
   const [tournament,     setTournament]     = useState<{ id: string; name: string } | null>(null);
   const [enrolled,       setEnrolled]       = useState<Player[]>([]);
   const [roundScenarios, setRoundScenarios] = useState<ScenarioRow[]>([]);
-  const [allScenarios,   setAllScenarios]   = useState<ScenarioRow[]>([]);
   const [games,          setGames]          = useState<GameRow[]>([]);
   const [allRounds,      setAllRounds]      = useState<{ id: string; round_number: number }[]>([]);
   const [playerRecords,  setPlayerRecords]  = useState<Record<string, { w: number; l: number }>>({});
@@ -296,9 +286,6 @@ export default function RoundDetail() {
       matchups.add(key);
     }
     setPriorMatchups(matchups);
-
-    const all = await loadAllScenarios();
-    setAllScenarios(all);
 
     await fetchGames();
     setLoading(false);
@@ -410,9 +397,8 @@ export default function RoundDetail() {
   const availablePlayers = enrolled.filter(p => !assignedIds.has(p.id)).sort(sortByRecord);
   const p2Options        = availablePlayers.filter(p => p.id !== p1Id);
 
-  const roundScenIds    = new Set(roundScenarios.map(s => s.id));
-  const unassignedScens = allScenarios.filter(s => !roundScenIds.has(s.id));
-  const atScenLimit     = roundScenarios.length >= 5;
+  const roundScenIds = new Set(roundScenarios.map(s => s.id));
+  const atScenLimit  = roundScenarios.length >= 10;
 
   // ── PDF report ───────────────────────────────────────────
 
@@ -565,7 +551,7 @@ export default function RoundDetail() {
         >
           <div className="section-label">
             Scenarios
-            <span style={{ color: 'var(--color-accent)', marginLeft: '0.5rem' }}>{roundScenarios.length}/5</span>
+            <span style={{ color: 'var(--color-accent)', marginLeft: '0.5rem' }}>{roundScenarios.length}/10</span>
           </div>
           <span style={{ color: '#ffffff', transition: 'transform 0.15s ease', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '24px', height: '24px', border: '1px solid #dddddd', transform: scenOpen ? 'rotate(0deg)' : 'rotate(-90deg)', flexShrink: 0 }}>▾</span>
         </button>
@@ -624,7 +610,7 @@ export default function RoundDetail() {
           {!atScenLimit && (
             <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', marginTop: roundScenarios.length > 0 ? '0.5rem' : '0' }}>
               <ScenarioPicker
-                available={unassignedScens}
+                excludeIds={roundScenIds}
                 value={scenPick}
                 onChange={setScenPick}
                 currentCount={roundScenarios.length}
@@ -641,7 +627,7 @@ export default function RoundDetail() {
           )}
           {atScenLimit && (
             <div style={{ color: 'var(--color-accent)', letterSpacing: '0.1em', marginTop: '0.25rem' }}>
-              MAX 5 SCENARIOS REACHED
+              MAX 10 SCENARIOS REACHED
             </div>
           )}
         </div>}

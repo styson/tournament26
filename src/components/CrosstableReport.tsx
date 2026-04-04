@@ -21,7 +21,7 @@ export default function CrosstableReportButton({ standings, tournamentId, tourna
 
   return (
     <button onClick={handleClick} disabled={disabled} className="btn-sm" style={style}>
-      {loading ? 'Building…' : 'View Crosstable'}
+      {loading ? 'Building…' : 'Standings'}
     </button>
   );
 }

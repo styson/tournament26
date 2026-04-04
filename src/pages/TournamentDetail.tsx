@@ -2,7 +2,8 @@ import { computeStandings, type GameResult, type StandingEntry } from "@/utils/s
 import { openPlayerReportPdf } from '@/utils/playerReportPdf';
 import { openScenarioReportPdf } from '@/utils/scenarioReportPdf';
 import { supabase } from '@/config/supabase';
-import { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
+import { useEffect, useRef, useState } from 'react';
 import { useParams, Link } from '@tanstack/react-router';
 import StandingsReportButton from '@/components/StandingsReport';
 import { ArrowLeft, Check, ChevronDown, ExternalLink, LogIn, X } from 'lucide-react';
@@ -21,6 +22,7 @@ interface Player {
   name: string;
   email: string | null;
   location: string | null;
+  seed: number | null;
 }
 
 interface Round {
@@ -80,10 +82,16 @@ export default function TournamentDetail() {
   const [points,     setPoints]     = useState<Record<string, number>>({});
   const [standings,  setStandings]  = useState<StandingEntry[]>([]);
   const [selectedPlayerId, setSelectedPlayerId] = useState('');
+  const [seedInput,        setSeedInput]        = useState('1');
 
   const [loadingTournament, setLoadingTournament] = useState(true);
   const [loadingPlayers,    setLoadingPlayers]    = useState(true);
   const [loadingRounds,     setLoadingRounds]     = useState(true);
+
+  const [seedModal,      setSeedModal]      = useState<Player | null>(null);
+  const [seedModalVal,   setSeedModalVal]   = useState('');
+  const [seedModalSaving,setSeedModalSaving]= useState(false);
+  const seedModalRef = useRef<HTMLInputElement>(null);
 
   const [enrolling,            setEnrolling]            = useState(false);
   const [removingId,           setRemovingId]           = useState<string | null>(null);
@@ -91,6 +99,8 @@ export default function TournamentDetail() {
   const [addingRound,          setAddingRound]          = useState(false);
   const [updatingStatus,       setUpdatingStatus]       = useState(false);
   const [error,                setError]                = useState('');
+
+  useEffect(() => { setSeedInput(String(enrolled.length + 1)); }, [enrolled.length]);
 
   // ── fetch tournament ──────────────────────────────────────
   useEffect(() => {
@@ -109,7 +119,7 @@ export default function TournamentDetail() {
     setLoadingPlayers(true);
     const [enrolledRes, allRes, gamesRes] = await Promise.all([
       supabase.from('tournament_players')
-        .select('player_id, players(id, name, email, location)')
+        .select('seed, players(id, name, email, location)')
         .eq('tournament_id', id),
       supabase.from('players').select('id, name, email, location').order('name'),
       supabase.from('games')
@@ -117,7 +127,9 @@ export default function TournamentDetail() {
         .eq('rounds.tournament_id', id)
         .eq('status', 'COMPLETED'),
     ]);
-    const enrolledPlayers: Player[] = (enrolledRes.data ?? []).map((r: any) => r.players).filter(Boolean);
+    const enrolledPlayers: Player[] = (enrolledRes.data ?? [])
+      .map((r: any) => r.players ? { ...r.players, seed: r.seed ?? null } : null)
+      .filter(Boolean);
     const enrolledIds = new Set(enrolledPlayers.map(p => p.id));
     setEnrolled(enrolledPlayers);
     setRoster((allRes.data ?? []).filter(p => !enrolledIds.has(p.id)));
@@ -145,10 +157,14 @@ export default function TournamentDetail() {
       pts[pid] = 10 * rec[pid].w + bonus;
     }
     setPoints(pts);
-    setEnrolled(prev => [...prev].sort((a, b) => (pts[b.id] ?? 0) - (pts[a.id] ?? 0) || a.name.localeCompare(b.name)));
+    setEnrolled(prev => [...prev].sort((a, b) =>
+      (pts[b.id] ?? 0) - (pts[a.id] ?? 0) ||
+      (a.seed ?? 999) - (b.seed ?? 999) ||
+      a.name.localeCompare(b.name)
+    ));
 
     const standingsResult = computeStandings(
-      enrolledPlayers.map(p => ({ id: p.id, name: p.name })),
+      enrolledPlayers.map(p => ({ id: p.id, name: p.name, seed: p.seed })),
       (gamesRes.data ?? []) as GameResult[],
     );
     setStandings(standingsResult);
@@ -175,8 +191,9 @@ export default function TournamentDetail() {
     e.preventDefault();
     if (!selectedPlayerId) return;
     setEnrolling(true);
+    const seed = seedInput.trim() ? parseInt(seedInput.trim(), 10) : null;
     const { error } = await supabase.from('tournament_players')
-      .insert({ tournament_id: id, player_id: selectedPlayerId });
+      .insert({ tournament_id: id, player_id: selectedPlayerId, seed });
     if (error) { console.error(error); setError(error.message); }
     else await fetchPlayers();
     setEnrolling(false);
@@ -190,6 +207,19 @@ export default function TournamentDetail() {
     if (error) { console.error(error); setError(error.message); }
     else await fetchPlayers();
     setRemovingId(null);
+  }
+
+  // ── edit seed ─────────────────────────────────────────────
+  async function handleSaveSeed(e: React.FormEvent) {
+    e.preventDefault();
+    if (!seedModal) return;
+    setSeedModalSaving(true);
+    const seed = seedModalVal.trim() ? parseInt(seedModalVal.trim(), 10) : null;
+    const { error } = await supabase.from('tournament_players')
+      .update({ seed }).eq('tournament_id', id).eq('player_id', seedModal.id);
+    if (error) { setError(error.message); }
+    else { setSeedModal(null); await fetchPlayers(); }
+    setSeedModalSaving(false);
   }
 
   // ── update tournament status ──────────────────────────────
@@ -389,14 +419,20 @@ export default function TournamentDetail() {
                 display: 'flex', flexDirection: 'column',
                 padding: '0.5rem 0.6rem',
                 background: 'var(--color-bg)', border: '1px solid var(--color-border)',
-                transition: 'border-color 0.15s ease',
+                transition: 'border-color 0.15s ease', cursor: 'default',
               }}
                 onMouseEnter={e => (e.currentTarget as HTMLDivElement).style.borderColor = 'var(--color-border-bright)'}
                 onMouseLeave={e => (e.currentTarget as HTMLDivElement).style.borderColor = 'var(--color-border)'}
+                onClick={e => { if (e.ctrlKey) { setSeedModal(p); setSeedModalVal(p.seed !== null ? String(p.seed) : ''); setTimeout(() => seedModalRef.current?.select(), 50); } }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                  <div style={{ color: 'var(--color-text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                    {p.name}
+                  <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.4rem', minWidth: 0 }}>
+                    <span style={{ color: 'var(--color-text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      {p.name}
+                    </span>
+                    {p.seed !== null && (
+                      <span style={{ color: 'var(--color-muted)', letterSpacing: '0.1em', flexShrink: 0 }}>#{p.seed}</span>
+                    )}
                   </div>
                   <button
                     onClick={() => openPlayerReportPdf(p.id, p.name, id!, tournament?.name ?? '', Object.fromEntries(enrolled.map(e => [e.id, e.name])))}
@@ -458,9 +494,11 @@ export default function TournamentDetail() {
       {/* Add player */}
       {!loadingPlayers && roster.length > 0 && (
         <div className="card anim-5">
-          <div className="section-label" style={{ marginBottom: '0.75rem' }}>Add From Player List</div>
-          <form onSubmit={handleEnroll} style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', flexWrap: 'wrap' }}>
-            <div style={{ position: 'relative', flex: 1, minWidth: '200px' }}>
+          <form onSubmit={handleEnroll} style={{ display: 'grid', gridTemplateColumns: '1fr 80px auto', gap: '0.5rem 0.75rem', alignItems: 'center' }}>
+            <div className="section-label">Add From Player List</div>
+            <label className="field-label">Seed</label>
+            <div />
+            <div style={{ position: 'relative' }}>
               <select
                 value={selectedPlayerId}
                 onChange={e => setSelectedPlayerId(e.target.value)}
@@ -480,11 +518,19 @@ export default function TournamentDetail() {
               </select>
               <span style={{ position: 'absolute', right: '0.6rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--color-muted)', pointerEvents: 'none', display: 'inline-flex' }}><ChevronDown size={12} /></span>
             </div>
+            <input
+              type="number"
+              min="1"
+              value={seedInput}
+              onChange={e => setSeedInput(e.target.value)}
+              className="input"
+              style={{ width: '100%' }}
+            />
             <button
               type="submit"
               className="btn-primary"
               disabled={enrolling || !selectedPlayerId}
-              style={{ opacity: enrolling || !selectedPlayerId ? 0.5 : 1, cursor: enrolling ? 'wait' : 'pointer' }}
+              style={{ opacity: enrolling || !selectedPlayerId ? 0.5 : 1, cursor: enrolling ? 'wait' : 'pointer', whiteSpace: 'nowrap' }}
             >
               {enrolling ? 'Enrolling...' : '+ Enroll'}
             </button>
@@ -502,6 +548,38 @@ export default function TournamentDetail() {
         <div style={{ color: 'var(--color-muted-dim)', letterSpacing: '0.12em', textAlign: 'center', padding: '0.5rem' }}>
           All players are enrolled in this tournament.
         </div>
+      )}
+
+      {/* Seed edit modal */}
+      {seedModal && createPortal(
+        <div style={{ position: 'fixed', inset: 0, zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(0,0,0,0.6)' }}
+          onClick={e => { if (e.target === e.currentTarget) setSeedModal(null); }}
+        >
+          <form onSubmit={handleSaveSeed} style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border-bright)', padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem', minWidth: '280px' }}>
+            <div className="section-label">Edit Seed</div>
+            <div style={{ color: 'var(--color-text)', fontWeight: 500 }}>{seedModal.name}</div>
+            <div>
+              <label className="field-label">Seed</label>
+              <input
+                ref={seedModalRef}
+                type="number"
+                min="1"
+                value={seedModalVal}
+                onChange={e => setSeedModalVal(e.target.value)}
+                className="input"
+                style={{ width: '100%' }}
+                autoFocus
+              />
+            </div>
+            <div style={{ display: 'flex', gap: '0.5rem' }}>
+              <button type="submit" className="btn-primary" disabled={seedModalSaving} style={{ opacity: seedModalSaving ? 0.6 : 1 }}>
+                {seedModalSaving ? 'Saving...' : 'Save'}
+              </button>
+              <button type="button" className="btn-secondary" onClick={() => setSeedModal(null)}>Cancel</button>
+            </div>
+          </form>
+        </div>,
+        document.body
       )}
     </div>
   );

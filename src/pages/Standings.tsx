@@ -20,13 +20,6 @@ function Spinner() {
   );
 }
 
-function rankLabel(rank: number) {
-  if (rank === 1) return '1st';
-  if (rank === 2) return '2nd';
-  if (rank === 3) return '3rd';
-  return `${rank}th`;
-}
-
 function rankAccent(rank: number) {
   if (rank === 1) return 'var(--color-accent)';
   if (rank === 2) return 'var(--color-text-dim)';
@@ -37,12 +30,14 @@ function rankAccent(rank: number) {
 // ─── main component ───────────────────────────────────────────
 
 export default function Standings() {
-  const [tournaments,    setTournaments]    = useState<Tournament[]>([]);
-  const [selectedId,     setSelectedId]     = useState('');
-  const [standings,      setStandings]      = useState<StandingEntry[]>([]);
-  const [loading,        setLoading]        = useState(false);
-  const [loadingTourneys,setLoadingTourneys]= useState(true);
-  const [error,          setError]          = useState('');
+  const [tournaments,     setTournaments]     = useState<Tournament[]>([]);
+  const [selectedId,      setSelectedId]      = useState('');
+  const [standings,       setStandings]       = useState<StandingEntry[]>([]);
+  const [roundNumbers,    setRoundNumbers]    = useState<number[]>([]);
+  const [gameByPlayerRound, setGameByPlayerRound] = useState<Map<string, Map<number, any>>>(new Map());
+  const [loading,         setLoading]         = useState(false);
+  const [loadingTourneys, setLoadingTourneys] = useState(true);
+  const [error,           setError]           = useState('');
 
   // ── load tournament list ──────────────────────────────────
   useEffect(() => {
@@ -53,36 +48,61 @@ export default function Standings() {
         else {
           const list = data ?? [];
           setTournaments(list);
-          if (list.length > 0) setSelectedId(list[0].id);
+          const defaultTourney = list.find(t => t.status !== 'COMPLETED') ?? list[0];
+          if (defaultTourney) setSelectedId(defaultTourney.id);
         }
         setLoadingTourneys(false);
       });
   }, []);
 
-  // ── compute standings when tournament selected ────────────
+  // ── load standings + rounds when tournament selected ──────
   useEffect(() => {
-    if (!selectedId) { setStandings([]); return; }
+    if (!selectedId) { setStandings([]); setRoundNumbers([]); setGameByPlayerRound(new Map()); return; }
     setLoading(true);
     setError('');
 
     Promise.all([
       supabase.from('tournament_players')
-        .select('player_id, players(id, name)')
+        .select('seed, players(id, name)')
         .eq('tournament_id', selectedId),
       supabase.from('games')
-        .select('player1_id, player2_id, winner_id, rounds!inner(tournament_id)')
+        .select('player1_id, player2_id, winner_id, rounds!inner(round_number, tournament_id)')
         .eq('rounds.tournament_id', selectedId)
         .eq('status', 'COMPLETED'),
-    ]).then(([enrolledRes, gamesRes]) => {
+      supabase.from('rounds')
+        .select('round_number')
+        .eq('tournament_id', selectedId)
+        .order('round_number'),
+    ]).then(([enrolledRes, gamesRes, roundsRes]) => {
       if (enrolledRes.error) { setError(enrolledRes.error.message); setLoading(false); return; }
       if (gamesRes.error)    { setError(gamesRes.error.message);    setLoading(false); return; }
 
-      const players: PlayerRow[] = (enrolledRes.data ?? []).map((r: any) => r.players).filter(Boolean);
-      const games: GameResult[]  = gamesRes.data ?? [];
-      setStandings(computeStandings(players, games));
+      const players: PlayerRow[] = (enrolledRes.data ?? [])
+        .map((r: any) => r.players ? { ...r.players, seed: r.seed ?? null } : null)
+        .filter(Boolean);
+      const games: GameResult[] = gamesRes.data ?? [];
+      const computed = computeStandings(players, games);
+      setStandings(computed);
+
+      const rounds = (roundsRes.data ?? []).map((r: any) => r.round_number as number);
+      setRoundNumbers(rounds);
+
+      const byPlayerRound = new Map<string, Map<number, any>>();
+      for (const s of computed) byPlayerRound.set(s.player.id, new Map());
+      for (const g of (gamesRes.data ?? [])) {
+        const rn = (g as any).rounds?.round_number as number;
+        if (rn == null) continue;
+        for (const pid of [g.player1_id, g.player2_id]) {
+          if (byPlayerRound.has(pid)) byPlayerRound.get(pid)!.set(rn, g);
+        }
+      }
+      setGameByPlayerRound(byPlayerRound);
       setLoading(false);
     });
   }, [selectedId]);
+
+  // ── derived ───────────────────────────────────────────────
+  const posByPlayerId = new Map(standings.map((s, i) => [s.player.id, i + 1]));
 
   // ─────────────────────────────────────────────────────────
   return (
@@ -97,50 +117,50 @@ export default function Standings() {
           </h1>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-        <div style={{ position: 'relative' }}>
-          <select
-            value={selectedId}
-            onChange={e => setSelectedId(e.target.value)}
-            disabled={loadingTourneys}
-            style={{
-              background: 'var(--color-bg)',
-              color: selectedId ? 'var(--color-text)' : 'var(--color-muted)',
-              border: '1px solid var(--color-border)',
-              fontSize: '0.7rem',
-              letterSpacing: '0.1em',
-              padding: '0.4rem 2rem 0.4rem 0.75rem',
-              outline: 'none',
-              appearance: 'none',
-              cursor: loadingTourneys ? 'wait' : 'pointer',
-              opacity: loadingTourneys ? 0.6 : 1,
-              minWidth: '220px',
-            }}
-          >
-            <option value="">Select Tournament…</option>
-            {tournaments.map(t => (
-              <option key={t.id} value={t.id}>{t.name}</option>
-            ))}
-          </select>
-          <span style={{ position: 'absolute', right: '0.6rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--color-muted)', pointerEvents: 'none', display: 'inline-flex' }}><ChevronDown size={12} /></span>
-        </div>
-        {selectedId && !loading && (() => {
-          const t = tournaments.find(x => x.id === selectedId);
-          return t ? (
-            <>
-              <StandingsReportButton
-                standings={standings}
-                tournamentName={t.name}
-                style={{ fontSize: '0.7rem', padding: '0.4rem 0.9rem' }}
-              />
-              <CrosstableReportButton
-                standings={standings}
-                tournamentId={selectedId}
-                tournamentName={t.name}
-                style={{ fontSize: '0.7rem', padding: '0.4rem 0.9rem' }}
-              />
-            </>
-          ) : null;
-        })()}
+          <div style={{ position: 'relative' }}>
+            <select
+              value={selectedId}
+              onChange={e => setSelectedId(e.target.value)}
+              disabled={loadingTourneys}
+              style={{
+                background: 'var(--color-bg)',
+                color: selectedId ? 'var(--color-text)' : 'var(--color-muted)',
+                border: '1px solid var(--color-border)',
+                fontSize: '0.7rem',
+                letterSpacing: '0.1em',
+                padding: '0.4rem 2rem 0.4rem 0.75rem',
+                outline: 'none',
+                appearance: 'none',
+                cursor: loadingTourneys ? 'wait' : 'pointer',
+                opacity: loadingTourneys ? 0.6 : 1,
+                minWidth: '220px',
+              }}
+            >
+              <option value="">Select Tournament…</option>
+              {tournaments.map(t => (
+                <option key={t.id} value={t.id}>{t.name}</option>
+              ))}
+            </select>
+            <span style={{ position: 'absolute', right: '0.6rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--color-muted)', pointerEvents: 'none', display: 'inline-flex' }}><ChevronDown size={12} /></span>
+          </div>
+          {selectedId && !loading && (() => {
+            const t = tournaments.find(x => x.id === selectedId);
+            return t ? (
+              <>
+                <StandingsReportButton
+                  standings={standings}
+                  tournamentName={t.name}
+                  style={{ fontSize: '0.7rem', padding: '0.4rem 0.9rem' }}
+                />
+                <CrosstableReportButton
+                  standings={standings}
+                  tournamentId={selectedId}
+                  tournamentName={t.name}
+                  style={{ fontSize: '0.7rem', padding: '0.4rem 0.9rem' }}
+                />
+              </>
+            ) : null;
+          })()}
         </div>
       </div>
 
@@ -162,32 +182,22 @@ export default function Standings() {
             <table className="ops-table">
               <thead>
                 <tr>
-                  <th style={{ width: '3rem', textAlign: 'center' }}>#</th>
+                  <th style={{ width: '2.5rem', textAlign: 'center' }}>#</th>
                   <th>Player</th>
-                  <th style={{ textAlign: 'center' }}>W</th>
-                  <th style={{ textAlign: 'center' }}>L</th>
-                  <th style={{ textAlign: 'right' }}>Base</th>
-                  <th style={{ textAlign: 'right' }}>Bonus</th>
+                  {roundNumbers.map(rn => (
+                    <th key={rn} style={{ textAlign: 'center', width: '3rem' }}>R{rn}</th>
+                  ))}
                   <th style={{ textAlign: 'right', color: 'var(--color-accent)' }}>Pts</th>
-                  <th style={{ textAlign: 'right' }}>TB1</th>
-                  <th style={{ textAlign: 'right' }}>TB2</th>
                 </tr>
               </thead>
               <tbody>
-                {standings.map((s) => {
-                  const base  = s.wins * 10;
-                  const bonus = s.points - base;
-                  const isTied = standings.filter(x => x.rank === s.rank).length > 1;
+                {standings.map((s, idx) => {
+                  const pos = idx + 1;
                   return (
                     <tr key={s.player.id}>
                       <td style={{ textAlign: 'center' }}>
-                        <span style={{
-                          fontSize: '0.8rem',
-                          letterSpacing: '0.1em',
-                          color: rankAccent(s.rank),
-                          fontWeight: s.rank <= 3 ? 600 : 400,
-                        }}>
-                          {rankLabel(s.rank)}{isTied ? '=' : ''}
+                        <span style={{ fontSize: '0.8rem', letterSpacing: '0.1em', color: rankAccent(pos), fontWeight: pos <= 3 ? 600 : 400 }}>
+                          {pos}
                         </span>
                       </td>
                       <td style={{ color: 'var(--color-text)', fontSize: '1rem' }}>
@@ -205,26 +215,26 @@ export default function Standings() {
                           ><ExternalLink size={14} /></button>
                         </span>
                       </td>
-                      <td style={{ textAlign: 'center', color: 'var(--color-green-dim)' }}>
-                        {s.wins}
-                      </td>
-                      <td style={{ textAlign: 'center', color: 'var(--color-red)' }}>
-                        {s.losses}
-                      </td>
-                      <td style={{ textAlign: 'right', color: 'var(--color-muted)' }}>
-                        {base}
-                      </td>
-                      <td style={{ textAlign: 'right', color: 'var(--color-muted)' }}>
-                        +{bonus}
-                      </td>
+                      {roundNumbers.map(rn => {
+                        const game = gameByPlayerRound.get(s.player.id)?.get(rn);
+                        if (!game) return <td key={rn} style={{ textAlign: 'center', color: 'var(--color-border-bright)' }}>—</td>;
+                        const isWin = game.winner_id === s.player.id;
+                        const oppId = game.player1_id === s.player.id ? game.player2_id : game.player1_id;
+                        const oppPos = posByPlayerId.get(oppId);
+                        return (
+                          <td key={rn} style={{ textAlign: 'center' }}>
+                            <span style={{
+                              fontWeight: 600,
+                              color: 'var(--color-text)',
+                              ...(isWin ? { border: '1px solid var(--color-green-dim)', padding: '0.1rem 0.35rem' } : {}),
+                            }}>
+                              {oppPos ?? '?'}
+                            </span>
+                          </td>
+                        );
+                      })}
                       <td style={{ textAlign: 'right', fontSize: '0.85rem', color: 'var(--color-accent)', fontWeight: 600 }}>
                         {s.points}
-                      </td>
-                      <td style={{ textAlign: 'right', fontSize: '0.7rem', color: 'var(--color-text-dim)' }}>
-                        {s.tb1}
-                      </td>
-                      <td style={{ textAlign: 'right', fontSize: '0.7rem', color: 'var(--color-text-dim)' }}>
-                        {s.tb2}
                       </td>
                     </tr>
                   );
@@ -238,9 +248,9 @@ export default function Standings() {
       {/* Scoring legend */}
       {selectedId && !loading && standings.length > 0 && (
         <div style={{ fontSize: '0.8rem', letterSpacing: '0.1em', color: 'var(--color-muted)', display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
+          <span><span style={{ border: '1px solid var(--color-green-dim)', padding: '0 0.25rem' }}>N</span> = win vs player N</span>
+          <span>N = loss vs player N</span>
           <span><span style={{ color: 'var(--color-accent)' }}>PTS</span> = 10 per win + 1 per win earned by each defeated opponent</span>
-          <span><span style={{ color: 'var(--color-text-dim)' }}>TB1</span> = sum of defeated opponents' final points</span>
-          <span><span style={{ color: 'var(--color-text-dim)' }}>TB2</span> = sum of victorious opponents' final points</span>
         </div>
       )}
     </div>

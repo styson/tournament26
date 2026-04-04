@@ -8,15 +8,22 @@ export async function downloadCrosstablePdf(
   tournamentId: string,
   tournamentName: string,
 ): Promise<void> {
-  const { data, error } = await supabase
-    .from('games')
-    .select('player1_id, player2_id, winner_id, rounds!inner(round_number, tournament_id)')
-    .eq('rounds.tournament_id', tournamentId)
-    .eq('status', 'COMPLETED');
+  const [gamesRes, roundsRes] = await Promise.all([
+    supabase
+      .from('games')
+      .select('player1_id, player2_id, winner_id, rounds!inner(round_number, tournament_id)')
+      .eq('rounds.tournament_id', tournamentId)
+      .eq('status', 'COMPLETED'),
+    supabase
+      .from('rounds')
+      .select('round_number')
+      .eq('tournament_id', tournamentId)
+      .order('round_number'),
+  ]);
 
-  if (error) { console.error(error); return; }
+  if (gamesRes.error) { console.error(gamesRes.error); return; }
 
-  const games: any[] = data ?? [];
+  const games: any[] = gamesRes.data ?? [];
 
   // Rank lookup: playerId → rank number
   const rankByPlayerId = new Map<string, number>();
@@ -24,20 +31,8 @@ export async function downloadCrosstablePdf(
     rankByPlayerId.set(s.player.id, s.rank);
   }
 
-  // Ranks that are tied
-  const tiedRanks = new Set(
-    standings
-      .filter((_, __) => true)
-      .reduce<number[]>((acc, s) => {
-        if (standings.filter(x => x.rank === s.rank).length > 1) acc.push(s.rank);
-        return acc;
-      }, [])
-  );
-
-  // All round numbers present in completed games, sorted
-  const roundNumbers = Array.from(
-    new Set(games.map(g => g.rounds?.round_number as number).filter(n => n != null))
-  ).sort((a, b) => a - b);
+  // All round numbers for the tournament, sorted
+  const roundNumbers = (roundsRes.data ?? []).map(r => r.round_number as number);
 
   // gameByPlayerRound: playerId → roundNumber → game
   const gameByPlayerRound = new Map<string, Map<number, any>>();
@@ -60,8 +55,7 @@ export async function downloadCrosstablePdf(
   const winCells = new Set<string>();
 
   const rows = standings.map((s, rowIdx) => {
-    const isTied = tiedRanks.has(s.rank);
-    const placeLabel = `${s.rank}${isTied ? '=' : ''}.`;
+    const placeLabel = rowIdx + 1;
 
     const roundCells = roundNumbers.map((rn, rnIdx) => {
       const game = gameByPlayerRound.get(s.player.id)?.get(rn);
@@ -83,7 +77,7 @@ export async function downloadCrosstablePdf(
 
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(16);
-  doc.text(`${tournamentName}  —  Crosstable`, 40, 36);
+  doc.text(`${tournamentName}  —  Standings`, 40, 36);
 
   const nameColWidth = 130;
   const placeColWidth = 40;

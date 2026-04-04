@@ -70,7 +70,7 @@ export default function UserMenu({ theme, onThemeChange }: UserMenuProps) {
           borderRadius: '50%',
           background: isOpen ? 'var(--color-raised)' : 'transparent',
           border: '1.5px solid var(--color-accent)',
-          color: '#ffffff',
+          color: 'var(--color-text)',
           letterSpacing: '0.05em',
           cursor: 'pointer',
           display: 'flex',

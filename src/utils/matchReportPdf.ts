@@ -44,6 +44,7 @@ export function openMatchReportPdf(
   } else {
     const headers = ['Player', '', 'Player', '', 'Scenario'];
     const rows: (string | number)[][] = [];
+    const sidesRowIndices = new Set<number>();
 
     for (const game of games) {
       const p1 = playerById[game.player1_id];
@@ -76,10 +77,23 @@ export function openMatchReportPdf(
       }
 
       rows.push(matchRow);
-      if (sidesRow.length) rows.push(sidesRow);
+      if (sidesRow.length) {
+        sidesRowIndices.add(rows.length);
+        rows.push(sidesRow);
+      }
     }
 
-    autoTable(doc, { theme: 'grid', head: [headers], body: rows });
+    autoTable(doc, {
+      theme: 'grid',
+      head: [headers],
+      body: rows,
+      didParseCell(data) {
+        if (data.section !== 'body') return;
+        const i = data.row.index;
+        if (sidesRowIndices.has(i))     data.cell.styles.lineWidth = { top: 0, right: 0.1, bottom: 0.1, left: 0.1 };
+        if (sidesRowIndices.has(i + 1)) data.cell.styles.lineWidth = { top: 0.1, right: 0.1, bottom: 0, left: 0.1 };
+      },
+    });
   }
 
   const blob = doc.output('blob');

@@ -21,7 +21,7 @@ export default function StandingsReportButton({ standings, tournamentName, style
       className="btn-sm"
       style={style}
     >
-      View Standings
+      Point Details
     </button>
   );
 }
