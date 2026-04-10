@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
-import type { ReactNode } from 'react';
 import { Link, useLocation } from '@tanstack/react-router';
 import { useAuth } from '@/config/auth';
+import { useState, useEffect } from 'react';
+import type { ReactNode } from 'react';
 import UserMenu from '@/components/common/UserMenu';
 
 interface LayoutProps {
@@ -32,103 +32,48 @@ export default function Layout({ children }: LayoutProps) {
   const isActive = (path: string) => location.pathname === path;
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+    <div className='min-h-screen flex flex-col'>
       {/* ── Nav bar ── */}
-      <header
-        style={{
-          background: 'var(--color-bg-header)',
-          borderBottom: '1px solid var(--color-border)',
-          position: 'sticky',
-          top: 0,
-          zIndex: 50,
-        }}
-      >
+      <header className='bg-bg-header border-b border-(--color-border) sticky top-0 z-50'>
         {/* Thin amber accent line at top */}
-        <div
-          style={{
-            height: '2px',
-            background:
-              'linear-gradient(90deg, transparent 0%, var(--color-accent) 30%, var(--color-accent) 70%, transparent 100%)',
-          }}
-        />
+        <div className='h-0.5 bg-[linear-gradient(90deg,transparent_0%,var(--color-accent)_30%,var(--color-accent)_70%,transparent_100%)]' />
 
-        <div
-          style={{
-            maxWidth: '1280px',
-            margin: '0 auto',
-            padding: '0 1rem',
-            display: 'flex',
-            alignItems: 'center',
-            height: '48px',
-            gap: '1.5rem',
-          }}
-        >
+        <div className='max-w-7xl mx-auto px-4 flex items-center h-12 gap-6'>
           {/* Logo */}
-          <Link to='/' style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', flexShrink: 0 }}>
-            <div style={{ position: 'relative' }}>
-              <div
-                style={{
-                  width: '28px',
-                  height: '28px',
-                  background: 'var(--color-accent)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  clipPath: 'polygon(0 0, calc(100% - 4px) 0, 100% 4px, 100% 100%, 4px 100%, 0 calc(100% - 4px))',
-                }}
-              >
-                <span className='font-display' style={{ color: 'var(--color-bg)', letterSpacing: '0.05em' }}>
+          <Link to='/' className='flex items-center gap-[0.6rem] shrink-0'>
+            <div className='relative'>
+              <div className='w-7 h-7 bg-accent flex items-center justify-center [clip-path:polygon(0_0,calc(100%-4px)_0,100%_4px,100%_100%,4px_100%,0_calc(100%-4px))]'>
+                <span className='font-display text-bg tracking-[0.05em]'>
                   T
                 </span>
               </div>
               {user && (
-                <div
-                  style={{
-                    position: 'absolute',
-                    bottom: '-1px',
-                    right: '-1px',
-                    width: '6px',
-                    height: '6px',
-                    borderRadius: '50%',
-                    background: 'var(--color-green)',
-                    border: '1px solid var(--color-bg-header)',
-                    animation: 'blink 2s step-end infinite',
-                  }}
-                />
+                <div className='absolute -bottom-px -right-px w-1.5 h-1.5 rounded-full bg-green border border-bg-header animate-[blink_2s_step-end_infinite]' />
               )}
             </div>
-            <span className='font-display' style={{ letterSpacing: '0.12em', color: 'var(--color-text)' }}>
-              TOURNEY<span style={{ color: 'var(--color-accent)' }}>26</span>
+            <span className='font-display tracking-[0.12em] text-text'>
+              TOURNEY<span className='text-accent'>26</span>
             </span>
           </Link>
 
           {/* Separator */}
-          <div style={{ width: '1px', height: '20px', background: 'var(--color-border)', flexShrink: 0 }} />
+          <div className='w-px h-5 bg-(--color-border) shrink-0' />
 
           {/* Nav links */}
           {user && (
-            <nav style={{ display: 'flex', gap: '0.15rem', flex: 1, overflow: 'hidden' }}>
+            <nav className='flex gap-[0.15rem] flex-1 overflow-hidden'>
               {navigation.map((item) => {
                 const active = isActive(item.href);
                 return (
                   <Link
                     key={item.href}
                     to={item.href}
-                    style={{
-                      letterSpacing: '0.14em',
-                      textTransform: 'uppercase',
-                      padding: '0.3rem 0.6rem',
-                      color: active ? 'var(--color-accent)' : 'var(--color-muted)',
-                      borderBottom: active ? '2px solid var(--color-accent)' : '2px solid transparent',
-                      transition: 'all 0.15s ease',
-                      whiteSpace: 'nowrap',
-                    }}
-                    onMouseEnter={(e) => {
-                      if (!active) (e.currentTarget as HTMLAnchorElement).style.color = 'var(--color-text)';
-                    }}
-                    onMouseLeave={(e) => {
-                      if (!active) (e.currentTarget as HTMLAnchorElement).style.color = 'var(--color-muted)';
-                    }}
+                    className={
+                      'tracking-[0.14em] uppercase py-[0.3rem] px-[0.6rem] border-b-2 transition-all duration-150 ease-in-out whitespace-nowrap ' +
+                      (active
+                        ? 'text-accent border-b-accent'
+                        : 'text-muted border-b-transparent hover:text-text')
+                    }
                   >
                     {item.name}
                   </Link>
@@ -138,7 +83,7 @@ export default function Layout({ children }: LayoutProps) {
           )}
 
           {/* Spacer when no user */}
-          {!user && <div style={{ flex: 1 }} />}
+          {!user && <div className='flex-1' />}
 
           {/* User menu */}
           {user && <UserMenu theme={theme} onThemeChange={setTheme} />}
@@ -146,11 +91,11 @@ export default function Layout({ children }: LayoutProps) {
       </header>
 
       {/* ── Page content ── */}
-      <main style={{ flex: 1, maxWidth: '1280px', width: '100%', margin: '0 auto', padding: '1.5rem 1rem' }}>{children}</main>
+      <main className='flex-1 max-w-7xl w-full mx-auto py-6 px-4'>{children}</main>
 
       {/* ── Footer ── */}
-      <footer style={{ borderTop: '1px solid var(--color-raised)', padding: '0.75rem 1rem', textAlign: 'center' }}>
-        <span style={{ color: 'var(--color-muted-dim)', letterSpacing: '0.15em' }}>TOURNAMENT26 · {new Date().getFullYear()}</span>
+      <footer className='border-t border-t-raised py-3 px-4 text-center'>
+        <span className='text-muted-dim tracking-[0.15em]'>TOURNAMENT26 · {new Date().getFullYear()}</span>
       </footer>
     </div>
   );

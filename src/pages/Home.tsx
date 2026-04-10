@@ -24,45 +24,16 @@ export default function Home() {
   const { user } = useAuth();
 
   return (
-    <div style={{
-      minHeight: '100vh',
-      background: 'var(--color-bg)',
-      display: 'flex',
-      flexDirection: 'column',
-      position: 'relative',
-      overflow: 'hidden',
-    }}>
+    <div className="min-h-screen bg-bg flex flex-col relative overflow-hidden">
 
       {/* Scanlines CRT overlay */}
-      <div style={{
-        position: 'absolute',
-        inset: 0,
-        backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.045) 2px, rgba(0,0,0,0.045) 4px)',
-        pointerEvents: 'none',
-        zIndex: 3,
-      }} />
+      <div className="absolute inset-0 bg-[repeating-linear-gradient(0deg,transparent,transparent_2px,rgba(0,0,0,0.045)_2px,rgba(0,0,0,0.045)_4px)] pointer-events-none z-3" />
 
       {/* Dot grid */}
-      <div style={{
-        position: 'absolute',
-        inset: 0,
-        backgroundImage: 'radial-gradient(circle, var(--color-raised) 1px, transparent 1px)',
-        backgroundSize: '22px 22px',
-        pointerEvents: 'none',
-        zIndex: 0,
-      }} />
+      <div className="absolute inset-0 bg-[radial-gradient(circle,var(--color-raised)_1px,transparent_1px)] [background-size:22px_22px] pointer-events-none z-0" />
 
       {/* Radar — positioned to right side */}
-      <div style={{
-        position: 'absolute',
-        right: '-2%',
-        top: '50%',
-        transform: 'translateY(-50%)',
-        width: '680px',
-        height: '680px',
-        pointerEvents: 'none',
-        zIndex: 1,
-      }}>
+      <div className="absolute right-[-2%] top-1/2 -translate-y-1/2 w-[680px] h-[680px] pointer-events-none z-1">
         {/* Concentric rings */}
         {[72, 150, 240, 340, 450].map((r, i) => (
           <div key={r} style={{
@@ -75,155 +46,84 @@ export default function Home() {
           }} />
         ))}
         {/* Crosshair H */}
-        <div style={{ position: 'absolute', top: '50%', left: 0, right: 0, height: '1px', marginTop: '-0.5px', background: 'rgba(240,160,32,0.09)' }} />
+        <div className="absolute top-1/2 left-0 right-0 h-px -mt-[0.5px] bg-[rgba(240,160,32,0.09)]" />
         {/* Crosshair V */}
-        <div style={{ position: 'absolute', left: '50%', top: 0, bottom: 0, width: '1px', marginLeft: '-0.5px', background: 'rgba(240,160,32,0.09)' }} />
+        <div className="absolute left-1/2 top-0 bottom-0 w-px -ml-[0.5px] bg-[rgba(240,160,32,0.09)]" />
 
         {/* Conic sweep gradient — rotates as a whole */}
-        <div style={{
-          position: 'absolute',
-          inset: 0,
-          borderRadius: '50%',
-          background: 'conic-gradient(from 0deg, transparent 0deg, transparent 300deg, rgba(240,160,32,0.04) 330deg, rgba(240,160,32,0.14) 355deg, rgba(240,160,32,0.22) 360deg)',
-          animation: 'radarSweep 8s linear infinite',
-          overflow: 'hidden',
-        }} />
+        <div className="absolute inset-0 rounded-full bg-[conic-gradient(from_0deg,transparent_0deg,transparent_300deg,rgba(240,160,32,0.04)_330deg,rgba(240,160,32,0.14)_355deg,rgba(240,160,32,0.22)_360deg)] animate-[radarSweep_8s_linear_infinite] overflow-hidden" />
 
         {/* Sweep tip: half-line with glowing dot at tip */}
-        <div style={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          width: '50%',
-          height: '1px',
-          marginTop: '-0.5px',
-          transformOrigin: '0 50%',
-          animation: 'radarSweep 8s linear infinite',
-        }}>
-          <div style={{
-            position: 'absolute',
-            right: 0,
-            top: '-4px',
-            width: '8px',
-            height: '8px',
-            borderRadius: '50%',
-            background: 'rgba(240,160,32,0.9)',
-            boxShadow: '0 0 10px 3px rgba(240,160,32,0.5)',
-          }} />
+        <div className="absolute top-1/2 left-1/2 w-1/2 h-px -mt-[0.5px] origin-[0_50%] animate-[radarSweep_8s_linear_infinite]">
+          <div className="absolute right-0 -top-1 w-2 h-2 rounded-full bg-[rgba(240,160,32,0.9)] shadow-[0_0_10px_3px_rgba(240,160,32,0.5)]" />
         </div>
       </div>
 
       {/* Radial vignette — masks radar toward the content */}
-      <div style={{
-        position: 'absolute',
-        inset: 0,
-        background: 'radial-gradient(ellipse at 68% 50%, transparent 28%, var(--color-bg) 72%)',
-        pointerEvents: 'none',
-        zIndex: 2,
-      }} />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_68%_50%,transparent_28%,var(--color-bg)_72%)] pointer-events-none z-2" />
 
       {/* Diagonal accent line */}
-      <div style={{
-        position: 'absolute',
-        top: 0,
-        left: '47%',
-        width: '1px',
-        height: '100%',
-        background: 'linear-gradient(180deg, transparent 0%, var(--color-border) 20%, var(--color-border) 80%, transparent 100%)',
-        transform: 'skewX(-8deg)',
-        pointerEvents: 'none',
-        zIndex: 2,
-      }} />
+      <div className="absolute top-0 left-[47%] w-px h-full bg-[linear-gradient(180deg,transparent_0%,var(--color-border)_20%,var(--color-border)_80%,transparent_100%)] [transform:skewX(-8deg)] pointer-events-none z-2" />
 
-      <div style={{ position: 'relative', zIndex: 4, flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '2rem 0', maxWidth: '1000px', margin: '0 auto', width: '100%' }}>
+      <div className="relative z-4 flex-1 flex flex-col justify-center py-8 max-w-[1000px] mx-auto w-full">
 
         {/* Status label with blinking dot + pulse ring */}
-        <div className="anim-0" style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '1.5rem' }}>
-          <div style={{ position: 'relative', width: '8px', height: '8px', flexShrink: 0 }}>
-            <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--color-accent)', animation: 'blink 1.4s step-end infinite' }} />
-            <div style={{ position: 'absolute', inset: 0, borderRadius: '50%', background: 'var(--color-accent)', animation: 'pulseRing 1.4s ease-out infinite' }} />
+        <div className="anim-0 flex items-center gap-[0.6rem] mb-6">
+          <div className="relative w-2 h-2 shrink-0">
+            <div className="w-2 h-2 rounded-full bg-accent animate-[blink_1.4s_step-end_infinite]" />
+            <div className="absolute inset-0 rounded-full bg-accent animate-[pulseRing_1.4s_ease-out_infinite]" />
           </div>
-          <span style={{ letterSpacing: '0.25em', color: 'var(--color-muted)', textTransform: 'uppercase' }}>
+          <span className="tracking-[0.25em] text-muted uppercase">
             Tournament Director Platform · System Online
           </span>
         </div>
 
         {/* Hero heading */}
-        <h1 className="anim-1" style={{
-          fontSize: 'clamp(3rem, 10vw, 7rem)',
-          letterSpacing: '0.06em',
-          lineHeight: 0.88,
-          color: 'var(--color-text)',
-          margin: '0 0 1.5rem',
-        }}>
+        <h1 className="anim-1 text-[clamp(3rem,10vw,7rem)] tracking-[0.06em] leading-[0.88] text-text mt-0 mb-6">
           COMMAND<br />
-          <span style={{
-            color: 'transparent',
-            WebkitTextStroke: '2px var(--color-accent)',
-            opacity: 0.7,
-          }}>YOUR</span><br />
-          <span style={{ color: 'var(--color-accent)' }}>TOURNAMENT</span>
+          <span className="text-transparent [-webkit-text-stroke:2px_var(--color-accent)] opacity-70">YOUR</span><br />
+          <span className="text-accent">TOURNAMENT</span>
         </h1>
 
         {/* Designation line */}
-        <div className="anim-2" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem' }}>
-          <div style={{ height: '1px', width: '2rem', background: 'var(--color-accent)', opacity: 0.6 }} />
-          <span style={{ letterSpacing: '0.28em', color: 'var(--color-accent)', textTransform: 'uppercase', opacity: 0.7 }}>
+        <div className="anim-2 flex items-center gap-3 mb-4">
+          <div className="h-px w-8 bg-accent opacity-60" />
+          <span className="tracking-[0.28em] text-accent uppercase opacity-70">
             Designation: TOURNEY-26
           </span>
         </div>
 
         {/* Sub-heading */}
-        <p className="anim-2" style={{
-          fontSize: '1.2rem',
-          color: 'var(--color-muted)',
-          maxWidth: '70%',
-          lineHeight: 1.7,
-          marginBottom: '2.5rem',
-        }}>
+        <p className="anim-2 text-[1.2rem] text-muted max-w-[70%] leading-[1.7] mb-10">
           Command your tournament from player registration to final standings.
           Track every round, every game, every player, every scenario.
         </p>
 
         {/* CTA */}
-        <div className="anim-3" style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+        <div className="anim-3 flex gap-3 flex-wrap">
           {user ? (
-            <Link to="/dashboard" className="btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}><ArrowRight size={14} /> Enter Command Center</Link>
+            <Link to="/dashboard" className="btn-primary inline-flex items-center gap-[0.35rem]"><ArrowRight size={14} /> Enter Command Center</Link>
           ) : (
             <>
-              <Link to="/login" className="btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}><ArrowRight size={14} /> Begin Mission</Link>
+              <Link to="/login" className="btn-primary inline-flex items-center gap-[0.35rem]"><ArrowRight size={14} /> Begin Mission</Link>
               <Link to="/login" className="btn-secondary">Learn More</Link>
             </>
           )}
         </div>
 
         {/* Feature cards */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1px', marginTop: '5rem', background: 'var(--color-border)' }}>
+        <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-px mt-20 bg-border">
           {features.map((f, i) => (
-            <div key={f.code} className={`anim-${i + 4}`} style={{
-              background: 'var(--color-surface)',
-              padding: '1.25rem 1.5rem',
-              position: 'relative',
-              overflow: 'hidden',
-              transition: 'background 0.2s ease',
-            }}
-              onMouseEnter={e => (e.currentTarget as HTMLDivElement).style.background = 'var(--color-raised)'}
-              onMouseLeave={e => (e.currentTarget as HTMLDivElement).style.background = 'var(--color-surface)'}
-            >
+            <div key={f.code} className={`anim-${i + 4} bg-surface py-5 px-6 relative overflow-hidden transition-colors duration-200 hover:bg-raised`}>
               {/* Top accent bar */}
-              <div style={{
-                position: 'absolute',
-                top: 0, left: 0, right: 0,
-                height: '2px',
-                background: 'linear-gradient(90deg, var(--color-accent), transparent 75%)',
-              }} />
-              <div style={{ letterSpacing: '0.2em', color: 'var(--color-accent)', marginBottom: '0.6rem' }}>
+              <div className="absolute top-0 left-0 right-0 h-0.5 bg-[linear-gradient(90deg,var(--color-accent),transparent_75%)]" />
+              <div className="tracking-[0.2em] text-accent mb-[0.6rem]">
                 [{f.code}]
               </div>
-              <h3 style={{ fontSize: '1.3rem', letterSpacing: '0.06em', color: 'var(--color-text)', margin: '0 0 0.5rem' }}>
+              <h3 className="text-[1.3rem] tracking-[0.06em] text-text m-0 mb-2">
                 {f.title}
               </h3>
-              <p style={{ color: 'var(--color-muted)', margin: 0, lineHeight: 1.6 }}>
+              <p className="text-muted m-0 leading-[1.6]">
                 {f.desc}
               </p>
             </div>

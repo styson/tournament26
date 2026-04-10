@@ -59,60 +59,23 @@ export default function UserMenu({ theme, onThemeChange }: UserMenuProps) {
   const initials = getInitials(user.name, user.email);
 
   return (
-    <div ref={menuRef} style={{ position: 'relative' }}>
+    <div ref={menuRef} className="relative">
 
       {/* ── Avatar button ── */}
       <button
         onClick={() => setIsOpen(o => !o)}
-        style={{
-          width: '28px',
-          height: '28px',
-          borderRadius: '50%',
-          background: isOpen ? 'var(--color-raised)' : 'transparent',
-          border: '1.5px solid var(--color-accent)',
-          color: 'var(--color-text)',
-          letterSpacing: '0.05em',
-          cursor: 'pointer',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          transition: 'all 0.15s ease',
-          padding: 0,
-        }}
-        onMouseEnter={e => {
-          if (!isOpen) (e.currentTarget as HTMLButtonElement).style.background = 'var(--color-raised)';
-        }}
-        onMouseLeave={e => {
-          if (!isOpen) (e.currentTarget as HTMLButtonElement).style.background = 'transparent';
-        }}
+        className={`w-7 h-7 rounded-full border-[1.5px] border-accent text-text tracking-[0.05em] cursor-pointer flex items-center justify-center transition-all duration-150 p-0 ${isOpen ? 'bg-raised' : 'bg-transparent hover:bg-raised'}`}
       >
         {initials}
       </button>
 
       {/* ── Dropdown ── */}
       {isOpen && (
-        <div style={{
-          position: 'absolute',
-          top: 'calc(100% + 6px)',
-          right: 0,
-          background: 'var(--color-bg-header)',
-          border: '1px solid var(--color-border-bright)',
-          minWidth: '250px',
-          zIndex: 100,
-          boxShadow: '0 8px 24px rgba(0,0,0,0.5)',
-        }}>
+        <div className="absolute top-[calc(100%+6px)] right-0 bg-bg-header border border-border-bright min-w-62.5 z-100 shadow-[0_8px_24px_rgba(0,0,0,0.5)]">
 
           {/* Email */}
           {user.email && (
-            <div style={{
-              padding: '0.6rem 0.75rem',
-              borderBottom: '1px solid var(--color-border)',
-              color: 'var(--color-accent)',
-              letterSpacing: '0.08em',
-              whiteSpace: 'nowrap',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-            }}>
+            <div className="py-[0.6rem] px-3 border-b border-border text-accent tracking-[0.08em] truncate">
               {user.email}
             </div>
           )}
@@ -120,45 +83,11 @@ export default function UserMenu({ theme, onThemeChange }: UserMenuProps) {
           {/* Dark mode toggle */}
           <button
             onClick={() => onThemeChange(theme === 'dark' ? 'light' : 'dark')}
-            style={{
-              width: '100%',
-              padding: '0.5rem 0.75rem',
-              background: 'transparent',
-              border: 'none',
-              borderBottom: '1px solid var(--color-border)',
-              color: 'var(--color-muted)',
-              letterSpacing: '0.08em',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              textAlign: 'left',
-            }}
-            onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = 'var(--color-text)'; }}
-            onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = 'var(--color-muted)'; }}
+            className="w-full py-2 px-3 bg-transparent border-0 border-b border-border text-muted tracking-[0.08em] cursor-pointer flex items-center justify-between text-left hover:text-text"
           >
             <span>◑ Dark mode</span>
-            <span style={{
-              display: 'inline-flex',
-              width: '30px',
-              height: '15px',
-              borderRadius: '8px',
-              background: theme === 'dark' ? 'var(--color-raised)' : 'var(--color-border)',
-              border: `1px solid ${theme === 'dark' ? 'var(--color-accent)' : 'var(--color-border-bright)'}`,
-              alignItems: 'center',
-              padding: '0 2px',
-              justifyContent: theme === 'dark' ? 'flex-end' : 'flex-start',
-              transition: 'all 0.15s ease',
-              flexShrink: 0,
-            }}>
-              <span style={{
-                width: '11px',
-                height: '11px',
-                borderRadius: '50%',
-                background: theme === 'dark' ? 'var(--color-accent)' : 'var(--color-muted)',
-                display: 'block',
-                transition: 'background 0.15s ease',
-              }} />
+            <span className={`inline-flex w-7.5 h-3.75 rounded-lg items-center px-0.5 transition-all duration-150 shrink-0 border ${theme === 'dark' ? 'bg-raised border-accent justify-end' : 'bg-border border-border-bright justify-start'}`}>
+              <span className={`w-2.75 h-2.75 rounded-full block transition-colors duration-150 ${theme === 'dark' ? 'bg-accent' : 'bg-muted'}`} />
             </span>
           </button>
 
@@ -166,22 +95,7 @@ export default function UserMenu({ theme, onThemeChange }: UserMenuProps) {
           {user.email && (
             <button
               onClick={handleResetPassword}
-              style={{
-                width: '100%',
-                padding: '0.5rem 0.75rem',
-                background: 'transparent',
-                border: 'none',
-                borderBottom: '1px solid var(--color-border)',
-                color: 'var(--color-muted)',
-                letterSpacing: '0.08em',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.5rem',
-                textAlign: 'left',
-              }}
-              onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = 'var(--color-text)'; }}
-              onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = 'var(--color-muted)'; }}
+              className="w-full py-2 px-3 bg-transparent border-0 border-b border-border text-muted tracking-[0.08em] cursor-pointer flex items-center gap-2 text-left hover:text-text"
             >
               ⟳ Reset password
             </button>
@@ -190,21 +104,7 @@ export default function UserMenu({ theme, onThemeChange }: UserMenuProps) {
           {/* Sign out */}
           <button
             onClick={handleSignOut}
-            style={{
-              width: '100%',
-              padding: '0.5rem 0.75rem',
-              background: 'transparent',
-              border: 'none',
-              color: 'var(--color-red, #d05c5c)',
-              letterSpacing: '0.08em',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.5rem',
-              textAlign: 'left',
-            }}
-            onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = 'color-mix(in srgb, var(--color-red, #d05c5c) 8%, transparent)'; }}
-            onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = 'transparent'; }}
+            className="w-full py-2 px-3 bg-transparent border-none text-red tracking-[0.08em] cursor-pointer flex items-center gap-2 text-left hover:bg-red/8"
           >
             ⏻ Sign out
           </button>
@@ -213,21 +113,7 @@ export default function UserMenu({ theme, onThemeChange }: UserMenuProps) {
 
       {/* ── Success toast ── */}
       {toastVisible && (
-        <div style={{
-          position: 'fixed',
-          bottom: '1.5rem',
-          right: '1.5rem',
-          background: 'var(--color-bg)',
-          border: '1px solid var(--color-green)',
-          padding: '0.6rem 1rem',
-          letterSpacing: '0.08em',
-          color: 'var(--color-green)',
-          boxShadow: '0 4px 12px rgba(0,0,0,0.4)',
-          zIndex: 200,
-          display: 'flex',
-          alignItems: 'center',
-          gap: '0.5rem',
-        }}>
+        <div className="fixed bottom-6 right-6 bg-bg border border-green py-[0.6rem] px-4 tracking-[0.08em] text-green shadow-[0_4px_12px_rgba(0,0,0,0.4)] z-200 flex items-center gap-2">
           ✓ Reset link sent — check your inbox
         </div>
       )}

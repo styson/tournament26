@@ -45,50 +45,25 @@ function StatCard({ label, value, link, code, delay = 0 }: StatCardProps) {
   const displayed = useCountUp(value);
   const inner = (
     <div
-      style={{
-        background: 'var(--color-surface)',
-        padding: '1rem 1.25rem 0.875rem',
-        cursor: link ? 'pointer' : 'default',
-        transition: 'background 0.15s ease',
-        position: 'relative',
-        overflow: 'hidden',
-      }}
-      onMouseEnter={e => { if (link) (e.currentTarget as HTMLDivElement).style.background = 'var(--color-raised)'; }}
-      onMouseLeave={e => { if (link) (e.currentTarget as HTMLDivElement).style.background = 'var(--color-surface)'; }}
+      className={`bg-surface pt-4 pb-3.5 px-5 transition-colors duration-150 relative overflow-hidden${link ? ' cursor-pointer hover:bg-raised' : ' cursor-default'}`}
     >
       {/* Top accent line — always visible */}
-      <div style={{
-        position: 'absolute',
-        top: 0, left: 0, right: 0,
-        height: '2px',
-        background: 'linear-gradient(90deg, var(--color-accent), transparent 70%)',
-      }} />
+      <div className="absolute top-0 left-0 right-0 h-0.5 bg-[linear-gradient(90deg,var(--color-accent),transparent_70%)]" />
 
-      <div style={{
-        letterSpacing: '0.2em',
-        color: 'var(--color-muted)',
-        marginBottom: '0.5rem',
-        display: 'flex',
-        justifyContent: 'space-between',
-      }}>
+      <div className="tracking-[0.2em] text-muted mb-2 flex justify-between">
         <span>{label}</span>
-        <span style={{ color: 'var(--color-muted-dim)' }}>[{code}]</span>
+        <span className="text-muted-dim">[{code}]</span>
       </div>
 
-      <div className="font-display" style={{
-        fontSize: '2.75rem',
-        lineHeight: 1,
-        color: value === 'Err' ? 'var(--color-red)' : 'var(--color-accent)',
-        letterSpacing: '0.04em',
-      }}>
+      <div className={`font-display text-[2.75rem] leading-none tracking-[0.04em] ${value === 'Err' ? 'text-red' : 'text-accent'}`}>
         {displayed}
       </div>
     </div>
   );
 
   return link
-    ? <Link to={link} style={{ display: 'block', animation: `fadeUp 0.45s ${delay}s ease both` }}>{inner}</Link>
-    : <div style={{ animation: `fadeUp 0.45s ${delay}s ease both` }}>{inner}</div>;
+    ? <Link to={link} className="block animate-[fadeUp_0.45s_ease_both]" style={{ animationDelay: `${delay}s` }}>{inner}</Link>
+    : <div className="animate-[fadeUp_0.45s_ease_both]" style={{ animationDelay: `${delay}s` }}>{inner}</div>;
 }
 
 export default function Dashboard() {
@@ -126,67 +101,46 @@ export default function Dashboard() {
   ];
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+    <div className="flex flex-col gap-5">
 
       {/* Header */}
-      <div className="anim-0" style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem' }}>
+      <div className="anim-0 flex items-end justify-between flex-wrap gap-2">
         <div>
-          <div className="section-label" style={{ marginBottom: '0.3rem' }}>Command Center</div>
-          <h1 style={{ fontSize: '2.4rem', letterSpacing: '0.06em', margin: 0 }}>
-            Welcome, <span style={{ color: 'var(--color-accent)' }}>{user?.name?.split(' ')[0] ?? 'Director'}</span>
+          <div className="section-label mb-[0.3rem]">Command Center</div>
+          <h1 className="text-[2.4rem] tracking-[0.06em] m-0">
+            Welcome, <span className="text-accent">{user?.name?.split(' ')[0] ?? 'Director'}</span>
           </h1>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+        <div className="flex items-center gap-[0.6rem]">
           {/* Online indicator */}
-          <div style={{ position: 'relative', width: '6px', height: '6px', flexShrink: 0 }}>
-            <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--color-green)', animation: 'blink 2s step-end infinite' }} />
-            <div style={{ position: 'absolute', inset: 0, borderRadius: '50%', background: 'var(--color-green)', animation: 'pulseRing 2s ease-out infinite' }} />
+          <div className="relative w-1.5 h-1.5 shrink-0">
+            <div className="w-1.5 h-1.5 rounded-full bg-green animate-[blink_2s_step-end_infinite]" />
+            <div className="absolute inset-0 rounded-full bg-green animate-[pulseRing_2s_ease-out_infinite]" />
           </div>
-          <span style={{ color: 'var(--color-muted-dim)', letterSpacing: '0.12em' }}>
+          <span className="text-muted-dim tracking-[0.12em]">
             {new Date().toLocaleDateString('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' }).toUpperCase()}
           </span>
         </div>
       </div>
 
       {/* Stats grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '1px', background: 'var(--color-border)' }}>
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(160px,1fr))] gap-px bg-border">
         {stats.map((stat, i) => (
           <StatCard key={stat.code} {...stat} delay={0.08 + i * 0.06} />
         ))}
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.25rem' }}>
+      <div className="grid grid-cols-2 gap-5">
 
         {/* Quick Actions */}
         <div className="card anim-2">
-          <div className="section-label" style={{ marginBottom: '0.75rem' }}>Quick Actions</div>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem' }}>
+          <div className="section-label mb-3">Quick Actions</div>
+          <div className="grid grid-cols-2 gap-2">
             {quickActions.map((action) => (
-              <Link key={action.name} to={action.link} style={{ display: 'block' }}>
-                <div style={{
-                  border: '1px solid var(--color-border)',
-                  padding: '0.75rem',
-                  cursor: 'pointer',
-                  transition: 'all 0.15s ease',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.6rem',
-                  position: 'relative',
-                  overflow: 'hidden',
-                }}
-                  onMouseEnter={e => {
-                    const d = e.currentTarget as HTMLDivElement;
-                    d.style.borderColor = 'var(--color-accent)';
-                    d.style.background = 'var(--color-raised)';
-                  }}
-                  onMouseLeave={e => {
-                    const d = e.currentTarget as HTMLDivElement;
-                    d.style.borderColor = 'var(--color-border)';
-                    d.style.background = 'transparent';
-                  }}
-                >
-                  <span style={{ color: 'var(--color-accent)', lineHeight: 1 }}>{action.symbol}</span>
-                  <span style={{ letterSpacing: '0.1em', color: 'var(--color-text-dim)', textTransform: 'uppercase' }}>{action.name}</span>
+              <Link key={action.name} to={action.link} className="block">
+                <div className="border border-border p-3 cursor-pointer transition-all duration-150 flex items-center gap-[0.6rem] relative overflow-hidden hover:border-accent hover:bg-raised">
+                  <span className="text-accent leading-none">{action.symbol}</span>
+                  <span className="tracking-widest text-text-dim uppercase">{action.name}</span>
                 </div>
               </Link>
             ))}
@@ -195,10 +149,10 @@ export default function Dashboard() {
 
         {/* Recent Activity */}
         <div className="card anim-3">
-          <div className="section-label" style={{ marginBottom: '0.75rem' }}>Recent Activity</div>
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '2rem 0', gap: '0.5rem' }}>
-            <div style={{ fontSize: '1.5rem', color: 'var(--color-border)' }}>—</div>
-            <p style={{ color: 'var(--color-muted-dim)', letterSpacing: '0.12em', textTransform: 'uppercase', margin: 0 }}>
+          <div className="section-label mb-3">Recent Activity</div>
+          <div className="flex flex-col items-center justify-center py-8 gap-2">
+            <div className="text-2xl text-border">—</div>
+            <p className="text-muted-dim tracking-[0.12em] uppercase m-0">
               No recent activity
             </p>
           </div>

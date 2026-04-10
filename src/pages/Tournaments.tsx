@@ -34,13 +34,13 @@ export default function Tournaments() {
   }, []);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+    <div className="flex flex-col gap-5">
 
       {/* Header */}
-      <div className="anim-0" style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.75rem' }}>
+      <div className="anim-0 flex items-end justify-between flex-wrap gap-3">
         <div>
-          <div className="section-label" style={{ marginBottom: '0.3rem' }}>Tournaments</div>
-          <h1 style={{ fontSize: '2.4rem', letterSpacing: '0.06em', margin: 0 }}>
+          <div className="section-label mb-[0.3rem]">Tournaments</div>
+          <h1 className="text-[2.4rem] tracking-[0.06em] m-0">
             Tournaments
           </h1>
         </div>
@@ -50,51 +50,55 @@ export default function Tournaments() {
       {/* List */}
       <div className="anim-1">
         {loading ? (
-          <div className="card row" style={{ justifyContent: 'center', padding: '3rem' }}>
+          <div className="card row justify-center p-12">
             <div className="spinner" />
             <span className="section-label">Loading...</span>
           </div>
         ) : error ? (
-          <div className="card error-box" style={{ padding: '1.25rem' }}>{error}</div>
+          <div className="card error-box p-5">{error}</div>
         ) : tournaments.length === 0 ? (
           <div className="card empty-state">
-            <h3 style={{ fontSize: '1.4rem', letterSpacing: '0.06em', color: 'var(--color-muted)', margin: 0 }}>No Tournaments Active</h3>
-            <p className="serif-body" style={{ margin: 0 }}>Launch your first tournament to get boots on the ground</p>
-            <Link to="/tournaments/new" className="btn-primary" style={{ marginTop: '0.5rem' }}>+ Launch First Tournament</Link>
+            <h3 className="text-[1.4rem] tracking-[0.06em] text-muted m-0">No Tournaments Active</h3>
+            <p className="serif-body m-0">Launch your first tournament to get boots on the ground</p>
+            <Link to="/tournaments/new" className="btn-primary mt-2">+ Launch First Tournament</Link>
           </div>
         ) : (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1px', background: 'var(--color-border)' }}>
+          <div className="flex flex-col gap-px bg-border">
             {tournaments.map((tournament) => (
-              <div key={tournament.id} style={{ background: 'var(--color-surface)', padding: '1.25rem 1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '1rem', transition: 'background 0.15s ease' }}
-                onMouseEnter={e => (e.currentTarget as HTMLDivElement).style.background = 'var(--color-raised)'}
-                onMouseLeave={e => (e.currentTarget as HTMLDivElement).style.background = 'var(--color-surface)'}
+              <div
+                key={tournament.id}
+                className="bg-surface py-5 px-6 flex justify-between items-start gap-4 transition-colors duration-150 hover:bg-raised"
               >
                 <div>
-                  <h3 style={{ fontSize: '1.3rem', letterSpacing: '0.06em', margin: '0 0 0.4rem' }}>{tournament.name}</h3>
+                  <h3 className="text-[1.3rem] tracking-[0.06em] mt-0 mb-[0.4rem]">{tournament.name}</h3>
                   {tournament.description && (
-                    <p style={{ color: 'var(--color-muted)', margin: '0 0 0.5rem' }}>{tournament.description}</p>
+                    <p className="text-muted mt-0 mb-2">{tournament.description}</p>
                   )}
-                  <div style={{ display: 'flex', gap: '1.5rem', letterSpacing: '0.1em', color: 'var(--color-muted)' }}>
+                  <div className="flex gap-6 tracking-widest text-muted">
                     <span>{tournament.start_date}</span>
                     {tournament.end_date && <span>→ {tournament.end_date}</span>}
                   </div>
                 </div>
-                <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'flex-start' }}>
-                  <span style={{
-                    letterSpacing: '0.12em',
-                    textTransform: 'uppercase', fontSize: '0.7rem',
-                    color: statusColor(tournament.status),
-                    border: `1px solid ${statusColor(tournament.status)}`,
-                    padding: '0.28rem 0.4rem',
-                    whiteSpace: 'nowrap',
-                  }}>
+                <div className="flex gap-2 items-start">
+                  <span
+                    className="tracking-[0.12em] uppercase text-[0.7rem] whitespace-nowrap px-[0.4rem] py-[0.28rem] border"
+                    style={{ color: statusColor(tournament.status), borderColor: statusColor(tournament.status) }}
+                  >
                     {tournament.status}
                   </span>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', alignItems: 'stretch' }}>
-                    <Link to="/tournaments/$id" params={{ id: tournament.id }} className="btn-sm" style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '0.35rem', justifyContent: 'center' }}>
+                  <div className="flex flex-col gap-[0.4rem] items-stretch">
+                    <Link
+                      to="/tournaments/$id"
+                      params={{ id: tournament.id }}
+                      className="btn-sm no-underline inline-flex items-center gap-[0.35rem] justify-center"
+                    >
                       View <ArrowRight size={14} />
                     </Link>
-                    <Link to="/tournaments/$id/edit" params={{ id: tournament.id }} className="btn-sm" style={{ textDecoration: 'none', textAlign: 'center' }}>
+                    <Link
+                      to="/tournaments/$id/edit"
+                      params={{ id: tournament.id }}
+                      className="btn-sm no-underline text-center"
+                    >
                       Edit
                     </Link>
                   </div>

@@ -40,18 +40,18 @@ export default function NewTournament() {
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', maxWidth: '600px' }}>
+    <div className="flex flex-col gap-5 max-w-150">
 
       {/* Header */}
       <div className="anim-0">
-        <div className="section-label" style={{ marginBottom: '0.3rem' }}>Tournaments</div>
-        <h1 style={{ fontSize: '2.4rem', letterSpacing: '0.06em', margin: 0 }}>
+        <div className="section-label mb-[0.3rem]">Tournaments</div>
+        <h1 className="text-[2.4rem] tracking-[0.06em] m-0">
           New Tournament
         </h1>
       </div>
 
       {/* Form card */}
-      <form onSubmit={handleSubmit} className="card anim-1" style={{ padding: '1.75rem', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+      <form onSubmit={handleSubmit} className="card anim-1 p-7 flex flex-col gap-5">
 
         {/* Name */}
         <div>
@@ -71,36 +71,33 @@ export default function NewTournament() {
         <div>
           <label className="field-label">Description</label>
           <textarea
-            className="input"
+            className="input resize-y text-base leading-[1.6]"
             placeholder="Optional notes about this tournament..."
             value={description}
             onChange={e => setDescription(e.target.value)}
             rows={3}
-            style={{ resize: 'vertical', fontSize: '1rem', lineHeight: 1.6 }}
           />
         </div>
 
         {/* Dates */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+        <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="field-label">Start Date *</label>
             <input
-              className="input"
+              className="input scheme-dark"
               type="date"
               value={startDate}
               onChange={e => setStartDate(e.target.value)}
               required
-              style={{ colorScheme: 'dark' }}
             />
           </div>
           <div>
             <label className="field-label">End Date</label>
             <input
-              className="input"
+              className="input scheme-dark"
               type="date"
               value={endDate}
               onChange={e => setEndDate(e.target.value)}
-              style={{ colorScheme: 'dark' }}
             />
           </div>
         </div>
@@ -111,12 +108,11 @@ export default function NewTournament() {
         )}
 
         {/* Actions */}
-        <div style={{ display: 'flex', gap: '0.75rem', paddingTop: '0.25rem' }}>
+        <div className="flex gap-3 pt-1">
           <button
             type="submit"
-            className="btn-primary"
+            className={`btn-primary ${loading ? 'opacity-60 cursor-wait' : 'cursor-pointer'}`}
             disabled={loading}
-            style={{ opacity: loading ? 0.6 : 1, cursor: loading ? 'wait' : 'pointer' }}
           >
             {loading ? 'Creating...' : '+ Create Tournament'}
           </button>

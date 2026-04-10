@@ -31,53 +31,32 @@ export default function Login() {
   }
 
   return (
-    <div style={{
-      minHeight: '100vh',
-      background: 'var(--color-bg)',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      padding: '1.5rem',
-      position: 'relative',
-      overflow: 'hidden',
-    }}>
+    <div className="min-h-screen bg-bg flex items-center justify-center p-6 relative overflow-hidden">
       {/* Dot-grid background */}
-      <div style={{
-        position: 'absolute',
-        inset: 0,
-        backgroundImage: 'radial-gradient(circle, var(--color-raised) 1px, transparent 1px)',
-        backgroundSize: '22px 22px',
-        opacity: 0.8,
-        pointerEvents: 'none',
-      }} />
+      <div className="absolute inset-0 bg-[radial-gradient(circle,var(--color-raised)_1px,transparent_1px)] bg-size-[22px_22px] opacity-80 pointer-events-none" />
 
       {/* Vignette */}
-      <div style={{
-        position: 'absolute',
-        inset: 0,
-        background: 'radial-gradient(ellipse at center, transparent 40%, var(--color-bg) 100%)',
-        pointerEvents: 'none',
-      }} />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_40%,var(--color-bg)_100%)] pointer-events-none" />
 
-      <div style={{ position: 'relative', zIndex: 1, width: '100%', maxWidth: '380px' }}>
+      <div className="relative z-1 w-full max-w-95">
 
         {/* Header */}
-        <div className="anim-0" style={{ textAlign: 'center', marginBottom: '2rem' }}>
+        <div className="anim-0 text-center mb-8">
           {/* Badge */}
-          <div style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '52px', height: '52px', background: 'var(--color-accent)', clipPath: 'polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px))', marginBottom: '1rem' }}>
-            <span className="font-display" style={{ fontSize: '1.5rem', color: 'var(--color-bg)', letterSpacing: '0.05em' }}>T</span>
+          <div className="inline-flex items-center justify-center w-13 h-13 bg-accent [clip-path:polygon(0_0,calc(100%-8px)_0,100%_8px,100%_100%,8px_100%,0_calc(100%-8px))] mb-4">
+            <span className="font-display text-2xl text-bg tracking-[0.05em]">T</span>
           </div>
-          <h1 style={{ fontSize: '2.2rem', letterSpacing: '0.1em', color: 'var(--color-text)', margin: 0 }}>
-            TOURNEY<span style={{ color: 'var(--color-accent)' }}>26</span>
+          <h1 className="text-[2.2rem] tracking-widest text-text m-0">
+            TOURNEY<span className="text-accent">26</span>
           </h1>
-          <p style={{ fontSize: '0.6rem', letterSpacing: '0.2em', color: 'var(--color-muted)', textTransform: 'uppercase', marginTop: '0.4rem' }}>
+          <p className="text-[0.6rem] tracking-[0.2em] text-muted uppercase mt-[0.4rem]">
             Secure Access Required
           </p>
         </div>
 
         {/* Card */}
-        <div className="card anim-1" style={{ padding: '1.75rem' }}>
-          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+        <div className="card anim-1 p-7">
+          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
 
             <div>
               <label className="field-label">Email</label>
@@ -111,16 +90,15 @@ export default function Login() {
 
             <button
               type="submit"
-              className="btn-primary"
+              className={`btn-primary w-full justify-center ${loading ? 'opacity-60 cursor-wait' : 'cursor-pointer'}`}
               disabled={loading}
-              style={{ width: '100%', justifyContent: 'center', opacity: loading ? 0.6 : 1, cursor: loading ? 'wait' : 'pointer' }}
             >
               {loading ? 'Processing...' : 'Enter HQ'}
             </button>
           </form>
         </div>
 
-        <p style={{ textAlign: 'center', fontSize: '0.58rem', color: 'var(--color-muted-dim)', letterSpacing: '0.12em', marginTop: '1.25rem', textTransform: 'uppercase' }}>
+        <p className="text-center text-[0.58rem] text-muted-dim tracking-[0.12em] mt-5 uppercase">
           Authorized Personnel Only
         </p>
       </div>

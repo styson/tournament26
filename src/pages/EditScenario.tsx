@@ -139,26 +139,26 @@ export default function EditScenario() {
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+    <div className="flex flex-col gap-5">
 
       <div className="anim-0">
-        <div className="section-label" style={{ marginBottom: '0.3rem' }}>Scenario Library</div>
-        <h1 style={{ fontSize: '2.4rem', letterSpacing: '0.06em', margin: 0 }}>
+        <div className="section-label mb-[0.3rem]">Scenario Library</div>
+        <h1 className="text-[2.4rem] tracking-[0.06em] m-0">
           Edit Scenario
         </h1>
       </div>
 
       {loading ? (
-        <div className="card" style={{ padding: '3rem', display: 'flex', justifyContent: 'center' }}>
+        <div className="card p-12 flex justify-center">
           <div className="spinner" />
         </div>
       ) : (
-        <div style={{ display: 'flex', gap: '1.25rem', alignItems: 'flex-start' }}>
+        <div className="flex gap-5 items-start">
 
           {/* Edit form */}
-          <form onSubmit={handleSubmit} className="card anim-1" style={{ flex: 1, padding: '1.75rem', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+          <form onSubmit={handleSubmit} className="card anim-1 flex-1 p-7 flex flex-col gap-5">
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '1rem' }}>
+            <div className="grid grid-cols-[1fr_2fr] gap-4">
               <div>
                 <label className="field-label">Scenario ID *</label>
                 <input
@@ -192,7 +192,7 @@ export default function EditScenario() {
               />
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+            <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="field-label">Attacker Nationality</label>
                 <input
@@ -215,27 +215,24 @@ export default function EditScenario() {
 
             <div>
               <label className="field-label">Scenario Archive ID</label>
-              <div style={{ display: 'flex', gap: '0.5rem' }}>
+              <div className="flex gap-2">
                 <input
-                  className="input"
+                  className="input flex-1"
                   type="text"
                   value={archiveId}
                   onChange={e => setArchiveId(e.target.value)}
-                  style={{ flex: 1 }}
                 />
                 <button
                   type="button"
-                  className="btn-secondary"
+                  className={`btn-secondary whitespace-nowrap${(searching || !archiveId.trim()) ? ' opacity-50' : ''}`}
                   onClick={findScenarioDetails}
                   disabled={searching || !archiveId.trim()}
-                  style={{ whiteSpace: 'nowrap', opacity: searching || !archiveId.trim() ? 0.5 : 1 }}
                 >
                   {searching ? 'Searching...' : 'Lookup'}
                 </button>
                 <button
                   type="button"
-                  className="btn-secondary"
-                  style={{ whiteSpace: 'nowrap', opacity: !archiveData ? 0.5 : 1 }}
+                  className={`btn-secondary whitespace-nowrap${!archiveData ? ' opacity-50' : ''}`}
                   disabled={!archiveData}
                   onClick={() => {
                     if (!archiveData) return;
@@ -253,22 +250,20 @@ export default function EditScenario() {
 
             {error && <div className="error-box">{error}</div>}
 
-            <div style={{ display: 'flex', gap: '0.75rem', paddingTop: '0.25rem' }}>
+            <div className="flex gap-3 pt-1">
               <button
                 type="submit"
-                className="btn-primary"
+                className={`btn-primary ${saving ? 'opacity-60 cursor-wait' : 'cursor-pointer'}`}
                 disabled={saving || deleting}
-                style={{ opacity: saving ? 0.6 : 1, cursor: saving ? 'wait' : 'pointer' }}
               >
                 {saving ? 'Saving...' : 'Save Changes'}
               </button>
               <Link to="/scenarios" search={{ q }} className="btn-secondary">Cancel</Link>
               <button
                 type="button"
-                className="btn-danger"
+                className={`btn-danger ml-auto ${deleting ? 'opacity-60 cursor-wait' : 'cursor-pointer'}`}
                 onClick={handleDelete}
                 disabled={deleting || saving}
-                style={{ marginLeft: 'auto', opacity: deleting ? 0.6 : 1, cursor: deleting ? 'wait' : 'pointer' }}
               >
                 {deleting ? 'Deleting...' : 'Delete'}
               </button>
@@ -276,71 +271,71 @@ export default function EditScenario() {
           </form>
 
           {/* Archive results panel */}
-          <div className="card anim-1" style={{ flex: 1, padding: '1.75rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-              <div className="section-label">Scenario Archive Data</div>
+          <div className="card anim-1 flex-1 p-7 flex flex-col gap-4">
+            <div className="section-label">Scenario Archive Data</div>
 
-              {searching && (
-                <div className="row" style={{ gap: '0.75rem' }}>
-                  <div className="spinner" /><span style={{ color: 'var(--color-muted)' }}>Searching archive...</span>
+            {searching && (
+              <div className="row gap-3">
+                <div className="spinner" /><span className="text-muted">Searching archive...</span>
+              </div>
+            )}
+
+            {archiveError && <div className="error-box">{archiveError}</div>}
+
+            {archiveData && (
+              <div className="flex flex-col gap-3">
+                <div>
+                  <div className="field-label">Title</div>
+                  <div className="text-text font-medium">{archiveData.title}</div>
                 </div>
-              )}
-
-              {archiveError && <div className="error-box">{archiveError}</div>}
-
-              {archiveData && (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <div className="field-label">Title</div>
-                    <div style={{ color: 'var(--color-text)', fontWeight: 500 }}>{archiveData.title}</div>
+                    <div className="field-label">Scenario ID</div>
+                    <div className="text-accent font-mono">{archiveData.sc_id}</div>
                   </div>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
-                    <div>
-                      <div className="field-label">Scenario ID</div>
-                      <div style={{ color: 'var(--color-accent)', fontFamily: 'monospace' }}>{archiveData.sc_id}</div>
-                    </div>
-                    <div>
-                      <div className="field-label">Archive ID</div>
-                      <div style={{ color: 'var(--color-muted)' }}>{archiveData.scenario_id}</div>
-                    </div>
-                    <div>
-                      <div className="field-label">Attacker</div>
-                      <div style={{ color: 'var(--color-text)' }}>{archiveData.attacker}</div>
-                    </div>
-                    <div>
-                      <div className="field-label">Defender</div>
-                      <div style={{ color: 'var(--color-text)' }}>{archiveData.defender}</div>
-                    </div>
+                  <div>
+                    <div className="field-label">Archive ID</div>
+                    <div className="text-muted">{archiveData.scenario_id}</div>
                   </div>
-                  {(() => {
-                    const p = archiveData.playings?.[0];
-                    return p ? (
-                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
-                        <div>
-                          <div className="field-label">Games Played</div>
-                          <div style={{ color: 'var(--color-text)' }}>{p.totalGames}</div>
-                        </div>
-                        <div>
-                          <div className="field-label">Balance (Att:Def)</div>
-                          <div style={{ color: 'var(--color-text)' }}>{p.attacker_wins}:{p.defender_wins}</div>
-                        </div>
-                      </div>
-                    ) : null;
-                  })()}
-                  {archiveData.author && (
-                    <div>
-                      <div className="field-label">Designer</div>
-                      <div style={{ color: 'var(--color-muted)' }}>{archiveData.author}</div>
-                    </div>
-                  )}
-                  {archiveData.pub_name && (
-                    <div>
-                      <div className="field-label">Publication</div>
-                      <div style={{ color: 'var(--color-muted)' }}>{archiveData.pub_name}</div>
-                    </div>
-                  )}
+                  <div>
+                    <div className="field-label">Attacker</div>
+                    <div className="text-text">{archiveData.attacker}</div>
+                  </div>
+                  <div>
+                    <div className="field-label">Defender</div>
+                    <div className="text-text">{archiveData.defender}</div>
+                  </div>
                 </div>
-              )}
-            </div>
+                {(() => {
+                  const p = archiveData.playings?.[0];
+                  return p ? (
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <div className="field-label">Games Played</div>
+                        <div className="text-text">{p.totalGames}</div>
+                      </div>
+                      <div>
+                        <div className="field-label">Balance (Att:Def)</div>
+                        <div className="text-text">{p.attacker_wins}:{p.defender_wins}</div>
+                      </div>
+                    </div>
+                  ) : null;
+                })()}
+                {archiveData.author && (
+                  <div>
+                    <div className="field-label">Designer</div>
+                    <div className="text-muted">{archiveData.author}</div>
+                  </div>
+                )}
+                {archiveData.pub_name && (
+                  <div>
+                    <div className="field-label">Publication</div>
+                    <div className="text-muted">{archiveData.pub_name}</div>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
 
         </div>
       )}

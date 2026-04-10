@@ -63,7 +63,7 @@ function roundStatusLabel(status: string) {
 
 function Spinner({ inline }: { inline?: boolean }) {
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', ...(inline ? {} : { justifyContent: 'center', padding: '4rem' }) }}>
+    <div className={`flex items-center gap-3${inline ? '' : ' justify-center p-16'}`}>
       <div className="spinner" />
     </div>
   );
@@ -250,54 +250,47 @@ export default function TournamentDetail() {
   // ─────────────────────────────────────────────────────────
   if (loadingTournament) return <Spinner />;
   if (!tournament) return (
-    <div style={{ color: 'var(--color-red)' }}>
-      Tournament not found. <Link to="/tournaments" style={{ color: 'var(--color-accent)', display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}><ArrowLeft size={14} /> Back</Link>
+    <div className="text-red">
+      Tournament not found. <Link to="/tournaments" className="text-accent inline-flex items-center gap-1"><ArrowLeft size={14} /> Back</Link>
     </div>
   );
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+    <div className="flex flex-col gap-6">
 
       {/* Back */}
       <div className="anim-0">
-        <Link to="/tournaments" style={{ letterSpacing: '0.15em', color: 'var(--color-muted)', textTransform: 'uppercase', display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}>
+        <Link to="/tournaments" className="tracking-[0.15em] text-muted uppercase inline-flex items-center gap-[0.35rem]">
           <ArrowLeft size={14} /> Tournaments
         </Link>
       </div>
 
       {/* Tournament info */}
       <div className="card anim-1">
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '0.75rem' }}>
+        <div className="flex justify-between items-start flex-wrap gap-3">
           <div>
-            <div className="section-label" style={{ marginBottom: '0.3rem' }}>Tournament</div>
-            <h1 style={{ fontSize: '2.2rem', letterSpacing: '0.06em', margin: '0 0 0.5rem' }}>
+            <div className="section-label mb-[0.3rem]">Tournament</div>
+            <h1 className="text-[2.2rem] tracking-[0.06em] mt-0 mb-2">
               {tournament.name}
             </h1>
             {tournament.description && (
-              <p style={{ color: 'var(--color-muted)', margin: '0 0 0.75rem' }}>
+              <p className="text-muted mt-0 mb-3">
                 {tournament.description}
               </p>
             )}
-            <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap', letterSpacing: '0.12em', color: 'var(--color-muted)' }}>
+            <div className="flex gap-6 flex-wrap tracking-[0.12em] text-muted">
               <span>Start: {tournament.start_date}</span>
               {tournament.end_date && <span>End: {tournament.end_date}</span>}
             </div>
           </div>
-          <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.6rem' }}>
-            <div style={{ position: 'relative' }}>
+          <div className="flex items-start gap-[0.6rem]">
+            <div className="relative">
               <select
                 value={tournament.status}
                 onChange={e => handleStatusChange(e.target.value)}
                 disabled={updatingStatus}
-                className="btn-sm"
-                style={{
-                  color: tournamentStatusColor(tournament.status),
-                  borderColor: tournamentStatusColor(tournament.status),
-                  paddingRight: '1.75rem',
-                  appearance: 'none',
-                  cursor: updatingStatus ? 'wait' : 'pointer',
-                  opacity: updatingStatus ? 0.6 : 1,
-                }}
+                className={`btn-sm appearance-none pr-7 ${updatingStatus ? 'opacity-60 cursor-wait' : 'cursor-pointer'}`}
+                style={{ color: tournamentStatusColor(tournament.status), borderColor: tournamentStatusColor(tournament.status) }}
               >
                 <option value="DRAFT">DRAFT</option>
                 <option value="ACTIVE">ACTIVE</option>
@@ -305,9 +298,12 @@ export default function TournamentDetail() {
                 <option value="COMPLETED">COMPLETED</option>
                 <option value="CANCELLED">CANCELLED</option>
               </select>
-              <span style={{ position: 'absolute', right: '0.5rem', top: '50%', transform: 'translateY(-50%)', color: tournamentStatusColor(tournament.status), pointerEvents: 'none', display: 'inline-flex' }}><ChevronDown size={12} /></span>
+              <span
+                className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none inline-flex"
+                style={{ color: tournamentStatusColor(tournament.status) }}
+              ><ChevronDown size={12} /></span>
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'stretch', gap: '0.4rem' }}>
+            <div className="flex flex-col items-stretch gap-[0.4rem]">
               <StandingsReportButton
                 standings={standings}
                 tournamentName={tournament.name}
@@ -325,70 +321,55 @@ export default function TournamentDetail() {
 
       {/* ── ROUNDS GRID ───────────────────────────────────── */}
       <div className="anim-2">
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
+        <div className="flex justify-between items-center mb-3">
           <div className="section-label">
             Rounds
-            {!loadingRounds && <span style={{ color: 'var(--color-accent)', marginLeft: '0.5rem' }}>{rounds.length}</span>}
+            {!loadingRounds && <span className="text-accent ml-2">{rounds.length}</span>}
           </div>
           <button
             onClick={handleAddRound}
-            className="btn-primary"
+            className={`btn-primary ${addingRound ? 'opacity-50 cursor-wait' : 'cursor-pointer'}`}
             disabled={addingRound}
             title="Add Round"
-            style={{ opacity: addingRound ? 0.5 : 1, cursor: addingRound ? 'wait' : 'pointer' }}
           >
             {addingRound ? 'Adding...' : `+ Round ${rounds.length + 1}`}
           </button>
         </div>
 
         {loadingRounds ? (
-          <div className="card" style={{ padding: '2rem' }}><Spinner inline /></div>
+          <div className="card p-8"><Spinner inline /></div>
         ) : rounds.length === 0 ? (
-          <div className="card" style={{ padding: '2.5rem', textAlign: 'center', color: 'var(--color-muted-dim)' }}>
+          <div className="card p-10 text-center text-muted-dim">
             No rounds yet. Use + Round 1 above to get started.
           </div>
         ) : (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.75rem' }}>
+          <div className="grid grid-cols-4 gap-3">
             {rounds.map((round) => (
               <Link
                 key={round.id}
                 to="/tournaments/$id/rounds/$roundId"
                 params={{ id: tournament.id, roundId: round.id }}
-                className="card"
+                className="card p-4 flex flex-col gap-[0.6rem] transition-colors duration-150 no-underline cursor-pointer hover:bg-raised"
                 title="Click to open"
-                style={{
-                  padding: '1rem',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '0.6rem',
-                  transition: 'background 0.15s ease',
-                  textDecoration: 'none',
-                  cursor: 'pointer',
-                }}
-                onMouseEnter={e => (e.currentTarget as HTMLAnchorElement).style.background = 'var(--color-raised)'}
-                onMouseLeave={e => (e.currentTarget as HTMLAnchorElement).style.background = 'var(--color-surface)'}
               >
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                <div className="flex justify-between items-start">
                   <div>
-                    <div className="font-display" style={{ fontSize: '1.75rem', letterSpacing: '0.06em', color: 'var(--color-text)', lineHeight: 1 }}>
+                    <div className="font-display text-[1.75rem] tracking-[0.06em] text-text leading-none">
                       Round {round.round_number}
                     </div>
                     {round.name && (
-                      <div style={{ color: 'var(--color-muted)', marginTop: '0.2rem' }}>
+                      <div className="text-muted mt-[0.2rem]">
                         {round.name}
                       </div>
                     )}
                   </div>
-                  <LogIn size={16} style={{ color: 'var(--color-muted)', flexShrink: 0, marginTop: '0.2rem' }} />
+                  <LogIn size={16} className="text-muted shrink-0 mt-[0.2rem]" />
                 </div>
 
-                <span style={{
-                  letterSpacing: '0.12em',
-                  textTransform: 'uppercase', color: roundStatusColor(round.status),
-                  border: `1px solid ${roundStatusColor(round.status)}`,
-                  padding: '0.15rem 0.4rem',
-                  alignSelf: 'flex-start',
-                }}>
+                <span
+                  className="tracking-[0.12em] uppercase px-[0.4rem] py-[0.15rem] self-start border"
+                  style={{ color: roundStatusColor(round.status), borderColor: roundStatusColor(round.status) }}
+                >
                   {roundStatusLabel(round.status)}
                 </span>
               </Link>
@@ -398,57 +379,51 @@ export default function TournamentDetail() {
       </div>
 
       {/* ── ENROLLED PLAYERS ───────────────────────────────── */}
-      <div className="card anim-4" style={{ padding: 0 }}>
-        <div style={{ padding: '1rem 1.25rem', borderBottom: '1px solid var(--color-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div className="card anim-4 p-0">
+        <div className="py-4 px-5 border-b border-border flex justify-between items-center">
           <div className="section-label">
             Enrolled Players
-            {!loadingPlayers && <span style={{ color: 'var(--color-accent)', marginLeft: '0.5rem' }}>{enrolled.length}</span>}
+            {!loadingPlayers && <span className="text-accent ml-2">{enrolled.length}</span>}
           </div>
         </div>
 
         {loadingPlayers ? (
-          <div style={{ padding: '2rem', display: 'flex', justifyContent: 'center' }}><Spinner inline /></div>
+          <div className="p-8 flex justify-center"><Spinner inline /></div>
         ) : enrolled.length === 0 ? (
-          <div style={{ padding: '2.5rem', textAlign: 'center', color: 'var(--color-muted-dim)' }}>
+          <div className="p-10 text-center text-muted-dim">
             No players enrolled yet.
           </div>
         ) : (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.5rem', padding: '1rem 1.25rem' }}>
+          <div className="grid grid-cols-4 gap-2 py-4 px-5">
             {enrolled.map(p => (
-              <div key={p.id} style={{
-                display: 'flex', flexDirection: 'column',
-                padding: '0.5rem 0.6rem',
-                background: 'var(--color-bg)', border: '1px solid var(--color-border)',
-                transition: 'border-color 0.15s ease', cursor: 'default',
-              }}
-                onMouseEnter={e => (e.currentTarget as HTMLDivElement).style.borderColor = 'var(--color-border-bright)'}
-                onMouseLeave={e => (e.currentTarget as HTMLDivElement).style.borderColor = 'var(--color-border)'}
+              <div
+                key={p.id}
+                className="flex flex-col py-2 px-[0.6rem] bg-bg border border-border transition-colors duration-150 cursor-default hover:border-border-bright"
                 onClick={e => { if (e.ctrlKey) { setSeedModal(p); setSeedModalVal(p.seed !== null ? String(p.seed) : ''); setTimeout(() => seedModalRef.current?.select(), 50); } }}
               >
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                  <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.4rem', minWidth: 0 }}>
-                    <span style={{ color: 'var(--color-text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-baseline gap-[0.4rem] min-w-0">
+                    <span className="text-text truncate">
                       {p.name}
                     </span>
                     {p.seed !== null && (
-                      <span style={{ color: 'var(--color-muted)', letterSpacing: '0.1em', flexShrink: 0 }}>#{p.seed}</span>
+                      <span className="text-muted tracking-widest shrink-0">#{p.seed}</span>
                     )}
                   </div>
                   <button
                     onClick={() => openPlayerReportPdf(p.id, p.name, id!, tournament?.name ?? '', Object.fromEntries(enrolled.map(e => [e.id, e.name])))}
                     title="View Player Report"
-                    className="icon-btn"
-                    style={{ fontSize: '0.65rem', flexShrink: 0 }}
+                    className="icon-btn text-[0.65rem] shrink-0"
                   ><ExternalLink size={14} /></button>
                 </div>
-                <div style={{ letterSpacing: '0.1em', color: 'var(--color-accent)', marginTop: '0.1rem' }}>
+                <div className="tracking-widest text-accent mt-[0.1rem]">
                   {`${points[p.id] ?? 0} Points`}
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                  <div style={{ letterSpacing: '0.1em', color: 'var(--color-muted)' }}>
+                <div className="flex items-center justify-between">
+                  <div className="tracking-widest text-muted">
                     {(() => { const r = records[p.id] ?? { w: 0, l: 0 }; return `W/L ${r.w}-${r.l}`; })()}
                   </div>
-                  <div style={{ display: 'flex', gap: '0.2rem', flexShrink: 0, alignItems: 'center' }}>
+                  <div className="flex gap-[0.2rem] shrink-0 items-center">
                     {(() => {
                       const r = records[p.id] ?? { w: 0, l: 0 };
                       const hasPlayed = r.w + r.l > 0;
@@ -456,8 +431,7 @@ export default function TournamentDetail() {
                         <button
                           disabled
                           title="Cannot remove — player has played games"
-                          className="icon-btn danger"
-                          style={{ opacity: 0.25, cursor: 'not-allowed' }}
+                          className="icon-btn danger opacity-25 cursor-not-allowed"
                         ><X size={14} /></button>
                       );
                       return confirmRemovePlayer === p.id ? (
@@ -466,13 +440,12 @@ export default function TournamentDetail() {
                             onClick={() => { setConfirmRemovePlayer(null); handleRemove(p.id); }}
                             disabled={removingId === p.id}
                             title="Confirm remove"
-                            style={{ background: 'var(--color-red-bg)', border: '1px solid var(--color-red)', color: 'var(--color-red-bright)', padding: '0.2rem 0.35rem', cursor: 'pointer', lineHeight: 1 }}
+                            className="bg-red-bg border border-red text-red-bright py-[0.2rem] px-[0.35rem] cursor-pointer leading-none"
                           >{removingId === p.id ? '…' : <Check size={14} />}</button>
                           <button
                             onClick={() => setConfirmRemovePlayer(null)}
                             title="Cancel"
-                            className="btn-secondary"
-                            style={{ padding: '0.2rem 0.35rem' }}
+                            className="btn-secondary py-[0.2rem] px-[0.35rem]"
                           ><X size={14} /></button>
                         </>
                       ) : (
@@ -494,43 +467,35 @@ export default function TournamentDetail() {
       {/* Add player */}
       {!loadingPlayers && roster.length > 0 && (
         <div className="card anim-5">
-          <form onSubmit={handleEnroll} style={{ display: 'grid', gridTemplateColumns: '1fr 80px auto', gap: '0.5rem 0.75rem', alignItems: 'center' }}>
+          <form onSubmit={handleEnroll} className="grid grid-cols-[1fr_80px_auto] gap-y-2 gap-x-3 items-center">
             <div className="section-label">Add From Player List</div>
             <label className="field-label">Seed</label>
             <div />
-            <div style={{ position: 'relative' }}>
+            <div className="relative">
               <select
                 value={selectedPlayerId}
                 onChange={e => setSelectedPlayerId(e.target.value)}
                 required
-                style={{
-                  width: '100%', background: 'var(--color-bg)',
-                  color: selectedPlayerId ? 'var(--color-text)' : 'var(--color-muted)',
-                  border: '1px solid var(--color-border)',
-                  letterSpacing: '0.06em', padding: '0.5rem 2rem 0.5rem 0.75rem',
-                  outline: 'none', appearance: 'none', cursor: 'pointer',
-                }}
+                className={`w-full bg-bg border border-border tracking-[0.06em] py-2 pr-8 pl-3 outline-none appearance-none cursor-pointer ${selectedPlayerId ? 'text-text' : 'text-muted'}`}
               >
                 <option value="">Select a player...</option>
                 {roster.map(p => (
                   <option key={p.id} value={p.id}>{p.name}{p.location ? ` — ${p.location}` : ''}</option>
                 ))}
               </select>
-              <span style={{ position: 'absolute', right: '0.6rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--color-muted)', pointerEvents: 'none', display: 'inline-flex' }}><ChevronDown size={12} /></span>
+              <span className="absolute right-[0.6rem] top-1/2 -translate-y-1/2 text-muted pointer-events-none inline-flex"><ChevronDown size={12} /></span>
             </div>
             <input
               type="number"
               min="1"
               value={seedInput}
               onChange={e => setSeedInput(e.target.value)}
-              className="input"
-              style={{ width: '100%' }}
+              className="input w-full"
             />
             <button
               type="submit"
-              className="btn-primary"
+              className={`btn-primary whitespace-nowrap ${enrolling ? 'cursor-wait' : 'cursor-pointer'} ${(enrolling || !selectedPlayerId) ? 'opacity-50' : ''}`}
               disabled={enrolling || !selectedPlayerId}
-              style={{ opacity: enrolling || !selectedPlayerId ? 0.5 : 1, cursor: enrolling ? 'wait' : 'pointer', whiteSpace: 'nowrap' }}
             >
               {enrolling ? 'Enrolling...' : '+ Enroll'}
             </button>
@@ -545,19 +510,20 @@ export default function TournamentDetail() {
       )}
 
       {!loadingPlayers && roster.length === 0 && enrolled.length > 0 && (
-        <div style={{ color: 'var(--color-muted-dim)', letterSpacing: '0.12em', textAlign: 'center', padding: '0.5rem' }}>
+        <div className="text-muted-dim tracking-[0.12em] text-center p-2">
           All players are enrolled in this tournament.
         </div>
       )}
 
       {/* Seed edit modal */}
       {seedModal && createPortal(
-        <div style={{ position: 'fixed', inset: 0, zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(0,0,0,0.6)' }}
+        <div
+          className="fixed inset-0 z-9999 flex items-center justify-center bg-[rgba(0,0,0,0.6)]"
           onClick={e => { if (e.target === e.currentTarget) setSeedModal(null); }}
         >
-          <form onSubmit={handleSaveSeed} style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border-bright)', padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem', minWidth: '280px' }}>
+          <form onSubmit={handleSaveSeed} className="bg-surface border border-border-bright p-6 flex flex-col gap-4 min-w-70">
             <div className="section-label">Edit Seed</div>
-            <div style={{ color: 'var(--color-text)', fontWeight: 500 }}>{seedModal.name}</div>
+            <div className="text-text font-medium">{seedModal.name}</div>
             <div>
               <label className="field-label">Seed</label>
               <input
@@ -566,13 +532,12 @@ export default function TournamentDetail() {
                 min="1"
                 value={seedModalVal}
                 onChange={e => setSeedModalVal(e.target.value)}
-                className="input"
-                style={{ width: '100%' }}
+                className="input w-full"
                 autoFocus
               />
             </div>
-            <div style={{ display: 'flex', gap: '0.5rem' }}>
-              <button type="submit" className="btn-primary" disabled={seedModalSaving} style={{ opacity: seedModalSaving ? 0.6 : 1 }}>
+            <div className="flex gap-2">
+              <button type="submit" className={`btn-primary ${seedModalSaving ? 'opacity-60' : ''}`} disabled={seedModalSaving}>
                 {seedModalSaving ? 'Saving...' : 'Save'}
               </button>
               <button type="button" className="btn-secondary" onClick={() => setSeedModal(null)}>Cancel</button>

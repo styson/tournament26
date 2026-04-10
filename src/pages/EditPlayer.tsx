@@ -80,21 +80,21 @@ export default function EditPlayer() {
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', maxWidth: '600px' }}>
+    <div className="flex flex-col gap-5 max-w-150">
 
       <div className="anim-0">
-        <div className="section-label" style={{ marginBottom: '0.3rem' }}>Players</div>
-        <h1 style={{ fontSize: '2.4rem', letterSpacing: '0.06em', margin: 0 }}>
+        <div className="section-label mb-[0.3rem]">Players</div>
+        <h1 className="text-[2.4rem] tracking-[0.06em] m-0">
           Edit Player
         </h1>
       </div>
 
       {loading ? (
-        <div className="card" style={{ padding: '3rem', display: 'flex', justifyContent: 'center' }}>
+        <div className="card p-12 flex justify-center">
           <div className="spinner" />
         </div>
       ) : (
-        <form onSubmit={handleSubmit} className="card anim-1" style={{ padding: '1.75rem', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+        <form onSubmit={handleSubmit} className="card anim-1 p-7 flex flex-col gap-5">
 
           <div>
             <label className="field-label">Full Name *</label>
@@ -108,7 +108,7 @@ export default function EditPlayer() {
             />
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+          <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="field-label">Email</label>
               <input
@@ -141,22 +141,20 @@ export default function EditPlayer() {
 
           {error && <div className="error-box">{error}</div>}
 
-          <div style={{ display: 'flex', gap: '0.75rem', paddingTop: '0.25rem' }}>
+          <div className="flex gap-3 pt-1">
             <button
               type="submit"
-              className="btn-primary"
+              className={`btn-primary ${saving ? 'opacity-60 cursor-wait' : 'cursor-pointer'}`}
               disabled={saving || deleting}
-              style={{ opacity: saving ? 0.6 : 1, cursor: saving ? 'wait' : 'pointer' }}
             >
               {saving ? 'Saving...' : 'Save Changes'}
             </button>
             <Link to="/players" search={{ q }} className="btn-secondary">Cancel</Link>
             <button
               type="button"
-              className="btn-danger"
+              className={`btn-danger ml-auto ${deleting ? 'opacity-60 cursor-wait' : 'cursor-pointer'}`}
               onClick={handleDelete}
               disabled={deleting || saving}
-              style={{ marginLeft: 'auto', opacity: deleting ? 0.6 : 1, cursor: deleting ? 'wait' : 'pointer' }}
             >
               {deleting ? 'Deleting...' : 'Delete'}
             </button>

@@ -11,18 +11,10 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
 
   if (loading) {
     return (
-      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--color-bg)' }}>
-        <div style={{ textAlign: 'center' }}>
-          <div style={{
-            width: '32px',
-            height: '32px',
-            border: '2px solid var(--color-spin-track)',
-            borderTopColor: 'var(--color-accent)',
-            borderRadius: '50%',
-            animation: 'spin 0.8s linear infinite',
-            margin: '0 auto',
-          }} />
-          <p style={{ fontSize: '0.8rem', letterSpacing: '0.2em', color: 'var(--color-muted)', marginTop: '1rem', textTransform: 'uppercase' }}>
+      <div className="min-h-screen flex items-center justify-center bg-bg">
+        <div className="text-center">
+          <div className="w-8 h-8 border-2 border-spin-track border-t-accent rounded-full animate-[spin_0.8s_linear_infinite] mx-auto" />
+          <p className="text-[0.8rem] tracking-[0.2em] text-muted mt-4 uppercase">
             Authenticating...
           </p>
           <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>

@@ -123,7 +123,7 @@ function ScenarioPicker({
         onChange={e => handleChange(e.target.value)}
         onFocus={() => { updateDropPos(); inputVal.trim() && setOpen(true); }}
         onBlur={() => setTimeout(() => setOpen(false), 150)}
-        placeholder={`Search by ID or title… (${currentCount}/10)`}
+        placeholder={'Search by ID or title…'}
         className="input"
         style={{ width: '100%' }}
         autoComplete="off"
@@ -145,12 +145,12 @@ function ScenarioPicker({
               onMouseLeave={e => (e.currentTarget as HTMLDivElement).style.background = 'transparent'}
             >
               {s.scen_id && (
-                <span style={{ color: 'var(--color-accent)', letterSpacing: '0.08em', whiteSpace: 'nowrap', flexShrink: 0 }}>
+                <span className="text-accent tracking-tighter whitespace-nowrap shrink-0">
                   {s.scen_id}
                 </span>
               )}
-              <span style={{ color: 'var(--color-text-dim)' }}>{s.title}</span>
-              <span style={{ color: 'var(--color-muted-dim)', marginLeft: 'auto', whiteSpace: 'nowrap', flexShrink: 0 }}>
+              <span className="text-text-dim">{s.title}</span>
+              <span className="text-muted-dim ml-auto whitespace-nowrap shrink-0">
                 {toTitleCase(s.attacker_nationality)} vs {toTitleCase(s.defender_nationality)}
               </span>
             </div>
@@ -416,7 +416,7 @@ export default function RoundDetail() {
 
   if (loading) return <Spinner />;
   if (!round) return (
-    <div style={{ color: 'var(--color-red)' }}>
+    <div className='text-red'>
       Round not found. <Link to="/tournaments/$id" params={{ id: tournamentId }} style={{ color: 'var(--color-accent)', display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}><ArrowLeft size={14} /> Back</Link>
     </div>
   );
@@ -432,12 +432,12 @@ export default function RoundDetail() {
       <div className="anim-0" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.75rem', flexWrap: 'wrap' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', letterSpacing: '0.14em', color: 'var(--color-muted)', textTransform: 'uppercase' }}>
           <Link to="/tournaments" style={{ color: 'var(--color-muted)' }}>Tournaments</Link>
-          <span style={{ color: 'var(--color-muted-dim)' }}>›</span>
+          <span className="text-muted-dim">›</span>
           <Link to="/tournaments/$id" params={{ id: tournamentId }} style={{ color: 'var(--color-muted)' }}>
             {tournament?.name ?? '…'}
           </Link>
-          <span style={{ color: 'var(--color-muted-dim)' }}>›</span>
-          <span style={{ color: 'var(--color-text-dim)' }}>Round {round.round_number}{round.name ? ` — ${round.name}` : ''}</span>
+          <span className="text-muted-dim">›</span>
+          <span className="text-text-dim">Round {round.round_number}{round.name ? ` — ${round.name}` : ''}</span>
         </div>
         {allRounds.length > 1 && (() => {
           const idx  = allRounds.findIndex(r => r.id === roundId);
@@ -481,7 +481,7 @@ export default function RoundDetail() {
           <div>
             <h1 style={{ fontSize: '2.2rem', letterSpacing: '0.06em', margin: 0 }}>
               Round {round.round_number}
-              {round.name && <span style={{ color: 'var(--color-muted)', marginLeft: '0.5rem', fontSize: '1.4rem' }}>— {round.name}</span>}
+              {round.name && <span className="text-muted ml-2 text-[1.4rem]">— {round.name}</span>}
             </h1>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
@@ -508,7 +508,7 @@ export default function RoundDetail() {
                   <option key={s.value} value={s.value}>{s.label}</option>
                 ))}
               </select>
-              <span style={{ position: 'absolute', right: '0.5rem', top: '50%', transform: 'translateY(-50%)', color: roundStatusColor(round.status), pointerEvents: 'none', display: 'inline-flex' }}><ChevronDownIcon size={12} /></span>
+              <span className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none inline-flex" style={{ color: roundStatusColor(round.status) }}><ChevronDownIcon size={12} /></span>
             </div>
             {games.length > 0 && (
               <button
@@ -551,14 +551,14 @@ export default function RoundDetail() {
         >
           <div className="section-label">
             Scenarios
-            <span style={{ color: 'var(--color-accent)', marginLeft: '0.5rem' }}>{roundScenarios.length}/10</span>
+            <span className="text-accent ml-2">{roundScenarios.length}/10</span>
           </div>
-          <span style={{ color: '#ffffff', transition: 'transform 0.15s ease', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '24px', height: '24px', border: '1px solid #dddddd', transform: scenOpen ? 'rotate(0deg)' : 'rotate(-90deg)', flexShrink: 0 }}>▾</span>
+          <span className={`text-white transition-transform inline-flex items-center justify-center w-6 h-6 border border-[#dddddd] ${scenOpen ? 'rotate-0' : '-rotate-90'} shrink-0`}>▾</span>
         </button>
 
         {scenOpen && <div style={{ padding: '0.875rem 1.25rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
           {roundScenarios.length === 0 ? (
-            <p style={{ color: 'var(--color-muted-dim)', margin: '0 0 0.5rem' }}>
+            <p className="text-muted ml-1">
               No scenarios assigned yet.
             </p>
           ) : (
@@ -566,14 +566,14 @@ export default function RoundDetail() {
               <div key={s.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.75rem' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', minWidth: 0 }}>
                   {s.scen_id && (
-                    <span style={{ color: 'var(--color-accent)', letterSpacing: '0.08em', whiteSpace: 'nowrap', flexShrink: 0 }}>
+                    <span className="text-accent tracking-tighter whitespace-nowrap shrink-0">
                       {s.scen_id}
                     </span>
                   )}
-                  <span style={{ color: 'var(--color-text-dim)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  <span className="text-text-dim overflow-hidden text-ellipsis whitespace-nowrap">
                     {s.title}
                   </span>
-                  <span style={{ color: 'var(--color-muted-dim)', letterSpacing: '0.08em', whiteSpace: 'nowrap', flexShrink: 0 }}>
+                  <span className="text-muted-dim tracking-tighter whitespace-nowrap shrink-0">
                     {toTitleCase(s.attacker_nationality)} vs {toTitleCase(s.defender_nationality)}
                   </span>
                 </div>
@@ -638,16 +638,16 @@ export default function RoundDetail() {
         <div style={{ padding: '1rem 1.25rem', borderBottom: '1px solid var(--color-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div className="section-label">
             Games
-            <span style={{ color: 'var(--color-accent)', marginLeft: '0.5rem' }}>{games.length}</span>
+            <span className="text-accent ml-2">{games.length}</span>
           </div>
-          <span style={{ color: 'var(--color-muted-dim)', letterSpacing: '0.12em' }}>
+          <span className="tracking-tight text-muted-dim">
             {games.filter(g => g.status === 'COMPLETED').length}/{games.length} COMPLETED
           </span>
         </div>
 
         {games.length === 0 ? (
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '3rem 2rem', gap: '0.75rem' }}>
-            <p style={{ color: 'var(--color-muted-dim)', margin: 0, textAlign: 'center' }}>
+            <p className="text-muted-dim m-0 text-center">
               No games scheduled yet. Create the first pairing below.
             </p>
           </div>
@@ -673,29 +673,29 @@ export default function RoundDetail() {
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                         {scenario?.scen_id && (
-                          <span style={{ color: 'var(--color-accent)', letterSpacing: '0.08em', flexShrink: 0 }}>
+                          <span className="text-accent tracking-tighter shrink-0">
                             {scenario.scen_id}
                           </span>
                         )}
-                        <span style={{ color: 'var(--color-text)', fontWeight: 600 }}>
+                        <span className="text-text font-semibold">
                           {scenario?.title ?? '—'}
                         </span>
                         {scenario && (
-                          <span style={{ color: 'var(--color-muted-dim)', letterSpacing: '0.08em', whiteSpace: 'nowrap' }}>
+                          <span className="text-muted-dim tracking-tighter whitespace-nowrap">
                             {toTitleCase(scenario.attacker_nationality)} vs {toTitleCase(scenario.defender_nationality)}
                           </span>
                         )}
                       </div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
                         <PlayerSideTag name={p1?.name ?? '—'} role={p1Role} isWinner={game.winner_id === game.player1_id} isCompleted={game.status === 'COMPLETED'} points={p1 ? playerPoints[p1.id] : undefined} />
-                        <span style={{ color: 'var(--color-muted-dim)' }}>vs</span>
+                        <span className="text-muted-dim">vs</span>
                         <PlayerSideTag name={p2?.name ?? '—'} role={p2Role} isWinner={game.winner_id === game.player2_id} isCompleted={game.status === 'COMPLETED'} points={p2 ? playerPoints[p2.id] : undefined} />
                       </div>
                     </div>
 
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.5rem' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                        <span style={{ letterSpacing: '0.12em', textTransform: 'uppercase', color: gameStatusColor(game.status), border: `1px solid ${gameStatusColor(game.status)}`, padding: '0.2rem 0.5rem' }}>
+                        <span className="tracking-tight uppercase border py-[0.2rem] px-2" style={{ color: gameStatusColor(game.status), borderColor: gameStatusColor(game.status) }}>
                           {game.status === 'COMPLETED' ? 'Complete' : 'Scheduled'}
                         </span>
                         {game.status === 'COMPLETED' && !roundComplete && (
@@ -729,7 +729,7 @@ export default function RoundDetail() {
                         ))}
                       </div>
                       {game.status === 'COMPLETED' && winner && (
-                        <span style={{ color: 'var(--color-green-dim)', letterSpacing: '0.1em' }}>
+                        <span className="text-green-dim tracking-widest">
                           ✓ {winner.name}
                         </span>
                       )}
@@ -776,11 +776,11 @@ export default function RoundDetail() {
                         </button>
                       </div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', background: 'var(--color-surface)', border: '1px solid var(--color-border)', padding: '0.5rem 0.75rem' }}>
-                        <span style={{ color: 'var(--color-text)' }}>{p1?.name ?? '—'}</span>
-                        <span style={{ color: 'var(--color-accent)', letterSpacing: '0.12em' }}>{effP1Role === 'Attacker' ? 'ATK' : 'DEF'}</span>
-                        <span style={{ color: 'var(--color-muted-dim)' }}>vs</span>
-                        <span style={{ color: 'var(--color-text)' }}>{p2?.name ?? '—'}</span>
-                        <span style={{ color: 'var(--color-accent)', letterSpacing: '0.12em' }}>{effP2Role === 'Attacker' ? 'ATK' : 'DEF'}</span>
+                        <span className="text-text">{p1?.name ?? '—'}</span>
+                        <span className="text-accent tracking-tight">{effP1Role === 'Attacker' ? 'ATK' : 'DEF'}</span>
+                        <span className="text-muted-dim">vs</span>
+                        <span className="text-text">{p2?.name ?? '—'}</span>
+                        <span className="text-accent tracking-tight">{effP2Role === 'Attacker' ? 'ATK' : 'DEF'}</span>
                       </div>
                       <div className="section-label" style={{ marginBottom: '0.25rem' }}>Who won?</div>
                       <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
@@ -796,7 +796,7 @@ export default function RoundDetail() {
                             onMouseEnter={e => { const b = e.currentTarget as HTMLButtonElement; b.style.borderColor = 'var(--color-accent)'; b.style.color = 'var(--color-accent)'; }}
                             onMouseLeave={e => { const b = e.currentTarget as HTMLButtonElement; b.style.borderColor = 'var(--color-border)'; b.style.color = 'var(--color-text)'; }}
                           >
-                            <span style={{ color: 'var(--color-muted)', letterSpacing: '0.15em' }}>{role.toUpperCase()}</span>
+                            <span className="text-muted">{role.toUpperCase()}</span>
                             <span>{player?.name ?? '—'}</span>
                           </button>
                         ))}
@@ -813,10 +813,9 @@ export default function RoundDetail() {
       {/* ── Schedule a Game ────────────────────────────────── */}
       {!roundComplete && (
         <div className="card anim-4">
-          <div className="section-label" style={{ marginBottom: '0.875rem' }}>Schedule a Game</div>
-
+          <div className="section-label mb-2">Schedule a Game</div>
           {availablePlayers.length < 2 ? (
-            <p style={{ color: 'var(--color-muted-dim)', margin: 0 }}>
+            <p className="text-muted m-0">
               {availablePlayers.length === 0
                 ? 'All enrolled players already have a game this round.'
                 : `Only ${availablePlayers.length} player available — need at least 2 to schedule a game.`}
@@ -861,12 +860,12 @@ export default function RoundDetail() {
               {p1 && p2 && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
                   <div style={{ background: 'var(--color-bg)', border: '1px solid var(--color-border)', padding: '0.6rem 0.875rem', display: 'flex', alignItems: 'center', gap: '1rem', letterSpacing: '0.1em' }}>
-                    <span style={{ color: 'var(--color-muted)' }}>PREVIEW</span>
-                    <span style={{ color: 'var(--color-text)' }}>{p1.name}</span>
-                    <span style={{ color: 'var(--color-accent)' }}>{p1Side === 'attacker' ? 'ATK' : 'DEF'}</span>
-                    <span style={{ color: 'var(--color-muted-dim)' }}>vs</span>
-                    <span style={{ color: 'var(--color-text)' }}>{p2.name}</span>
-                    <span style={{ color: 'var(--color-accent)' }}>{p1Side === 'attacker' ? 'DEF' : 'ATK'}</span>
+                    <span className="text-muted">PREVIEW</span>
+                    <span className="text-text">{p1.name}</span>
+                    <span className="text-accent">{p1Side === 'attacker' ? 'ATK' : 'DEF'}</span>
+                    <span className="text-muted-dim">vs</span>
+                    <span className="text-text">{p2.name}</span>
+                    <span className="text-accent">{p1Side === 'attacker' ? 'DEF' : 'ATK'}</span>
                   </div>
                   {priorMatchups.has([p1Id, p2Id].sort().join('|')) && (
                     <div className="error-box">⚠ These players have already met in this tournament</div>
@@ -875,7 +874,7 @@ export default function RoundDetail() {
               )}
 
               <div>
-                <label className="field-label">Scenario <span style={{ color: 'var(--color-muted-dim)', letterSpacing: '0.08em', textTransform: 'none' }}>(optional — can be set when recording result)</span></label>
+                <label className="field-label">Scenario <span className="text-muted-dim tracking-tighter normal-case">(optional — can be set when recording result)</span></label>
                 <div style={{ position: 'relative' }}>
                   <select value={gameScenId} onChange={e => setGameScenId(e.target.value)} style={selectStyle}>
                     <option value="">TBD</option>
@@ -900,7 +899,7 @@ export default function RoundDetail() {
       )}
 
       {roundComplete && (
-        <div style={{ color: 'var(--color-muted-dim)', letterSpacing: '0.12em', textAlign: 'center', padding: '0.25rem' }}>
+        <div className="text-muted-dim text-center tracking-tighter">
           Round is complete. Change status to Upcoming or Started to modify games or scenarios.
         </div>
       )}
@@ -913,10 +912,10 @@ export default function RoundDetail() {
 function PlayerSideTag({ name, role, isWinner, isCompleted, points }: { name: string; role: string; isWinner: boolean; isCompleted: boolean; points?: number }) {
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-      <span style={{ letterSpacing: '0.12em', textTransform: 'uppercase', color: role === 'Attacker' ? 'var(--color-accent)' : 'var(--color-muted)', border: `1px solid ${role === 'Attacker' ? 'var(--color-accent-dim)' : 'var(--color-border)'}`, padding: '0.1rem 0.35rem', flexShrink: 0 }}>
+      <span className={`tracking-tight uppercase ${role === 'Attacker' ? 'text-accent border border-accent-dim' : 'text-muted border border-border'} py-[0.1rem] px-[0.35rem] shrink-0`}>
         {role === 'Attacker' ? 'ATK' : 'DEF'}
       </span>
-      <span style={{ color: isCompleted && isWinner ? 'var(--color-green-dim)' : isCompleted ? 'var(--color-muted)' : 'var(--color-text-dim)', fontWeight: isWinner ? 600 : 400 }}>
+      <span className={`${isCompleted && isWinner ? 'text-green-dim' : isCompleted ? 'text-muted' : 'text-text-dim'} ${isWinner ? 'font-semibold' : 'font-normal'}`}>
         {name}
         {points !== undefined && (
           <sup style={{ letterSpacing: '0.05em', color: 'var(--color-muted)', marginLeft: '0.15em', verticalAlign: 'super', lineHeight: 0 }}>
@@ -924,7 +923,7 @@ function PlayerSideTag({ name, role, isWinner, isCompleted, points }: { name: st
           </sup>
         )}
       </span>
-      {isWinner && <span style={{ color: 'var(--color-green-dim)' }}>✓</span>}
+      {isWinner && <span className="text-green-dim">✓</span>}
     </div>
   );
 }
@@ -943,6 +942,6 @@ const selectStyle: React.CSSProperties = {
 
 function ChevronDown() {
   return (
-    <span style={{ position: 'absolute', right: '0.6rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--color-muted)', pointerEvents: 'none', display: 'inline-flex' }}><ChevronDownIcon size={12} /></span>
+    <span className="absolute right-[0.6rem] top-1/2 -translate-y-1/2 text-muted pointer-events-none inline-flex"><ChevronDownIcon size={12} /></span>
   );
 }

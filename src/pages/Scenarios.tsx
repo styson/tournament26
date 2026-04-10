@@ -115,52 +115,51 @@ export default function Scenarios() {
   }, []);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+    <div className="flex flex-col gap-5">
 
       {/* Header */}
-      <div className="anim-0" style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.75rem' }}>
+      <div className="anim-0 flex items-end justify-between flex-wrap gap-3">
         <div>
-          <div className="section-label" style={{ marginBottom: '0.3rem' }}>Scenario Library</div>
-          <h1 style={{ fontSize: '2.4rem', letterSpacing: '0.06em', margin: 0 }}>
+          <div className="section-label mb-[0.3rem]">Scenario Library</div>
+          <h1 className="text-[2.4rem] tracking-[0.06em] m-0">
             Scenarios
             {!loading && (
-              <span className="mono" style={{ fontSize: '0.85rem', color: 'var(--color-accent)', marginLeft: '0.75rem', letterSpacing: '0.1em' }}>
+              <span className="mono text-[0.85rem] text-accent ml-3 tracking-widest">
                 {scenarios.length}{hasMore ? '+' : ''}
               </span>
             )}
           </h1>
         </div>
-        <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+        <div className="flex gap-3 items-center">
           <input
             type="text"
             placeholder="Search scenarios..."
             value={search}
             onChange={e => setSearch(e.target.value)}
-            className="input"
-            style={{ width: '220px' }}
+            className="input w-55"
           />
           <Link to="/scenarios/new" className="btn-primary">+ Add Scenario</Link>
         </div>
       </div>
 
-      <div className="card anim-1" style={{ padding: 0, overflow: 'hidden' }}>
+      <div className="card anim-1 p-0 overflow-hidden">
         {loading ? (
-          <div className="row" style={{ justifyContent: 'center', padding: '3rem' }}>
+          <div className="row justify-center p-12">
             <div className="spinner" /><span className="section-label">Loading...</span>
           </div>
         ) : error ? (
           <div className="error-box">{error}</div>
         ) : scenarios.length === 0 ? (
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '4rem 2rem', gap: '1rem' }}>
-            <h3 style={{ fontSize: '1.4rem', letterSpacing: '0.06em', color: 'var(--color-muted)', margin: 0 }}>
+          <div className="flex flex-col items-center justify-center py-16 px-8 gap-4">
+            <h3 className="text-[1.4rem] tracking-[0.06em] text-muted m-0">
               {search ? 'No Matches Found' : 'No Scenarios Loaded'}
             </h3>
-            <p style={{ fontSize: '0.95rem', color: 'var(--color-muted-dim)', margin: 0, textAlign: 'center' }}>
+            <p className="text-[0.95rem] text-muted-dim m-0 text-center">
               {search ? 'Try a different search term' : 'Import scenarios via the SQL migration'}
             </p>
           </div>
         ) : (
-          <div style={{ overflowX: 'auto' }}>
+          <div className="overflow-x-auto">
             <table className="ops-table">
               <thead>
                 <tr>
@@ -176,14 +175,14 @@ export default function Scenarios() {
               <tbody>
                 {scenarios.map(s => (
                   <tr key={s.id}>
-                    <td style={{ color: 'var(--color-accent)', letterSpacing: '0.08em', whiteSpace: 'nowrap' }}>
+                    <td className="text-accent tracking-[0.08em] whitespace-nowrap">
                       {s.scen_id ?? '—'}
                     </td>
-                    <td style={{ color: 'var(--color-text)', fontWeight: 500 }}>{s.title}</td>
-                    <td style={{ color: 'var(--color-text)', letterSpacing: '0.06em' }}>{toTitleCase(s.attacker_nationality)}</td>
-                    <td style={{ color: 'var(--color-text)', letterSpacing: '0.06em' }}>{toTitleCase(s.defender_nationality)}</td>
-                    <td style={{ color: 'var(--color-muted)' }}>{s.source ?? '—'}</td>
-                    <td style={{ color: 'var(--color-muted)' }}>{s.archive_id ?? ''}</td>
+                    <td className="text-text font-medium">{s.title}</td>
+                    <td className="text-text tracking-[0.06em]">{toTitleCase(s.attacker_nationality)}</td>
+                    <td className="text-text tracking-[0.06em]">{toTitleCase(s.defender_nationality)}</td>
+                    <td className="text-muted">{s.source ?? '—'}</td>
+                    <td className="text-muted">{s.archive_id ?? ''}</td>
                     <td>
                       <button
                         className="btn-secondary btn-sm"
@@ -196,9 +195,9 @@ export default function Scenarios() {
                 ))}
               </tbody>
             </table>
-            <div ref={sentinelRef} style={{ height: 1 }} />
+            <div ref={sentinelRef} className="h-px" />
             {loadingMore && (
-              <div className="row" style={{ justifyContent: 'center', padding: '1rem' }}>
+              <div className="row justify-center p-4">
                 <div className="spinner" /><span className="section-label">Loading...</span>
               </div>
             )}

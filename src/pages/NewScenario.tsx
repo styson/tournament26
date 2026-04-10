@@ -75,20 +75,20 @@ export default function NewScenario() {
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+    <div className="flex flex-col gap-5">
 
       <div className="anim-0">
-        <div className="section-label" style={{ marginBottom: '0.3rem' }}>Scenario Library</div>
-        <h1 style={{ fontSize: '2.4rem', letterSpacing: '0.06em', margin: 0 }}>
+        <div className="section-label mb-[0.3rem]">Scenario Library</div>
+        <h1 className="text-[2.4rem] tracking-[0.06em] m-0">
           Add Scenario
         </h1>
       </div>
 
-      <div style={{ display: 'flex', gap: '1.25rem', alignItems: 'flex-start' }}>
+      <div className="flex gap-5 items-start">
 
-        <form onSubmit={handleSubmit} className="card anim-1" style={{ flex: 1, padding: '1.75rem', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+        <form onSubmit={handleSubmit} className="card anim-1 flex-1 p-7 flex flex-col gap-5">
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '1rem' }}>
+          <div className="grid grid-cols-[1fr_2fr] gap-4">
             <div>
               <label className="field-label">Scenario ID *</label>
               <input
@@ -122,7 +122,7 @@ export default function NewScenario() {
             />
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+          <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="field-label">Attacker Nationality</label>
               <input
@@ -155,12 +155,11 @@ export default function NewScenario() {
 
           {error && <div className="error-box">{error}</div>}
 
-          <div style={{ display: 'flex', gap: '0.75rem', paddingTop: '0.25rem' }}>
+          <div className="flex gap-3 pt-1">
             <button
               type="submit"
-              className="btn-primary"
+              className={`btn-primary ${saving ? 'opacity-60 cursor-wait' : 'cursor-pointer'}`}
               disabled={saving}
-              style={{ opacity: saving ? 0.6 : 1, cursor: saving ? 'wait' : 'pointer' }}
             >
               {saving ? 'Adding...' : '+ Add Scenario'}
             </button>
@@ -169,43 +168,43 @@ export default function NewScenario() {
         </form>
 
         {/* Title match panel */}
-        <div className="card anim-1" style={{ flex: 1, padding: '1.75rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+        <div className="card anim-1 flex-1 p-7 flex flex-col gap-4">
           <div className="section-label">Existing Matches</div>
 
           {matchLoading && (
-            <div className="row" style={{ gap: '0.75rem' }}>
-              <div className="spinner" /><span style={{ color: 'var(--color-muted)' }}>Searching...</span>
+            <div className="row gap-3">
+              <div className="spinner" /><span className="text-muted">Searching...</span>
             </div>
           )}
 
           {!matchLoading && title.trim() && matches.length === 0 && (
-            <p style={{ color: 'var(--color-muted)', margin: 0, fontSize: '0.9rem' }}>No existing matches found.</p>
+            <p className="text-muted m-0 text-[0.9rem]">No existing matches found.</p>
           )}
 
           {!matchLoading && !title.trim() && (
-            <p style={{ color: 'var(--color-muted-dim)', margin: 0, fontSize: '0.9rem' }}>Type a title to search existing scenarios.</p>
+            <p className="text-muted-dim m-0 text-[0.9rem]">Type a title to search existing scenarios.</p>
           )}
 
           {matches.length > 0 && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+            <div className="flex flex-col gap-3">
               {matches.map(s => (
-                <div key={s.id} style={{ borderTop: '1px solid var(--color-border)', paddingTop: '0.75rem' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '0.35rem' }}>
-                    <span style={{ fontWeight: 500, color: 'var(--color-text)' }}>{s.title}</span>
+                <div key={s.id} className="border-t border-border pt-3">
+                  <div className="flex justify-between items-baseline mb-[0.35rem]">
+                    <span className="font-medium text-text">{s.title}</span>
                     <Link to="/scenarios/$id/edit" params={{ id: s.id }} className="btn-secondary btn-sm">Edit</Link>
                   </div>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.25rem 1rem', fontSize: '0.85rem' }}>
-                    <span style={{ color: 'var(--color-muted)' }}>ID</span>
-                    <span style={{ color: 'var(--color-accent)', fontFamily: 'monospace' }}>{s.scen_id ?? '—'}</span>
-                    <span style={{ color: 'var(--color-muted)' }}>Archive</span>
-                    <span style={{ color: 'var(--color-muted)' }}>{s.archive_id ?? '—'}</span>
-                    <span style={{ color: 'var(--color-muted)' }}>Attacker</span>
-                    <span style={{ color: 'var(--color-text)' }}>{toTitleCase(s.attacker_nationality)}</span>
-                    <span style={{ color: 'var(--color-muted)' }}>Defender</span>
-                    <span style={{ color: 'var(--color-text)' }}>{toTitleCase(s.defender_nationality)}</span>
+                  <div className="grid grid-cols-2 gap-y-1 gap-x-4 text-[0.85rem]">
+                    <span className="text-muted">ID</span>
+                    <span className="text-accent font-mono">{s.scen_id ?? '—'}</span>
+                    <span className="text-muted">Archive</span>
+                    <span className="text-muted">{s.archive_id ?? '—'}</span>
+                    <span className="text-muted">Attacker</span>
+                    <span className="text-text">{toTitleCase(s.attacker_nationality)}</span>
+                    <span className="text-muted">Defender</span>
+                    <span className="text-text">{toTitleCase(s.defender_nationality)}</span>
                     {s.source && <>
-                      <span style={{ color: 'var(--color-muted)' }}>Source</span>
-                      <span style={{ color: 'var(--color-muted)' }}>{s.source}</span>
+                      <span className="text-muted">Source</span>
+                      <span className="text-muted">{s.source}</span>
                     </>}
                   </div>
                 </div>
