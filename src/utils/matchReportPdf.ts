@@ -1,6 +1,5 @@
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import { toTitleCase } from './format';
 
 // ─── types ───────────────────────────────────────────────────
 

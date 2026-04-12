@@ -1,7 +1,6 @@
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { supabase } from '@/config/supabase';
-import { toTitleCase } from './format';
 
 export async function openScenarioReportPdf(
   tournamentId:   string,

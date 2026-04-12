@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate, useSearch, Link } from '@tanstack/react-router';
 import { supabase } from '@/config/supabase';
-import { toTitleCase } from '@/utils/format';
 
 const PAGE_SIZE = 20;
 

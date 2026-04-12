@@ -10,7 +10,6 @@ import { Link, useParams } from '@tanstack/react-router';
 import { supabase } from '@/config/supabase';
 import { useEffect, useRef, useState } from 'react';
 import { openMatchReportPdf } from '@/utils/matchReportPdf';
-import { toTitleCase } from '@/utils/format';
 import { ArrowLeft, ArrowRight, Check, ChevronDown as ChevronDownIcon, X } from 'lucide-react';
 
 // ─── types ───────────────────────────────────────────────────

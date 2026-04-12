@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate, Link } from '@tanstack/react-router';
 import { supabase } from '@/config/supabase';
-import { toTitleCase } from '@/utils/format';
 
 interface MatchedScenario {
   id: string;
