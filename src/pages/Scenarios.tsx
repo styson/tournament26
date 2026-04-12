@@ -179,8 +179,8 @@ export default function Scenarios() {
                       {s.scen_id ?? '—'}
                     </td>
                     <td className="text-text font-medium">{s.title}</td>
-                    <td className="text-text tracking-wider">{toTitleCase(s.attacker_nationality)}</td>
-                    <td className="text-text tracking-wider">{toTitleCase(s.defender_nationality)}</td>
+                    <td className="text-text tracking-wider">{s.attacker_nationality}</td>
+                    <td className="text-text tracking-wider">{s.defender_nationality}</td>
                     <td className="text-muted">{s.source ?? '—'}</td>
                     <td className="text-muted">{s.archive_id ?? ''}</td>
                     <td>

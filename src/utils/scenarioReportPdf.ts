@@ -69,8 +69,8 @@ export async function openScenarioReportPdf(
     head: [['Scenario', 'Attacker', 'Defender']],
     body: rows.map(r => [
       r.title,
-      `${toTitleCase(r.attacker_nationality)}\n${r.attackerWins}`,
-      `${toTitleCase(r.defender_nationality)}\n${r.defenderWins}`,
+      `${r.attacker_nationality}\n${r.attackerWins}`,
+      `${r.defender_nationality}\n${r.defenderWins}`,
     ]),
     startY: 72,
     theme: 'striped',

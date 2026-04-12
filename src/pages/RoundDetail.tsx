@@ -146,7 +146,7 @@ function ScenarioPicker({
               )}
               <span className="text-text-dim">{s.title}</span>
               <span className="text-muted-dim ml-auto whitespace-nowrap shrink-0">
-                {toTitleCase(s.attacker_nationality)} vs {toTitleCase(s.defender_nationality)}
+                {s.attacker_nationality} vs {s.defender_nationality}
               </span>
             </div>
           )) : (
@@ -540,7 +540,7 @@ export default function RoundDetail() {
                       {s.title}
                     </span>
                     <span className="text-muted-dim tracking-tighter whitespace-nowrap shrink-0">
-                      {toTitleCase(s.attacker_nationality)} vs {toTitleCase(s.defender_nationality)}
+                      {s.attacker_nationality} vs {s.defender_nationality}
                     </span>
                   </div>
                   {confirmRemScen === s.id ? (
@@ -644,7 +644,7 @@ export default function RoundDetail() {
                         </span>
                         {scenario && (
                           <span className="text-muted-dim tracking-tighter whitespace-nowrap">
-                            {toTitleCase(scenario.attacker_nationality)} vs {toTitleCase(scenario.defender_nationality)}
+                            {scenario.attacker_nationality} vs {scenario.defender_nationality}
                           </span>
                         )}
                       </div>
@@ -841,7 +841,7 @@ export default function RoundDetail() {
                     <option value="">TBD</option>
                     {roundScenarios.map(s => (
                       <option key={s.id} value={s.id}>
-                        {s.scen_id ? `${s.scen_id} — ` : ''}{s.title} ({toTitleCase(s.attacker_nationality)} vs {toTitleCase(s.defender_nationality)})
+                        {s.scen_id ? `${s.scen_id} — ` : ''}{s.title} ({s.attacker_nationality} vs {s.defender_nationality})
                       </option>
                     ))}
                   </select>

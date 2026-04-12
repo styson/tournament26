@@ -198,9 +198,9 @@ export default function NewScenario() {
                     <span className="text-muted">Archive</span>
                     <span className="text-muted">{s.archive_id ?? '—'}</span>
                     <span className="text-muted">Attacker</span>
-                    <span className="text-text">{toTitleCase(s.attacker_nationality)}</span>
+                    <span className="text-text">{s.attacker_nationality}</span>
                     <span className="text-muted">Defender</span>
-                    <span className="text-text">{toTitleCase(s.defender_nationality)}</span>
+                    <span className="text-text">{s.defender_nationality}</span>
                     {s.source && <>
                       <span className="text-muted">Source</span>
                       <span className="text-muted">{s.source}</span>

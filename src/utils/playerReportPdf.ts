@@ -46,9 +46,9 @@ export async function openPlayerReportPdf(
     const isPlayer1    = g.player1_id === playerId;
     const isAttacker   = isPlayer1 ? g.player1_attacks : !g.player1_attacks;
     const role         = isAttacker ? 'Attacker' : 'Defender';
-    const nationality  = toTitleCase(isAttacker
+    const nationality  = isAttacker
       ? (g.scenarios?.attacker_nationality ?? '—')
-      : (g.scenarios?.defender_nationality ?? '—'));
+      : (g.scenarios?.defender_nationality ?? '—');
 
     return [roundNum, opponentName, scenTitle, role, nationality, result];
   });
