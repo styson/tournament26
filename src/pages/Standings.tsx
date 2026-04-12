@@ -24,12 +24,6 @@ function Spinner() {
   );
 }
 
-function rankAccent(rank: number) {
-  if (rank === 1) return 'var(--color-accent)';
-  if (rank === 2) return 'var(--color-text-dim)';
-  if (rank === 3) return '#c08050';
-  return 'var(--color-muted)';
-}
 
 // ─── main component ───────────────────────────────────────────
 
@@ -127,8 +121,8 @@ export default function Standings() {
       {/* Header */}
       <div className='anim-0 flex items-end justify-between flex-wrap gap-3'>
         <div>
-          <div className='section-label mb-[0.3rem]'>Field Report</div>
-          <h1 className='text-[2.4rem] tracking-[0.06em] m-0'>Standings</h1>
+          <div className='section-label mb-1'>Field Report</div>
+          <h1 className='text-4xl tracking-wider m-0'>Standings</h1>
         </div>
         <div className='flex items-center gap-3'>
           <div className='relative'>
@@ -136,7 +130,7 @@ export default function Standings() {
               value={selectedId}
               onChange={(e) => setSelectedId(e.target.value)}
               disabled={loadingTourneys}
-              className={`bg-bg ${selectedId ? 'text-text' : 'text-muted'} border border-border text-[0.7rem] tracking-widest py-[0.4rem] pl-3 pr-8 outline-none appearance-none ${loadingTourneys ? 'cursor-wait opacity-60' : 'cursor-pointer'} min-w-55`}
+              className={`bg-bg ${selectedId ? 'text-text' : 'text-muted'} border border-border text-xs tracking-widest py-1.5 pl-3 pr-8 outline-none appearance-none ${loadingTourneys ? 'cursor-wait opacity-60' : 'cursor-pointer'} min-w-55`}
             >
               <option value=''>Select Tournament…</option>
               {tournaments.map((t) => (
@@ -197,10 +191,10 @@ export default function Standings() {
                   return (
                     <tr key={s.player.id}>
                       <td className='text-center'>
-                        <span className={`text-[0.8rem] tracking-widest ${pos <= 3 ? 'font-semibold' : 'font-normal'}`}>{pos}</span>
+                        <span className={`text-sm tracking-widest ${pos <= 3 ? 'font-semibold' : 'font-normal'}`}>{pos}</span>
                       </td>
                       <td className='text-text text-base'>
-                        <span className='flex items-center gap-[0.4rem]'>
+                        <span className='flex items-center gap-1.5'>
                           {s.player.name}
                           <button
                             onClick={() => {
@@ -209,7 +203,7 @@ export default function Standings() {
                               openPlayerReportPdf(s.player.id, s.player.name, selectedId, t?.name ?? '', playerById);
                             }}
                             title='View Player Report'
-                            className='icon-btn text-[0.65rem] py-[0.1rem] px-1 opacity-60'
+                            className='icon-btn text-xs py-0.5 px-1 opacity-60'
                           >
                             <ExternalLink size={14} />
                           </button>
@@ -229,14 +223,14 @@ export default function Standings() {
                         return (
                           <td key={rn} className='text-center'>
                             <span
-                              className={`font-semibold text-text${isWin ? ' border border-green-dim py-[0.1rem] px-[0.35rem]' : ''}`}
+                              className={`font-semibold text-text${isWin ? ' border border-green-dim py-0.5 px-1.5' : ''}`}
                             >
                               {oppPos ?? '?'}
                             </span>
                           </td>
                         );
                       })}
-                      <td className='text-right text-[0.85rem] text-accent font-semibold'>{s.points}</td>
+                      <td className='text-right text-sm text-accent font-semibold'>{s.points}</td>
                     </tr>
                   );
                 })}
@@ -248,7 +242,7 @@ export default function Standings() {
 
       {/* Scoring legend */}
       {selectedId && !loading && standings.length > 0 && (
-        <div className='text-[0.8rem] tracking-widest text-muted flex gap-6 flex-wrap'>
+        <div className='text-sm tracking-widest text-muted flex gap-6 flex-wrap'>
           <span>
             <span className='border border-green-dim px-1'>N</span> = win vs player N
           </span>

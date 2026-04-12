@@ -68,18 +68,18 @@ export default function Home() {
       <div className="relative z-4 flex-1 flex flex-col justify-center py-8 max-w-[1000px] mx-auto w-full">
 
         {/* Status label with blinking dot + pulse ring */}
-        <div className="anim-0 flex items-center gap-[0.6rem] mb-6">
+        <div className="anim-0 flex items-center gap-2.5 mb-6">
           <div className="relative w-2 h-2 shrink-0">
             <div className="w-2 h-2 rounded-full bg-accent animate-[blink_1.4s_step-end_infinite]" />
             <div className="absolute inset-0 rounded-full bg-accent animate-[pulseRing_1.4s_ease-out_infinite]" />
           </div>
-          <span className="tracking-[0.25em] text-muted uppercase">
+          <span className="tracking-widest text-muted uppercase">
             Tournament Director Platform · System Online
           </span>
         </div>
 
         {/* Hero heading */}
-        <h1 className="anim-1 text-[clamp(3rem,10vw,7rem)] tracking-[0.06em] leading-[0.88] text-text mt-0 mb-6">
+        <h1 className="anim-1 text-[clamp(3rem,10vw,7rem)] tracking-wider leading-[0.88] text-text mt-0 mb-6">
           COMMAND<br />
           <span className="text-transparent [-webkit-text-stroke:2px_var(--color-accent)] opacity-70">YOUR</span><br />
           <span className="text-accent">TOURNAMENT</span>
@@ -88,13 +88,13 @@ export default function Home() {
         {/* Designation line */}
         <div className="anim-2 flex items-center gap-3 mb-4">
           <div className="h-px w-8 bg-accent opacity-60" />
-          <span className="tracking-[0.28em] text-accent uppercase opacity-70">
+          <span className="tracking-widest text-accent uppercase opacity-70">
             Designation: TOURNEY-26
           </span>
         </div>
 
         {/* Sub-heading */}
-        <p className="anim-2 text-[1.2rem] text-muted max-w-[70%] leading-[1.7] mb-10">
+        <p className="anim-2 text-2xl text-muted max-w-[70%] leading-[1.7] mb-10">
           Command your tournament from player registration to final standings.
           Track every round, every game, every player, every scenario.
         </p>
@@ -102,10 +102,10 @@ export default function Home() {
         {/* CTA */}
         <div className="anim-3 flex gap-3 flex-wrap">
           {user ? (
-            <Link to="/dashboard" className="btn-primary inline-flex items-center gap-[0.35rem]"><ArrowRight size={14} /> Enter Command Center</Link>
+            <Link to="/dashboard" className="btn-primary inline-flex items-center gap-1.5"><ArrowRight size={14} /> Enter Command Center</Link>
           ) : (
             <>
-              <Link to="/login" className="btn-primary inline-flex items-center gap-[0.35rem]"><ArrowRight size={14} /> Begin Mission</Link>
+              <Link to="/login" className="btn-primary inline-flex items-center gap-1.5"><ArrowRight size={14} /> Begin Mission</Link>
               <Link to="/login" className="btn-secondary">Learn More</Link>
             </>
           )}
@@ -117,10 +117,10 @@ export default function Home() {
             <div key={f.code} className={`anim-${i + 4} bg-surface py-5 px-6 relative overflow-hidden transition-colors duration-200 hover:bg-raised`}>
               {/* Top accent bar */}
               <div className="absolute top-0 left-0 right-0 h-0.5 bg-[linear-gradient(90deg,var(--color-accent),transparent_75%)]" />
-              <div className="tracking-[0.2em] text-accent mb-[0.6rem]">
+              <div className="tracking-widest text-accent mb-2.5">
                 [{f.code}]
               </div>
-              <h3 className="text-[1.3rem] tracking-[0.06em] text-text m-0 mb-2">
+              <h3 className="text-2xl tracking-wider text-text m-0 mb-2">
                 {f.title}
               </h3>
               <p className="text-muted m-0 leading-[1.6]">

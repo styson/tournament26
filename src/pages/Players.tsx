@@ -114,11 +114,11 @@ export default function Players() {
       {/* Header */}
       <div className="anim-0 flex items-end justify-between flex-wrap gap-3">
         <div>
-          <div className="section-label mb-[0.3rem]">Personnel Records</div>
-          <h1 className="text-[2.4rem] tracking-[0.06em] m-0">
+          <div className="section-label mb-1">Personnel Records</div>
+          <h1 className="text-4xl tracking-wider m-0">
             Players
             {!loading && (
-              <span className="mono text-[0.85rem] text-accent ml-3 tracking-widest">
+              <span className="mono text-sm text-accent ml-3 tracking-widest">
                 {players.length}{hasMore ? '+' : ''}
               </span>
             )}
@@ -145,10 +145,10 @@ export default function Players() {
           <div className="error-box">{error}</div>
         ) : players.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-16 px-8 gap-4">
-            <h3 className="text-[1.4rem] tracking-[0.06em] text-muted m-0">
+            <h3 className="text-2xl tracking-wider text-muted m-0">
               {search ? 'No Matches Found' : 'No Personnel on Record'}
             </h3>
-            <p className="text-[0.95rem] text-muted-dim m-0 text-center">
+            <p className="text-sm text-muted-dim m-0 text-center">
               {search ? 'Try a different search term' : 'Enlist your first player to begin building the roster'}
             </p>
             {!search && <Link to="/players/new" className="btn-primary mt-2">+ Enlist First Player</Link>}

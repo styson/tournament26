@@ -44,12 +44,12 @@ export default function Login() {
         <div className="anim-0 text-center mb-8">
           {/* Badge */}
           <div className="inline-flex items-center justify-center w-13 h-13 bg-accent [clip-path:polygon(0_0,calc(100%-8px)_0,100%_8px,100%_100%,8px_100%,0_calc(100%-8px))] mb-4">
-            <span className="font-display text-2xl text-bg tracking-[0.05em]">T</span>
+            <span className="font-display text-2xl text-bg tracking-wider">T</span>
           </div>
-          <h1 className="text-[2.2rem] tracking-widest text-text m-0">
+          <h1 className="text-4xl tracking-widest text-text m-0">
             TOURNEY<span className="text-accent">26</span>
           </h1>
-          <p className="text-[0.6rem] tracking-[0.2em] text-muted uppercase mt-[0.4rem]">
+          <p className="text-xs tracking-widest text-muted uppercase mt-1.5">
             Secure Access Required
           </p>
         </div>
@@ -98,7 +98,7 @@ export default function Login() {
           </form>
         </div>
 
-        <p className="text-center text-[0.58rem] text-muted-dim tracking-[0.12em] mt-5 uppercase">
+        <p className="text-center text-xs text-muted-dim tracking-widest mt-5 uppercase">
           Authorized Personnel Only
         </p>
       </div>

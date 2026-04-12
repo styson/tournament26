@@ -39,8 +39,8 @@ export default function Tournaments() {
       {/* Header */}
       <div className="anim-0 flex items-end justify-between flex-wrap gap-3">
         <div>
-          <div className="section-label mb-[0.3rem]">Tournaments</div>
-          <h1 className="text-[2.4rem] tracking-[0.06em] m-0">
+          <div className="section-label mb-1">Tournaments</div>
+          <h1 className="text-4xl tracking-wider m-0">
             Tournaments
           </h1>
         </div>
@@ -58,7 +58,7 @@ export default function Tournaments() {
           <div className="card error-box p-5">{error}</div>
         ) : tournaments.length === 0 ? (
           <div className="card empty-state">
-            <h3 className="text-[1.4rem] tracking-[0.06em] text-muted m-0">No Tournaments Active</h3>
+            <h3 className="text-2xl tracking-wider text-muted m-0">No Tournaments Active</h3>
             <p className="serif-body m-0">Launch your first tournament to get boots on the ground</p>
             <Link to="/tournaments/new" className="btn-primary mt-2">+ Launch First Tournament</Link>
           </div>
@@ -70,7 +70,7 @@ export default function Tournaments() {
                 className="bg-surface py-5 px-6 flex justify-between items-start gap-4 transition-colors duration-150 hover:bg-raised"
               >
                 <div>
-                  <h3 className="text-[1.3rem] tracking-[0.06em] mt-0 mb-[0.4rem]">{tournament.name}</h3>
+                  <h3 className="text-2xl tracking-wider mt-0 mb-1.5">{tournament.name}</h3>
                   {tournament.description && (
                     <p className="text-muted mt-0 mb-2">{tournament.description}</p>
                   )}
@@ -81,16 +81,16 @@ export default function Tournaments() {
                 </div>
                 <div className="flex gap-2 items-start">
                   <span
-                    className="tracking-[0.12em] uppercase text-[0.7rem] whitespace-nowrap px-[0.4rem] py-[0.28rem] border"
+                    className="tracking-widest uppercase text-sm whitespace-nowrap p-1.5 border"
                     style={{ color: statusColor(tournament.status), borderColor: statusColor(tournament.status) }}
                   >
                     {tournament.status}
                   </span>
-                  <div className="flex flex-col gap-[0.4rem] items-stretch">
+                  <div className="flex flex-col gap-2 items-stretch">
                     <Link
                       to="/tournaments/$id"
                       params={{ id: tournament.id }}
-                      className="btn-sm no-underline inline-flex items-center gap-[0.35rem] justify-center"
+                      className="btn-sm no-underline inline-flex items-center gap-1 justify-center"
                     >
                       View <ArrowRight size={14} />
                     </Link>

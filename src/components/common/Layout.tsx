@@ -40,10 +40,10 @@ export default function Layout({ children }: LayoutProps) {
 
         <div className='max-w-7xl mx-auto px-4 flex items-center h-12 gap-6'>
           {/* Logo */}
-          <Link to='/' className='flex items-center gap-[0.6rem] shrink-0'>
+          <Link to='/' className='flex items-center gap-2.5 shrink-0'>
             <div className='relative'>
               <div className='w-7 h-7 bg-accent flex items-center justify-center [clip-path:polygon(0_0,calc(100%-4px)_0,100%_4px,100%_100%,4px_100%,0_calc(100%-4px))]'>
-                <span className='font-display text-bg tracking-[0.05em]'>
+                <span className='font-display text-bg tracking-wider'>
                   T
                 </span>
               </div>
@@ -51,7 +51,7 @@ export default function Layout({ children }: LayoutProps) {
                 <div className='absolute -bottom-px -right-px w-1.5 h-1.5 rounded-full bg-green border border-bg-header animate-[blink_2s_step-end_infinite]' />
               )}
             </div>
-            <span className='font-display tracking-[0.12em] text-text'>
+            <span className='font-display tracking-widest text-text'>
               TOURNEY<span className='text-accent'>26</span>
             </span>
           </Link>
@@ -61,7 +61,7 @@ export default function Layout({ children }: LayoutProps) {
 
           {/* Nav links */}
           {user && (
-            <nav className='flex gap-[0.15rem] flex-1 overflow-hidden'>
+            <nav className='flex gap-0.5 flex-1 overflow-hidden'>
               {navigation.map((item) => {
                 const active = isActive(item.href);
                 return (
@@ -69,7 +69,7 @@ export default function Layout({ children }: LayoutProps) {
                     key={item.href}
                     to={item.href}
                     className={
-                      'tracking-[0.14em] uppercase py-[0.3rem] px-[0.6rem] border-b-2 transition-all duration-150 ease-in-out whitespace-nowrap ' +
+                      'tracking-widest uppercase py-1 px-2.5 border-b-2 transition-all duration-150 ease-in-out whitespace-nowrap ' +
                       (active
                         ? 'text-accent border-b-accent'
                         : 'text-muted border-b-transparent hover:text-text')
@@ -95,7 +95,7 @@ export default function Layout({ children }: LayoutProps) {
 
       {/* ── Footer ── */}
       <footer className='border-t border-t-raised py-3 px-4 text-center'>
-        <span className='text-muted-dim tracking-[0.15em]'>TOURNAMENT26 · {new Date().getFullYear()}</span>
+        <span className='text-muted-dim tracking-widest'>TOURNAMENT26 · {new Date().getFullYear()}</span>
       </footer>
     </div>
   );

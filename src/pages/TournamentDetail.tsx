@@ -132,7 +132,7 @@ export default function TournamentDetail() {
       .filter(Boolean);
     const enrolledIds = new Set(enrolledPlayers.map(p => p.id));
     setEnrolled(enrolledPlayers);
-    setRoster((allRes.data ?? []).filter(p => !enrolledIds.has(p.id)));
+    setRoster((allRes.data ?? []).map(p => ({ ...p, seed: null })).filter(p => !enrolledIds.has(p.id)));
     setSelectedPlayerId('');
 
     const rec: Record<string, { w: number; l: number }> = {};
@@ -260,7 +260,7 @@ export default function TournamentDetail() {
 
       {/* Back */}
       <div className="anim-0">
-        <Link to="/tournaments" className="tracking-[0.15em] text-muted uppercase inline-flex items-center gap-[0.35rem]">
+        <Link to="/tournaments" className="tracking-widest text-muted uppercase inline-flex items-center gap-1.5">
           <ArrowLeft size={14} /> Tournaments
         </Link>
       </div>
@@ -269,8 +269,8 @@ export default function TournamentDetail() {
       <div className="card anim-1">
         <div className="flex justify-between items-start flex-wrap gap-3">
           <div>
-            <div className="section-label mb-[0.3rem]">Tournament</div>
-            <h1 className="text-[2.2rem] tracking-[0.06em] mt-0 mb-2">
+            <div className="section-label mb-1">Tournament</div>
+            <h1 className="text-2xl tracking-wider mt-0 mb-2">
               {tournament.name}
             </h1>
             {tournament.description && (
@@ -278,12 +278,12 @@ export default function TournamentDetail() {
                 {tournament.description}
               </p>
             )}
-            <div className="flex gap-6 flex-wrap tracking-[0.12em] text-muted">
+            <div className="flex gap-6 flex-wrap tracking-widest text-muted">
               <span>Start: {tournament.start_date}</span>
               {tournament.end_date && <span>End: {tournament.end_date}</span>}
             </div>
           </div>
-          <div className="flex items-start gap-[0.6rem]">
+          <div className="flex items-start gap-2.5">
             <div className="relative">
               <select
                 value={tournament.status}
@@ -303,7 +303,7 @@ export default function TournamentDetail() {
                 style={{ color: tournamentStatusColor(tournament.status) }}
               ><ChevronDown size={12} /></span>
             </div>
-            <div className="flex flex-col items-stretch gap-[0.4rem]">
+            <div className="flex flex-col items-stretch gap-1.5">
               <StandingsReportButton
                 standings={standings}
                 tournamentName={tournament.name}
@@ -349,25 +349,25 @@ export default function TournamentDetail() {
                 key={round.id}
                 to="/tournaments/$id/rounds/$roundId"
                 params={{ id: tournament.id, roundId: round.id }}
-                className="card p-4 flex flex-col gap-[0.6rem] transition-colors duration-150 no-underline cursor-pointer hover:bg-raised"
+                className="card p-4 flex flex-col gap-2.5 transition-colors duration-150 no-underline cursor-pointer hover:bg-raised"
                 title="Click to open"
               >
                 <div className="flex justify-between items-start">
                   <div>
-                    <div className="font-display text-[1.75rem] tracking-[0.06em] text-text leading-none">
+                    <div className="font-display text-3xl tracking-wider text-text leading-none">
                       Round {round.round_number}
                     </div>
                     {round.name && (
-                      <div className="text-muted mt-[0.2rem]">
+                      <div className="text-muted mt-1">
                         {round.name}
                       </div>
                     )}
                   </div>
-                  <LogIn size={16} className="text-muted shrink-0 mt-[0.2rem]" />
+                  <LogIn size={16} className="text-muted shrink-0 mt-1" />
                 </div>
 
                 <span
-                  className="tracking-[0.12em] uppercase px-[0.4rem] py-[0.15rem] self-start border"
+                  className="tracking-widest uppercase px-1.5 py-0.5 self-start border"
                   style={{ color: roundStatusColor(round.status), borderColor: roundStatusColor(round.status) }}
                 >
                   {roundStatusLabel(round.status)}
@@ -398,11 +398,11 @@ export default function TournamentDetail() {
             {enrolled.map(p => (
               <div
                 key={p.id}
-                className="flex flex-col py-2 px-[0.6rem] bg-bg border border-border transition-colors duration-150 cursor-default hover:border-border-bright"
+                className="flex flex-col py-2 px-2.5 bg-bg border border-border transition-colors duration-150 cursor-default hover:border-border-bright"
                 onClick={e => { if (e.ctrlKey) { setSeedModal(p); setSeedModalVal(p.seed !== null ? String(p.seed) : ''); setTimeout(() => seedModalRef.current?.select(), 50); } }}
               >
                 <div className="flex items-center justify-between">
-                  <div className="flex items-baseline gap-[0.4rem] min-w-0">
+                  <div className="flex items-baseline gap-1.5 min-w-0">
                     <span className="text-text truncate">
                       {p.name}
                     </span>
@@ -413,17 +413,17 @@ export default function TournamentDetail() {
                   <button
                     onClick={() => openPlayerReportPdf(p.id, p.name, id!, tournament?.name ?? '', Object.fromEntries(enrolled.map(e => [e.id, e.name])))}
                     title="View Player Report"
-                    className="icon-btn text-[0.65rem] shrink-0"
+                    className="icon-btn text-xs shrink-0"
                   ><ExternalLink size={14} /></button>
                 </div>
-                <div className="tracking-widest text-accent mt-[0.1rem]">
+                <div className="tracking-widest text-accent mt-0.5">
                   {`${points[p.id] ?? 0} Points`}
                 </div>
                 <div className="flex items-center justify-between">
                   <div className="tracking-widest text-muted">
                     {(() => { const r = records[p.id] ?? { w: 0, l: 0 }; return `W/L ${r.w}-${r.l}`; })()}
                   </div>
-                  <div className="flex gap-[0.2rem] shrink-0 items-center">
+                  <div className="flex gap-1 shrink-0 items-center">
                     {(() => {
                       const r = records[p.id] ?? { w: 0, l: 0 };
                       const hasPlayed = r.w + r.l > 0;
@@ -440,12 +440,12 @@ export default function TournamentDetail() {
                             onClick={() => { setConfirmRemovePlayer(null); handleRemove(p.id); }}
                             disabled={removingId === p.id}
                             title="Confirm remove"
-                            className="bg-red-bg border border-red text-red-bright py-[0.2rem] px-[0.35rem] cursor-pointer leading-none"
+                            className="bg-red-bg border border-red text-red-bright py-1 px-1.5 cursor-pointer leading-none"
                           >{removingId === p.id ? '…' : <Check size={14} />}</button>
                           <button
                             onClick={() => setConfirmRemovePlayer(null)}
                             title="Cancel"
-                            className="btn-secondary py-[0.2rem] px-[0.35rem]"
+                            className="btn-secondary py-1 px-1.5"
                           ><X size={14} /></button>
                         </>
                       ) : (
@@ -476,7 +476,7 @@ export default function TournamentDetail() {
                 value={selectedPlayerId}
                 onChange={e => setSelectedPlayerId(e.target.value)}
                 required
-                className={`w-full bg-bg border border-border tracking-[0.06em] py-2 pr-8 pl-3 outline-none appearance-none cursor-pointer ${selectedPlayerId ? 'text-text' : 'text-muted'}`}
+                className={`w-full bg-bg border border-border tracking-wider py-2 pr-8 pl-3 outline-none appearance-none cursor-pointer ${selectedPlayerId ? 'text-text' : 'text-muted'}`}
               >
                 <option value="">Select a player...</option>
                 {roster.map(p => (
@@ -510,7 +510,7 @@ export default function TournamentDetail() {
       )}
 
       {!loadingPlayers && roster.length === 0 && enrolled.length > 0 && (
-        <div className="text-muted-dim tracking-[0.12em] text-center p-2">
+        <div className="text-muted-dim tracking-widest text-center p-2">
           All players are enrolled in this tournament.
         </div>
       )}

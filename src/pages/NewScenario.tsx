@@ -71,15 +71,14 @@ export default function NewScenario() {
     setSaving(false);
 
     if (error) { setError(error.message); return; }
-    navigate({ to: '/scenarios' });
+    navigate({ to: '/scenarios', search: { q: '' } });
   }
 
   return (
     <div className="flex flex-col gap-5">
-
       <div className="anim-0">
-        <div className="section-label mb-[0.3rem]">Scenario Library</div>
-        <h1 className="text-[2.4rem] tracking-[0.06em] m-0">
+        <div className="section-label mb-1">Scenario Library</div>
+        <h1 className="text-4xl tracking-wider m-0">
           Add Scenario
         </h1>
       </div>
@@ -163,7 +162,7 @@ export default function NewScenario() {
             >
               {saving ? 'Adding...' : '+ Add Scenario'}
             </button>
-            <Link to="/scenarios" className="btn-secondary">Cancel</Link>
+            <Link to="/scenarios" search={{ q: '' }} className="btn-secondary">Cancel</Link>
           </div>
         </form>
 
@@ -178,22 +177,22 @@ export default function NewScenario() {
           )}
 
           {!matchLoading && title.trim() && matches.length === 0 && (
-            <p className="text-muted m-0 text-[0.9rem]">No existing matches found.</p>
+            <p className="text-muted m-0 text-sm">No existing matches found.</p>
           )}
 
           {!matchLoading && !title.trim() && (
-            <p className="text-muted-dim m-0 text-[0.9rem]">Type a title to search existing scenarios.</p>
+            <p className="text-muted-dim m-0 text-sm">Type a title to search existing scenarios.</p>
           )}
 
           {matches.length > 0 && (
             <div className="flex flex-col gap-3">
               {matches.map(s => (
                 <div key={s.id} className="border-t border-border pt-3">
-                  <div className="flex justify-between items-baseline mb-[0.35rem]">
+                  <div className="flex justify-between items-baseline mb-1.5">
                     <span className="font-medium text-text">{s.title}</span>
-                    <Link to="/scenarios/$id/edit" params={{ id: s.id }} className="btn-secondary btn-sm">Edit</Link>
+                    <Link to="/scenarios/$id/edit" params={{ id: s.id }} search={{ q: '' }} className="btn-secondary btn-sm">Edit</Link>
                   </div>
-                  <div className="grid grid-cols-2 gap-y-1 gap-x-4 text-[0.85rem]">
+                  <div className="grid grid-cols-2 gap-y-1 gap-x-4 text-sm">
                     <span className="text-muted">ID</span>
                     <span className="text-accent font-mono">{s.scen_id ?? '—'}</span>
                     <span className="text-muted">Archive</span>

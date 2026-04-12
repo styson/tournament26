@@ -120,11 +120,11 @@ export default function Scenarios() {
       {/* Header */}
       <div className="anim-0 flex items-end justify-between flex-wrap gap-3">
         <div>
-          <div className="section-label mb-[0.3rem]">Scenario Library</div>
-          <h1 className="text-[2.4rem] tracking-[0.06em] m-0">
+          <div className="section-label mb-1">Scenario Library</div>
+          <h1 className="text-4xl tracking-wider m-0">
             Scenarios
             {!loading && (
-              <span className="mono text-[0.85rem] text-accent ml-3 tracking-widest">
+              <span className="mono text-sm text-accent ml-3 tracking-widest">
                 {scenarios.length}{hasMore ? '+' : ''}
               </span>
             )}
@@ -151,10 +151,10 @@ export default function Scenarios() {
           <div className="error-box">{error}</div>
         ) : scenarios.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-16 px-8 gap-4">
-            <h3 className="text-[1.4rem] tracking-[0.06em] text-muted m-0">
+            <h3 className="text-2xl tracking-wider text-muted m-0">
               {search ? 'No Matches Found' : 'No Scenarios Loaded'}
             </h3>
-            <p className="text-[0.95rem] text-muted-dim m-0 text-center">
+            <p className="text-sm text-muted-dim m-0 text-center">
               {search ? 'Try a different search term' : 'Import scenarios via the SQL migration'}
             </p>
           </div>
@@ -175,12 +175,12 @@ export default function Scenarios() {
               <tbody>
                 {scenarios.map(s => (
                   <tr key={s.id}>
-                    <td className="text-accent tracking-[0.08em] whitespace-nowrap">
+                    <td className="text-accent tracking-wider whitespace-nowrap">
                       {s.scen_id ?? '—'}
                     </td>
                     <td className="text-text font-medium">{s.title}</td>
-                    <td className="text-text tracking-[0.06em]">{toTitleCase(s.attacker_nationality)}</td>
-                    <td className="text-text tracking-[0.06em]">{toTitleCase(s.defender_nationality)}</td>
+                    <td className="text-text tracking-wider">{toTitleCase(s.attacker_nationality)}</td>
+                    <td className="text-text tracking-wider">{toTitleCase(s.defender_nationality)}</td>
                     <td className="text-muted">{s.source ?? '—'}</td>
                     <td className="text-muted">{s.archive_id ?? ''}</td>
                     <td>

@@ -35,7 +35,7 @@ export default function NewPlayer() {
       return;
     }
 
-    navigate({ to: '/players' });
+    navigate({ to: '/players', search: { q: '' } });
   }
 
   return (
@@ -43,8 +43,8 @@ export default function NewPlayer() {
 
       {/* Header */}
       <div className="anim-0">
-        <div className="section-label mb-[0.3rem]">Players</div>
-        <h1 className="text-[2.4rem] tracking-[0.06em] m-0">
+        <div className="section-label mb-1">Players</div>
+        <h1 className="text-4xl tracking-wider m-0">
           Enlist Player
         </h1>
       </div>
@@ -111,7 +111,7 @@ export default function NewPlayer() {
           >
             {loading ? 'Enlisting...' : '+ Enlist Player'}
           </button>
-          <Link to="/players" className="btn-secondary">Cancel</Link>
+          <Link to="/players" search={{ q: '' }} className="btn-secondary">Cancel</Link>
         </div>
       </form>
     </div>

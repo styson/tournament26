@@ -64,7 +64,7 @@ export default function UserMenu({ theme, onThemeChange }: UserMenuProps) {
       {/* ── Avatar button ── */}
       <button
         onClick={() => setIsOpen(o => !o)}
-        className={`w-7 h-7 rounded-full border-[1.5px] border-accent text-text tracking-[0.05em] cursor-pointer flex items-center justify-center transition-all duration-150 p-0 ${isOpen ? 'bg-raised' : 'bg-transparent hover:bg-raised'}`}
+        className={`w-7 h-7 rounded-full border-[1.5px] border-accent text-text tracking-wider cursor-pointer flex items-center justify-center transition-all duration-150 p-0 ${isOpen ? 'bg-raised' : 'bg-transparent hover:bg-raised'}`}
       >
         {initials}
       </button>
@@ -75,7 +75,7 @@ export default function UserMenu({ theme, onThemeChange }: UserMenuProps) {
 
           {/* Email */}
           {user.email && (
-            <div className="py-[0.6rem] px-3 border-b border-border text-accent tracking-[0.08em] truncate">
+            <div className="py-2.5 px-3 border-b border-border text-accent tracking-wider truncate">
               {user.email}
             </div>
           )}
@@ -83,7 +83,7 @@ export default function UserMenu({ theme, onThemeChange }: UserMenuProps) {
           {/* Dark mode toggle */}
           <button
             onClick={() => onThemeChange(theme === 'dark' ? 'light' : 'dark')}
-            className="w-full py-2 px-3 bg-transparent border-0 border-b border-border text-muted tracking-[0.08em] cursor-pointer flex items-center justify-between text-left hover:text-text"
+            className="w-full py-2 px-3 bg-transparent border-0 border-b border-border text-muted tracking-wider cursor-pointer flex items-center justify-between text-left hover:text-text"
           >
             <span>◑ Dark mode</span>
             <span className={`inline-flex w-7.5 h-3.75 rounded-lg items-center px-0.5 transition-all duration-150 shrink-0 border ${theme === 'dark' ? 'bg-raised border-accent justify-end' : 'bg-border border-border-bright justify-start'}`}>
@@ -95,7 +95,7 @@ export default function UserMenu({ theme, onThemeChange }: UserMenuProps) {
           {user.email && (
             <button
               onClick={handleResetPassword}
-              className="w-full py-2 px-3 bg-transparent border-0 border-b border-border text-muted tracking-[0.08em] cursor-pointer flex items-center gap-2 text-left hover:text-text"
+              className="w-full py-2 px-3 bg-transparent border-0 border-b border-border text-muted tracking-wider cursor-pointer flex items-center gap-2 text-left hover:text-text"
             >
               ⟳ Reset password
             </button>
@@ -104,7 +104,7 @@ export default function UserMenu({ theme, onThemeChange }: UserMenuProps) {
           {/* Sign out */}
           <button
             onClick={handleSignOut}
-            className="w-full py-2 px-3 bg-transparent border-none text-red tracking-[0.08em] cursor-pointer flex items-center gap-2 text-left hover:bg-red/8"
+            className="w-full py-2 px-3 bg-transparent border-none text-red tracking-wider cursor-pointer flex items-center gap-2 text-left hover:bg-red/8"
           >
             ⏻ Sign out
           </button>
@@ -113,7 +113,7 @@ export default function UserMenu({ theme, onThemeChange }: UserMenuProps) {
 
       {/* ── Success toast ── */}
       {toastVisible && (
-        <div className="fixed bottom-6 right-6 bg-bg border border-green py-[0.6rem] px-4 tracking-[0.08em] text-green shadow-[0_4px_12px_rgba(0,0,0,0.4)] z-200 flex items-center gap-2">
+        <div className="fixed bottom-6 right-6 bg-bg border border-green py-2.5 px-4 tracking-wider text-green shadow-[0_4px_12px_rgba(0,0,0,0.4)] z-200 flex items-center gap-2">
           ✓ Reset link sent — check your inbox
         </div>
       )}

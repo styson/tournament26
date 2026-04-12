@@ -41,7 +41,7 @@ interface StatCardProps {
   delay?: number;
 }
 
-function StatCard({ label, value, link, code, delay = 0 }: StatCardProps) {
+function StatCard({ label, value, link, delay = 0 }: StatCardProps) {
   const displayed = useCountUp(value);
   const inner = (
     <div
@@ -50,12 +50,11 @@ function StatCard({ label, value, link, code, delay = 0 }: StatCardProps) {
       {/* Top accent line — always visible */}
       <div className="absolute top-0 left-0 right-0 h-0.5 bg-[linear-gradient(90deg,var(--color-accent),transparent_70%)]" />
 
-      <div className="tracking-[0.2em] text-muted mb-2 flex justify-between">
+      <div className="tracking-widest text-muted mb-2 flex justify-between">
         <span>{label}</span>
-        <span className="text-muted-dim">[{code}]</span>
       </div>
 
-      <div className={`font-display text-[2.75rem] leading-none tracking-[0.04em] ${value === 'Err' ? 'text-red' : 'text-accent'}`}>
+      <div className={`font-display text-5xl leading-none tracking-wider ${value === 'Err' ? 'text-red' : 'text-accent'}`}>
         {displayed}
       </div>
     </div>
@@ -94,10 +93,10 @@ export default function Dashboard() {
   ];
 
   const quickActions = [
+    { name: 'Standings',      link: '/standings',       symbol: '≡' },
+    { name: 'New Tournament', link: '/tournaments/new', symbol: '◈' },
     { name: 'Add Player',     link: '/players/new',     symbol: '+' },
     { name: 'Add Scenario',   link: '/scenarios/new',   symbol: '+' },
-    { name: 'New Tournament', link: '/tournaments/new', symbol: '◈' },
-    { name: 'Standings',      link: '/standings',       symbol: '≡' },
   ];
 
   return (
@@ -106,18 +105,18 @@ export default function Dashboard() {
       {/* Header */}
       <div className="anim-0 flex items-end justify-between flex-wrap gap-2">
         <div>
-          <div className="section-label mb-[0.3rem]">Command Center</div>
-          <h1 className="text-[2.4rem] tracking-[0.06em] m-0">
+          <div className="section-label mb-1">Command Center</div>
+          <h1 className="text-4xl tracking-wider m-0">
             Welcome, <span className="text-accent">{user?.name?.split(' ')[0] ?? 'Director'}</span>
           </h1>
         </div>
-        <div className="flex items-center gap-[0.6rem]">
+        <div className="flex items-center gap-2.5">
           {/* Online indicator */}
           <div className="relative w-1.5 h-1.5 shrink-0">
             <div className="w-1.5 h-1.5 rounded-full bg-green animate-[blink_2s_step-end_infinite]" />
             <div className="absolute inset-0 rounded-full bg-green animate-[pulseRing_2s_ease-out_infinite]" />
           </div>
-          <span className="text-muted-dim tracking-[0.12em]">
+          <span className="text-muted-dim tracking-widest">
             {new Date().toLocaleDateString('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' }).toUpperCase()}
           </span>
         </div>
@@ -131,14 +130,13 @@ export default function Dashboard() {
       </div>
 
       <div className="grid grid-cols-2 gap-5">
-
         {/* Quick Actions */}
         <div className="card anim-2">
           <div className="section-label mb-3">Quick Actions</div>
           <div className="grid grid-cols-2 gap-2">
             {quickActions.map((action) => (
               <Link key={action.name} to={action.link} className="block">
-                <div className="border border-border p-3 cursor-pointer transition-all duration-150 flex items-center gap-[0.6rem] relative overflow-hidden hover:border-accent hover:bg-raised">
+                <div className="border border-border p-3 cursor-pointer transition-all duration-150 flex items-center gap-2.5 relative overflow-hidden hover:border-accent hover:bg-raised">
                   <span className="text-accent leading-none">{action.symbol}</span>
                   <span className="tracking-widest text-text-dim uppercase">{action.name}</span>
                 </div>
@@ -152,7 +150,7 @@ export default function Dashboard() {
           <div className="section-label mb-3">Recent Activity</div>
           <div className="flex flex-col items-center justify-center py-8 gap-2">
             <div className="text-2xl text-border">—</div>
-            <p className="text-muted-dim tracking-[0.12em] uppercase m-0">
+            <p className="text-muted-dim tracking-widest uppercase m-0">
               No recent activity
             </p>
           </div>

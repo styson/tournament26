@@ -44,8 +44,8 @@ export default function NewTournament() {
 
       {/* Header */}
       <div className="anim-0">
-        <div className="section-label mb-[0.3rem]">Tournaments</div>
-        <h1 className="text-[2.4rem] tracking-[0.06em] m-0">
+        <div className="section-label mb-1">Tournaments</div>
+        <h1 className="text-4xl tracking-wider m-0">
           New Tournament
         </h1>
       </div>

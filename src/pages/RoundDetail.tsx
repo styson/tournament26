@@ -52,6 +52,8 @@ const ROUND_STATUSES = [
   { value: 'COMPLETED',   label: 'Complete' },
 ];
 
+const SELECT_CLS = 'w-full bg-bg text-text border border-border tracking-[0.06em] py-2 pl-3 pr-8 outline-none appearance-none cursor-pointer';
+
 function roundStatusColor(s: string) {
   switch (s) {
     case 'IN_PROGRESS': return 'var(--color-accent)';
@@ -66,12 +68,11 @@ function gameStatusColor(s: string) {
 // ─── scenario search combobox ────────────────────────────────
 
 function ScenarioPicker({
-  excludeIds, value, onChange, currentCount,
+  excludeIds, value, onChange,
 }: {
   excludeIds: Set<string>;
   value: string;
   onChange: (id: string) => void;
-  currentCount: number;
 }) {
   const [inputVal, setInputVal]   = useState('');
   const [results,  setResults]    = useState<ScenarioRow[]>([]);
@@ -115,7 +116,7 @@ function ScenarioPicker({
   }
 
   return (
-    <div style={{ flex: 1, minWidth: '200px' }}>
+    <div className="flex-1 min-w-[200px]">
       <input
         ref={inputRef}
         type="text"
@@ -125,24 +126,18 @@ function ScenarioPicker({
         onBlur={() => setTimeout(() => setOpen(false), 150)}
         placeholder={'Search by ID or title…'}
         className="input"
-        style={{ width: '100%' }}
         autoComplete="off"
       />
       {open && inputVal.trim().length > 0 && createPortal(
-        <div style={{
-          position: 'fixed', zIndex: 9999,
-          background: 'var(--color-bg)', border: '1px solid var(--color-border-bright)',
-          maxHeight: '320px', overflowY: 'auto',
-          boxShadow: '0 8px 24px rgba(0,0,0,0.6)',
-          ...dropStyle,
-        }}>
+        <div
+          className="fixed z-[9999] bg-bg border border-border-bright max-h-[320px] overflow-y-auto shadow-[0_8px_24px_rgba(0,0,0,0.6)]"
+          style={dropStyle}
+        >
           {results.length > 0 ? results.map(s => (
             <div
               key={s.id}
               onMouseDown={() => handleSelect(s)}
-              style={{ padding: '0.5rem 0.75rem', cursor: 'pointer', display: 'flex', alignItems: 'baseline', gap: '0.6rem', borderBottom: '1px solid var(--color-raised)' }}
-              onMouseEnter={e => (e.currentTarget as HTMLDivElement).style.background = 'var(--color-raised)'}
-              onMouseLeave={e => (e.currentTarget as HTMLDivElement).style.background = 'transparent'}
+              className="px-3 py-2 cursor-pointer flex items-baseline gap-2.5 border-b border-raised hover:bg-raised"
             >
               {s.scen_id && (
                 <span className="text-accent tracking-tighter whitespace-nowrap shrink-0">
@@ -155,7 +150,7 @@ function ScenarioPicker({
               </span>
             </div>
           )) : (
-            <div style={{ padding: '0.6rem 0.75rem', color: 'var(--color-muted-dim)', letterSpacing: '0.1em' }}>
+            <div className="px-3 py-2.5 text-muted-dim tracking-widest">
               No matches
             </div>
           )}
@@ -170,7 +165,7 @@ function ScenarioPicker({
 
 function Spinner() {
   return (
-    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '4rem', gap: '0.75rem' }}>
+    <div className="flex items-center justify-center p-16 gap-3">
       <div className="spinner" />
     </div>
   );
@@ -417,7 +412,7 @@ export default function RoundDetail() {
   if (loading) return <Spinner />;
   if (!round) return (
     <div className='text-red'>
-      Round not found. <Link to="/tournaments/$id" params={{ id: tournamentId }} style={{ color: 'var(--color-accent)', display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}><ArrowLeft size={14} /> Back</Link>
+      Round not found. <Link to="/tournaments/$id" params={{ id: tournamentId }} className="text-accent inline-flex items-center gap-1"><ArrowLeft size={14} /> Back</Link>
     </div>
   );
 
@@ -426,14 +421,14 @@ export default function RoundDetail() {
   const p2 = p2Id ? playerById[p2Id] : null;
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+    <div className="flex flex-col gap-6">
 
       {/* Breadcrumb + round nav */}
-      <div className="anim-0" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.75rem', flexWrap: 'wrap' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', letterSpacing: '0.14em', color: 'var(--color-muted)', textTransform: 'uppercase' }}>
-          <Link to="/tournaments" style={{ color: 'var(--color-muted)' }}>Tournaments</Link>
+      <div className="anim-0 flex items-center justify-between gap-3 flex-wrap">
+        <div className="flex items-center gap-2 tracking-[0.14em] text-muted uppercase">
+          <Link to="/tournaments" className="text-muted">Tournaments</Link>
           <span className="text-muted-dim">›</span>
-          <Link to="/tournaments/$id" params={{ id: tournamentId }} style={{ color: 'var(--color-muted)' }}>
+          <Link to="/tournaments/$id" params={{ id: tournamentId }} className="text-muted">
             {tournament?.name ?? '…'}
           </Link>
           <span className="text-muted-dim">›</span>
@@ -443,33 +438,26 @@ export default function RoundDetail() {
           const idx  = allRounds.findIndex(r => r.id === roundId);
           const prev = allRounds[idx - 1];
           const next = allRounds[idx + 1];
-          const btnStyle = (enabled: boolean): React.CSSProperties => ({
-            letterSpacing: '0.12em',
-            textTransform: 'uppercase',
-            padding: '0.25rem 0.6rem',
-            background: 'transparent',
-            border: '1px solid var(--color-border)',
-            color: enabled ? 'var(--color-muted)' : 'var(--color-border)',
-            cursor: enabled ? 'pointer' : 'default',
-            transition: 'all 0.15s ease',
-            pointerEvents: enabled ? 'auto' : 'none',
-          });
           return (
-            <div style={{ display: 'flex', gap: '0.35rem' }}>
+            <div className="flex gap-1.5">
               {prev ? (
-                <Link to="/tournaments/$id/rounds/$roundId" params={{ id: tournamentId, roundId: prev.id }}
-                  style={{ ...btnStyle(true), display: 'inline-flex', alignItems: 'center', gap: '0.3rem' }}
-                  onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.borderColor = 'var(--color-accent)'; (e.currentTarget as HTMLAnchorElement).style.color = 'var(--color-accent)'; }}
-                  onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.borderColor = 'var(--color-border)'; (e.currentTarget as HTMLAnchorElement).style.color = 'var(--color-muted)'; }}
+                <Link
+                  to="/tournaments/$id/rounds/$roundId"
+                  params={{ id: tournamentId, roundId: prev.id }}
+                  className="tracking-[0.12em] uppercase py-1 px-2.5 bg-transparent border border-border text-muted cursor-pointer transition-all duration-150 inline-flex items-center gap-1 hover:border-accent hover:text-accent"
                 ><ArrowLeft size={14} /> R{prev.round_number}</Link>
-              ) : <span style={{ ...btnStyle(false), display: 'inline-flex', alignItems: 'center', gap: '0.3rem' }}><ArrowLeft size={14} /> R{round.round_number - 1 || '?'}</span>}
+              ) : (
+                <span className="tracking-[0.12em] uppercase py-1 px-2.5 bg-transparent border border-border text-border cursor-default transition-all duration-150 pointer-events-none inline-flex items-center gap-1"><ArrowLeft size={14} /> R{round.round_number - 1 || '?'}</span>
+              )}
               {next ? (
-                <Link to="/tournaments/$id/rounds/$roundId" params={{ id: tournamentId, roundId: next.id }}
-                  style={{ ...btnStyle(true), display: 'inline-flex', alignItems: 'center', gap: '0.3rem' }}
-                  onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.borderColor = 'var(--color-accent)'; (e.currentTarget as HTMLAnchorElement).style.color = 'var(--color-accent)'; }}
-                  onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.borderColor = 'var(--color-border)'; (e.currentTarget as HTMLAnchorElement).style.color = 'var(--color-muted)'; }}
+                <Link
+                  to="/tournaments/$id/rounds/$roundId"
+                  params={{ id: tournamentId, roundId: next.id }}
+                  className="tracking-[0.12em] uppercase py-1 px-2.5 bg-transparent border border-border text-muted cursor-pointer transition-all duration-150 inline-flex items-center gap-1 hover:border-accent hover:text-accent"
                 >R{next.round_number} <ArrowRight size={14} /></Link>
-              ) : <span style={{ ...btnStyle(false), display: 'inline-flex', alignItems: 'center', gap: '0.3rem' }}>R{round.round_number + 1} <ArrowRight size={14} /></span>}
+              ) : (
+                <span className="tracking-[0.12em] uppercase py-1 px-2.5 bg-transparent border border-border text-border cursor-default transition-all duration-150 pointer-events-none inline-flex items-center gap-1">R{round.round_number + 1} <ArrowRight size={14} /></span>
+              )}
             </div>
           );
         })()}
@@ -477,32 +465,21 @@ export default function RoundDetail() {
 
       {/* Round header */}
       <div className="card anim-1">
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '0.75rem' }}>
+        <div className="flex justify-between items-start flex-wrap gap-3">
           <div>
-            <h1 style={{ fontSize: '2.2rem', letterSpacing: '0.06em', margin: 0 }}>
+            <h1 className="text-4xl tracking-[0.06em] m-0">
               Round {round.round_number}
-              {round.name && <span className="text-muted ml-2 text-[1.4rem]">— {round.name}</span>}
+              {round.name && <span className="text-muted ml-2 text-2xl">— {round.name}</span>}
             </h1>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-            <div style={{ position: 'relative' }}>
+          <div className="flex items-center gap-2.5">
+            <div className="relative">
               <select
                 value={round.status}
                 onChange={e => handleStatusChange(e.target.value)}
                 disabled={updatingStatus}
-                style={{
-                  background: 'var(--color-bg)',
-                  color: roundStatusColor(round.status),
-                  border: `1px solid ${roundStatusColor(round.status)}`,
-                  letterSpacing: '0.14em',
-                  textTransform: 'uppercase',
-                  padding: '0.3rem 1.75rem 0.3rem 0.6rem',
-                  outline: 'none',
-                  appearance: 'none',
-                  cursor: updatingStatus ? 'wait' : 'pointer',
-                  opacity: updatingStatus ? 0.6 : 1,
-                  transition: 'opacity 0.15s ease',
-                }}
+                className={`bg-bg tracking-[0.14em] uppercase py-1 pl-2.5 pr-7 outline-none appearance-none transition-opacity duration-150 ${updatingStatus ? 'opacity-60 cursor-wait' : 'opacity-100 cursor-pointer'}`}
+                style={{ color: roundStatusColor(round.status), border: `1px solid ${roundStatusColor(round.status)}` }}
               >
                 {ROUND_STATUSES.map(s => (
                   <option key={s.value} value={s.value}>{s.label}</option>
@@ -513,20 +490,7 @@ export default function RoundDetail() {
             {games.length > 0 && (
               <button
                 onClick={generateMatchReport}
-                style={{
-                  background: 'transparent',
-                  color: 'var(--color-text-dim)',
-                  border: '1px solid var(--color-border-bright)',
-                  fontSize: 'inherit',
-                  letterSpacing: '0.14em',
-                  textTransform: 'uppercase',
-                  padding: '0.3rem 0.6rem',
-                  cursor: 'pointer',
-                  whiteSpace: 'nowrap',
-                  transition: 'all 0.15s ease',
-                }}
-                onMouseEnter={e => { const b = e.currentTarget as HTMLButtonElement; b.style.borderColor = 'var(--color-accent)'; b.style.color = 'var(--color-accent)'; }}
-                onMouseLeave={e => { const b = e.currentTarget as HTMLButtonElement; b.style.borderColor = 'var(--color-border-bright)'; b.style.color = 'var(--color-text-dim)'; }}
+                className="bg-transparent text-text-dim border border-border-bright tracking-[0.14em] uppercase py-1 px-2.5 cursor-pointer whitespace-nowrap transition-all duration-150 hover:border-accent hover:text-accent"
               >
                 View Round Report
               </button>
@@ -539,15 +503,16 @@ export default function RoundDetail() {
       {error && (
         <div className="error-box">
           {error}
-          <button onClick={() => setError('')} style={{ marginLeft: '1rem', background: 'none', border: 'none', color: 'var(--color-red)', cursor: 'pointer', display: 'inline-flex', alignItems: 'center' }}><X size={14} /></button>
+          <button onClick={() => setError('')} className="ml-4 bg-transparent border-none text-red cursor-pointer inline-flex items-center"><X size={14} /></button>
         </div>
       )}
 
       {/* ── Scenarios ──────────────────────────────────────── */}
-      <div className="card anim-2" style={{ padding: 0, overflow: 'hidden' }}>
+      <div className="card anim-2 p-0! overflow-hidden">
         <button
           onClick={() => setScenOpen(o => { const next = !o; localStorage.setItem('roundDetail.scenOpen', String(next)); return next; })}
-          style={{ width: '100%', padding: '0.875rem 1.25rem', borderBottom: scenOpen ? '1px solid var(--color-border)' : 'none', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'transparent', border: 'none', cursor: 'pointer', textAlign: 'left' }}
+          className="w-full px-5 py-3.5 flex justify-between items-center bg-transparent border-none cursor-pointer text-left"
+          style={{ borderBottom: scenOpen ? '1px solid var(--color-border)' : 'none' }}
         >
           <div className="section-label">
             Scenarios
@@ -556,86 +521,85 @@ export default function RoundDetail() {
           <span className={`text-white transition-transform inline-flex items-center justify-center w-6 h-6 border border-[#dddddd] ${scenOpen ? 'rotate-0' : '-rotate-90'} shrink-0`}>▾</span>
         </button>
 
-        {scenOpen && <div style={{ padding: '0.875rem 1.25rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-          {roundScenarios.length === 0 ? (
-            <p className="text-muted ml-1">
-              No scenarios assigned yet.
-            </p>
-          ) : (
-            roundScenarios.map(s => (
-              <div key={s.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.75rem' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', minWidth: 0 }}>
-                  {s.scen_id && (
-                    <span className="text-accent tracking-tighter whitespace-nowrap shrink-0">
-                      {s.scen_id}
+        {scenOpen && (
+          <div className="px-5 py-3.5 flex flex-col gap-2">
+            {roundScenarios.length === 0 ? (
+              <p className="text-muted ml-1">
+                No scenarios assigned yet.
+              </p>
+            ) : (
+              roundScenarios.map(s => (
+                <div key={s.id} className="flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-3 min-w-0">
+                    {s.scen_id && (
+                      <span className="text-accent tracking-tighter whitespace-nowrap shrink-0">
+                        {s.scen_id}
+                      </span>
+                    )}
+                    <span className="text-text-dim overflow-hidden text-ellipsis whitespace-nowrap">
+                      {s.title}
                     </span>
-                  )}
-                  <span className="text-text-dim overflow-hidden text-ellipsis whitespace-nowrap">
-                    {s.title}
-                  </span>
-                  <span className="text-muted-dim tracking-tighter whitespace-nowrap shrink-0">
-                    {toTitleCase(s.attacker_nationality)} vs {toTitleCase(s.defender_nationality)}
-                  </span>
-                </div>
-                {confirmRemScen === s.id ? (
-                  <div style={{ display: 'flex', gap: '0.3rem', flexShrink: 0 }}>
-                    <button
-                      onClick={() => handleRemoveScenario(s.id)}
-                      disabled={removingScen === s.id}
-                      style={{ background: 'var(--color-red-bg)', border: '1px solid var(--color-red)', color: 'var(--color-red-bright)', letterSpacing: '0.1em', padding: '0.25rem 0.5rem', cursor: 'pointer' }}
-                    >
-                      {removingScen === s.id ? '...' : 'Confirm'}
-                    </button>
-                    <button
-                      onClick={() => setConfirmRemScen(null)}
-                      style={{ background: 'transparent', border: '1px solid var(--color-border)', color: 'var(--color-muted)', padding: '0.25rem 0.5rem', cursor: 'pointer' }}
-                    >
-                      Cancel
-                    </button>
+                    <span className="text-muted-dim tracking-tighter whitespace-nowrap shrink-0">
+                      {toTitleCase(s.attacker_nationality)} vs {toTitleCase(s.defender_nationality)}
+                    </span>
                   </div>
-                ) : (
-                  <button
-                    onClick={() => setConfirmRemScen(s.id)}
-                    style={{ background: 'transparent', border: '1px solid var(--color-red-border)', color: 'var(--color-red)', letterSpacing: '0.1em', textTransform: 'uppercase', padding: '0.25rem 0.5rem', cursor: 'pointer', flexShrink: 0, transition: 'all 0.15s ease' }}
-                    onMouseEnter={e => (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--color-red-bright)'}
-                    onMouseLeave={e => (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--color-red-border)'}
-                  >
-                    Remove
-                  </button>
-                )}
-              </div>
-            ))
-          )}
+                  {confirmRemScen === s.id ? (
+                    <div className="flex gap-1 shrink-0">
+                      <button
+                        onClick={() => handleRemoveScenario(s.id)}
+                        disabled={removingScen === s.id}
+                        className="bg-red-bg border border-red text-red-bright tracking-widest py-1 px-2 cursor-pointer"
+                      >
+                        {removingScen === s.id ? '...' : 'Confirm'}
+                      </button>
+                      <button
+                        onClick={() => setConfirmRemScen(null)}
+                        className="bg-transparent border border-border text-muted py-1 px-2 cursor-pointer"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  ) : (
+                    <button
+                      onClick={() => setConfirmRemScen(s.id)}
+                      className="bg-transparent border border-red-border text-red tracking-widest uppercase py-1 px-2 cursor-pointer shrink-0 transition-all duration-150 hover:border-red-bright"
+                    >
+                      Remove
+                    </button>
+                  )}
+                </div>
+              ))
+            )}
 
-          {!atScenLimit && (
-            <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', marginTop: roundScenarios.length > 0 ? '0.5rem' : '0' }}>
-              <ScenarioPicker
-                excludeIds={roundScenIds}
-                value={scenPick}
-                onChange={setScenPick}
-                currentCount={roundScenarios.length}
-              />
-              <button
-                onClick={handleAddScenario}
-                disabled={addingScen || !scenPick}
-                className="btn-primary"
-                style={{ opacity: addingScen || !scenPick ? 0.5 : 1, padding: '0.4rem 0.75rem', flexShrink: 0 }}
-              >
-                {addingScen ? '...' : '+ Add'}
-              </button>
-            </div>
-          )}
-          {atScenLimit && (
-            <div style={{ color: 'var(--color-accent)', letterSpacing: '0.1em', marginTop: '0.25rem' }}>
-              MAX 10 SCENARIOS REACHED
-            </div>
-          )}
-        </div>}
+            {!atScenLimit && (
+              <div className={`flex gap-2 items-center ${roundScenarios.length > 0 ? 'mt-2' : 'mt-0'}`}>
+                <ScenarioPicker
+                  excludeIds={roundScenIds}
+                  value={scenPick}
+                  onChange={setScenPick}
+
+                />
+                <button
+                  onClick={handleAddScenario}
+                  disabled={addingScen || !scenPick}
+                  className={`btn-primary py-1.5! px-3! shrink-0 ${addingScen || !scenPick ? 'opacity-50' : 'opacity-100'}`}
+                >
+                  {addingScen ? '...' : '+ Add'}
+                </button>
+              </div>
+            )}
+            {atScenLimit && (
+              <div className="text-accent tracking-widest mt-1">
+                MAX 10 SCENARIOS REACHED
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
       {/* ── Games ──────────────────────────────────────────── */}
-      <div className="card anim-3" style={{ padding: 0, overflow: 'hidden' }}>
-        <div style={{ padding: '1rem 1.25rem', borderBottom: '1px solid var(--color-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div className="card anim-3 p-0! overflow-hidden">
+        <div className="px-5 py-4 border-b border-border flex justify-between items-center">
           <div className="section-label">
             Games
             <span className="text-accent ml-2">{games.length}</span>
@@ -646,32 +610,30 @@ export default function RoundDetail() {
         </div>
 
         {games.length === 0 ? (
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '3rem 2rem', gap: '0.75rem' }}>
+          <div className="flex flex-col items-center justify-center py-12 px-8 gap-3">
             <p className="text-muted-dim m-0 text-center">
               No games scheduled yet. Create the first pairing below.
             </p>
           </div>
         ) : (
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
+          <div className="flex flex-col">
             {games.map((game, idx) => {
               const scenario  = game.scenario_id ? scenarioById[game.scenario_id] : null;
               const p1        = playerById[game.player1_id];
               const p2        = playerById[game.player2_id];
               const winner    = game.winner_id ? playerById[game.winner_id] : null;
-              // roles based on player1_attacks flag
               const p1Role    = game.player1_attacks ? 'Attacker' : 'Defender';
               const p2Role    = game.player1_attacks ? 'Defender' : 'Attacker';
               const isRecording = recordingFor === game.id;
-              // effective roles when swap is active in the recording panel
               const effP1Attacks = resultSidesFlipped ? !game.player1_attacks : game.player1_attacks;
               const effP1Role    = effP1Attacks ? 'Attacker' : 'Defender';
               const effP2Role    = effP1Attacks ? 'Defender' : 'Attacker';
 
               return (
-                <div key={game.id} style={{ borderBottom: idx < games.length - 1 ? '1px solid var(--color-border)' : 'none' }}>
-                  <div style={{ padding: '1rem 1.25rem', display: 'grid', gridTemplateColumns: '1fr auto', gap: '0.75rem', alignItems: 'start' }}>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <div key={game.id} className={idx < games.length - 1 ? 'border-b border-border' : ''}>
+                  <div className="px-5 py-4 grid grid-cols-[1fr_auto] gap-3 items-start">
+                    <div className="flex flex-col gap-2">
+                      <div className="flex items-center gap-2">
                         {scenario?.scen_id && (
                           <span className="text-accent tracking-tighter shrink-0">
                             {scenario.scen_id}
@@ -686,16 +648,16 @@ export default function RoundDetail() {
                           </span>
                         )}
                       </div>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+                      <div className="flex items-center gap-4 flex-wrap">
                         <PlayerSideTag name={p1?.name ?? '—'} role={p1Role} isWinner={game.winner_id === game.player1_id} isCompleted={game.status === 'COMPLETED'} points={p1 ? playerPoints[p1.id] : undefined} />
                         <span className="text-muted-dim">vs</span>
                         <PlayerSideTag name={p2?.name ?? '—'} role={p2Role} isWinner={game.winner_id === game.player2_id} isCompleted={game.status === 'COMPLETED'} points={p2 ? playerPoints[p2.id] : undefined} />
                       </div>
                     </div>
 
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.5rem' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                        <span className="tracking-tight uppercase border py-[0.2rem] px-2" style={{ color: gameStatusColor(game.status), borderColor: gameStatusColor(game.status) }}>
+                    <div className="flex flex-col items-end gap-2">
+                      <div className="flex items-center gap-1.5">
+                        <span className="tracking-tight uppercase border py-1 px-2" style={{ color: gameStatusColor(game.status), borderColor: gameStatusColor(game.status) }}>
                           {game.status === 'COMPLETED' ? 'Complete' : 'Scheduled'}
                         </span>
                         {game.status === 'COMPLETED' && !roundComplete && (
@@ -711,13 +673,12 @@ export default function RoundDetail() {
                               onClick={() => handleRemoveGame(game.id)}
                               disabled={removingGame}
                               title="Confirm remove"
-                              style={{ background: 'var(--color-red-bg)', border: '1px solid var(--color-red)', color: 'var(--color-red-bright)', padding: '0.2rem 0.35rem', cursor: 'pointer', lineHeight: 1 }}
+                              className="bg-red-bg border border-red text-red-bright py-1 px-1.5 cursor-pointer leading-none"
                             >{removingGame ? '…' : <Check size={14} />}</button>
                             <button
                               onClick={() => setConfirmRemGame(null)}
                               title="Cancel"
-                              className="btn-secondary"
-                              style={{ padding: '0.2rem 0.35rem' }}
+                              className="btn-secondary py-1! px-1.5!"
                             ><X size={14} /></button>
                           </>
                         ) : (
@@ -736,8 +697,7 @@ export default function RoundDetail() {
                       {game.status !== 'COMPLETED' && !roundComplete && (
                         <button
                           onClick={() => { setRecordingFor(isRecording ? null : game.id); setResultScenId(''); setResultSidesFlipped(false); }}
-                          className={isRecording ? 'btn-secondary' : 'btn-primary'}
-                          style={{ padding: '0.25rem 0.6rem' }}
+                          className={`${isRecording ? 'btn-secondary' : 'btn-primary'} py-1! px-2.5!`}
                         >
                           {isRecording ? 'Cancel' : '▶ Record Result'}
                         </button>
@@ -746,12 +706,12 @@ export default function RoundDetail() {
                   </div>
 
                   {isRecording && (
-                    <div style={{ padding: '0.75rem 1.25rem 1rem', background: 'var(--color-bg)', borderTop: '1px solid var(--color-border)', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                    <div className="px-5 pt-3 pb-4 bg-bg border-t border-border flex flex-col gap-3">
                       {!game.scenario_id && roundScenarios.length > 0 && (
                         <div>
                           <label className="field-label">Scenario</label>
-                          <div style={{ position: 'relative', maxWidth: '360px' }}>
-                            <select value={resultScenId} onChange={e => setResultScenId(e.target.value)} style={selectStyle}>
+                          <div className="relative max-w-[360px]">
+                            <select value={resultScenId} onChange={e => setResultScenId(e.target.value)} className={SELECT_CLS}>
                               <option value="">TBD</option>
                               {roundScenarios.map(s => (
                                 <option key={s.id} value={s.id}>
@@ -763,27 +723,25 @@ export default function RoundDetail() {
                           </div>
                         </div>
                       )}
-                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem' }}>
+                      <div className="flex items-center justify-between gap-2">
                         <div className="section-label">Sides</div>
                         <button
                           type="button"
                           onClick={() => setResultSidesFlipped(f => !f)}
-                          style={{ background: 'transparent', border: '1px solid var(--color-border-bright)', color: 'var(--color-text-dim)', letterSpacing: '0.1em', textTransform: 'uppercase', padding: '0.2rem 0.5rem', cursor: 'pointer', transition: 'all 0.15s ease' }}
-                          onMouseEnter={e => { const b = e.currentTarget as HTMLButtonElement; b.style.borderColor = 'var(--color-accent)'; b.style.color = 'var(--color-accent)'; }}
-                          onMouseLeave={e => { const b = e.currentTarget as HTMLButtonElement; b.style.borderColor = 'var(--color-border-bright)'; b.style.color = 'var(--color-text-dim)'; }}
+                          className="bg-transparent border border-border-bright text-text-dim tracking-widest uppercase py-1 px-2 cursor-pointer transition-all duration-150 hover:border-accent hover:text-accent"
                         >
                           ⇄ Swap
                         </button>
                       </div>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', background: 'var(--color-surface)', border: '1px solid var(--color-border)', padding: '0.5rem 0.75rem' }}>
+                      <div className="flex items-center gap-3 bg-surface border border-border px-3 py-2">
                         <span className="text-text">{p1?.name ?? '—'}</span>
                         <span className="text-accent tracking-tight">{effP1Role === 'Attacker' ? 'ATK' : 'DEF'}</span>
                         <span className="text-muted-dim">vs</span>
                         <span className="text-text">{p2?.name ?? '—'}</span>
                         <span className="text-accent tracking-tight">{effP2Role === 'Attacker' ? 'ATK' : 'DEF'}</span>
                       </div>
-                      <div className="section-label" style={{ marginBottom: '0.25rem' }}>Who won?</div>
-                      <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                      <div className="section-label mb-1">Who won?</div>
+                      <div className="flex gap-2 flex-wrap">
                         {[
                           { id: game.player1_id, player: p1, role: effP1Role },
                           { id: game.player2_id, player: p2, role: effP2Role },
@@ -792,9 +750,7 @@ export default function RoundDetail() {
                             key={id}
                             onClick={() => handleRecordResult(game.id, id, effP1Attacks)}
                             disabled={savingResult}
-                            style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border)', color: 'var(--color-text)', letterSpacing: '0.1em', padding: '0.5rem 1rem', cursor: savingResult ? 'wait' : 'pointer', transition: 'all 0.15s ease', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '0.15rem', opacity: savingResult ? 0.5 : 1 }}
-                            onMouseEnter={e => { const b = e.currentTarget as HTMLButtonElement; b.style.borderColor = 'var(--color-accent)'; b.style.color = 'var(--color-accent)'; }}
-                            onMouseLeave={e => { const b = e.currentTarget as HTMLButtonElement; b.style.borderColor = 'var(--color-border)'; b.style.color = 'var(--color-text)'; }}
+                            className={`bg-surface border border-border text-text tracking-widest py-2 px-4 transition-all duration-150 flex flex-col items-start gap-0.5 hover:border-accent hover:text-accent ${savingResult ? 'cursor-wait opacity-50' : 'cursor-pointer'}`}
                           >
                             <span className="text-muted">{role.toUpperCase()}</span>
                             <span>{player?.name ?? '—'}</span>
@@ -821,12 +777,12 @@ export default function RoundDetail() {
                 : `Only ${availablePlayers.length} player available — need at least 2 to schedule a game.`}
             </p>
           ) : (
-            <form onSubmit={handleAddGame} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr auto 1fr', gap: '0.75rem', alignItems: 'end' }}>
+            <form onSubmit={handleAddGame} className="flex flex-col gap-4">
+              <div className="grid grid-cols-[1fr_auto_1fr] gap-3 items-end">
                 <div>
                   <label className="field-label">Player 1</label>
-                  <div style={{ position: 'relative' }}>
-                    <select value={p1Id} onChange={e => { setP1Id(e.target.value); if (e.target.value === p2Id) setP2Id(''); }} required style={selectStyle}>
+                  <div className="relative">
+                    <select value={p1Id} onChange={e => { setP1Id(e.target.value); if (e.target.value === p2Id) setP2Id(''); }} required className={SELECT_CLS}>
                       <option value="">Select player…</option>
                       {availablePlayers.map(p => { const r = playerRecords[p.id] ?? { w: 0, l: 0 }; const pts = playerPoints[p.id] ?? 0; return <option key={p.id} value={p.id}>{p.name} ({pts} pts, {r.w}-{r.l})</option>; })}
                     </select>
@@ -834,11 +790,16 @@ export default function RoundDetail() {
                   </div>
                 </div>
 
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.35rem', paddingBottom: '2px' }}>
-                  <label className="field-label" style={{ whiteSpace: 'nowrap' }}>P1 Side</label>
-                  <div style={{ display: 'flex', border: '1px solid var(--color-border)', overflow: 'hidden' }}>
+                <div className="flex flex-col items-center gap-1.5 pb-0.5">
+                  <label className="field-label whitespace-nowrap">P1 Side</label>
+                  <div className="flex border border-border overflow-hidden">
                     {(['attacker', 'defender'] as const).map(side => (
-                      <button key={side} type="button" onClick={() => setP1Side(side)} style={{ background: p1Side === side ? 'var(--color-accent)' : 'var(--color-bg)', color: p1Side === side ? 'var(--color-bg)' : 'var(--color-muted)', border: 'none', borderRight: side === 'attacker' ? '1px solid var(--color-border)' : 'none', letterSpacing: '0.12em', textTransform: 'uppercase', padding: '0.35rem 0.6rem', cursor: 'pointer', transition: 'all 0.15s ease' }}>
+                      <button
+                        key={side}
+                        type="button"
+                        onClick={() => setP1Side(side)}
+                        className={`${p1Side === side ? 'bg-accent text-bg' : 'bg-bg text-muted'} border-none ${side === 'attacker' ? 'border-r border-border' : ''} tracking-[0.12em] uppercase py-1.5 px-2.5 cursor-pointer transition-all duration-150`}
+                      >
                         {side}
                       </button>
                     ))}
@@ -847,8 +808,8 @@ export default function RoundDetail() {
 
                 <div>
                   <label className="field-label">Player 2 ({p1Side === 'attacker' ? 'Defender' : 'Attacker'})</label>
-                  <div style={{ position: 'relative' }}>
-                    <select value={p2Id} onChange={e => setP2Id(e.target.value)} required disabled={!p1Id} style={{ ...selectStyle, opacity: p1Id ? 1 : 0.5 }}>
+                  <div className="relative">
+                    <select value={p2Id} onChange={e => setP2Id(e.target.value)} required disabled={!p1Id} className={`${SELECT_CLS} ${p1Id ? 'opacity-100' : 'opacity-50'}`}>
                       <option value="">Select player…</option>
                       {p2Options.map(p => { const r = playerRecords[p.id] ?? { w: 0, l: 0 }; const pts = playerPoints[p.id] ?? 0; return <option key={p.id} value={p.id}>{p.name} ({r.w}-{r.l}, {pts}pts)</option>; })}
                     </select>
@@ -858,8 +819,8 @@ export default function RoundDetail() {
               </div>
 
               {p1 && p2 && (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-                  <div style={{ background: 'var(--color-bg)', border: '1px solid var(--color-border)', padding: '0.6rem 0.875rem', display: 'flex', alignItems: 'center', gap: '1rem', letterSpacing: '0.1em' }}>
+                <div className="flex flex-col gap-1.5">
+                  <div className="bg-bg border border-border py-2.5 px-3.5 flex items-center gap-4 tracking-widest">
                     <span className="text-muted">PREVIEW</span>
                     <span className="text-text">{p1.name}</span>
                     <span className="text-accent">{p1Side === 'attacker' ? 'ATK' : 'DEF'}</span>
@@ -875,8 +836,8 @@ export default function RoundDetail() {
 
               <div>
                 <label className="field-label">Scenario <span className="text-muted-dim tracking-tighter normal-case">(optional — can be set when recording result)</span></label>
-                <div style={{ position: 'relative' }}>
-                  <select value={gameScenId} onChange={e => setGameScenId(e.target.value)} style={selectStyle}>
+                <div className="relative">
+                  <select value={gameScenId} onChange={e => setGameScenId(e.target.value)} className={SELECT_CLS}>
                     <option value="">TBD</option>
                     {roundScenarios.map(s => (
                       <option key={s.id} value={s.id}>
@@ -889,7 +850,11 @@ export default function RoundDetail() {
               </div>
 
               <div>
-                <button type="submit" className="btn-primary" disabled={addingGame || !p1Id || !p2Id} style={{ opacity: (addingGame || !p1Id || !p2Id) ? 0.5 : 1, cursor: addingGame ? 'wait' : 'pointer' }}>
+                <button
+                  type="submit"
+                  className={`btn-primary ${(addingGame || !p1Id || !p2Id) ? 'opacity-50' : ''} ${addingGame ? 'cursor-wait' : ''}`}
+                  disabled={addingGame || !p1Id || !p2Id}
+                >
                   {addingGame ? 'Scheduling…' : '+ Schedule Game'}
                 </button>
               </div>
@@ -911,14 +876,14 @@ export default function RoundDetail() {
 
 function PlayerSideTag({ name, role, isWinner, isCompleted, points }: { name: string; role: string; isWinner: boolean; isCompleted: boolean; points?: number }) {
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-      <span className={`tracking-tight uppercase ${role === 'Attacker' ? 'text-accent border border-accent-dim' : 'text-muted border border-border'} py-[0.1rem] px-[0.35rem] shrink-0`}>
+    <div className="flex items-center gap-1.5">
+      <span className={`tracking-tight uppercase ${role === 'Attacker' ? 'text-accent border border-accent-dim' : 'text-muted border border-border'} py-0.5 px-1.5 shrink-0`}>
         {role === 'Attacker' ? 'ATK' : 'DEF'}
       </span>
       <span className={`${isCompleted && isWinner ? 'text-green-dim' : isCompleted ? 'text-muted' : 'text-text-dim'} ${isWinner ? 'font-semibold' : 'font-normal'}`}>
         {name}
         {points !== undefined && (
-          <sup style={{ letterSpacing: '0.05em', color: 'var(--color-muted)', marginLeft: '0.15em', verticalAlign: 'super', lineHeight: 0 }}>
+          <sup className="tracking-[0.05em] text-muted ml-[0.15em] align-super leading-[0]">
             {points}
           </sup>
         )}
@@ -927,18 +892,6 @@ function PlayerSideTag({ name, role, isWinner, isCompleted, points }: { name: st
     </div>
   );
 }
-
-const selectStyle: React.CSSProperties = {
-  width: '100%',
-  background: 'var(--color-bg)',
-  color: 'var(--color-text)',
-  border: '1px solid var(--color-border)',
-  letterSpacing: '0.06em',
-  padding: '0.5rem 2rem 0.5rem 0.75rem',
-  outline: 'none',
-  appearance: 'none',
-  cursor: 'pointer',
-};
 
 function ChevronDown() {
   return (
