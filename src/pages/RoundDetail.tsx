@@ -22,7 +22,7 @@ interface RoundData {
   tournament_id: string;
 }
 
-interface Player { id: string; name: string; }
+interface Player { id: string; name: string; seed: number | null; }
 
 interface ScenarioRow {
   id: string;
@@ -224,7 +224,7 @@ export default function RoundDetail() {
       supabase.from('rounds').select('*').eq('id', roundId).single(),
       supabase.from('tournaments').select('id, name').eq('id', tournamentId).single(),
       supabase.from('tournament_players')
-        .select('player_id, players(id, name)')
+        .select('seed, players(id, name)')
         .eq('tournament_id', tournamentId),
       supabase.from('round_scenarios')
         .select('scenario_id, scenarios(id, scen_id, title, attacker_nationality, defender_nationality)')
@@ -247,7 +247,7 @@ export default function RoundDetail() {
 
     setRound(roundRes.data);
     setTournament(tourneyRes.data ?? null);
-    setEnrolled((enrolledRes.data ?? []).map((r: any) => r.players).filter(Boolean));
+    setEnrolled((enrolledRes.data ?? []).map((r: any) => r.players ? { ...r.players, seed: r.seed ?? null } : null).filter(Boolean));
     setRoundScenarios((scenRes.data ?? []).map((r: any) => r.scenarios).filter(Boolean));
     setAllRounds(allRoundsRes.data ?? []);
 
@@ -386,6 +386,7 @@ export default function RoundDetail() {
   const assignedIds      = new Set(games.flatMap(g => [g.player1_id, g.player2_id]));
   const sortByRecord = (a: Player, b: Player) =>
     (playerPoints[b.id] ?? 0) - (playerPoints[a.id] ?? 0) ||
+    (a.seed ?? 999) - (b.seed ?? 999) ||
     (playerRecords[b.id]?.w ?? 0) - (playerRecords[a.id]?.w ?? 0) ||
     a.name.localeCompare(b.name);
   const availablePlayers = enrolled.filter(p => !assignedIds.has(p.id)).sort(sortByRecord);
