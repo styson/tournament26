@@ -132,7 +132,7 @@ export default function Players() {
             onChange={e => setSearch(e.target.value)}
             className="input w-55"
           />
-          <Link to="/players/new" className="btn-primary">+ Enlist Player</Link>
+          <Link to="/players/new" className="btn-primary">+ Add Player</Link>
         </div>
       </div>
 
@@ -149,9 +149,9 @@ export default function Players() {
               {search ? 'No Matches Found' : 'No Personnel on Record'}
             </h3>
             <p className="text-sm text-muted-dim m-0 text-center">
-              {search ? 'Try a different search term' : 'Enlist your first player to begin building the roster'}
+              {search ? 'Try a different search term' : 'Add your first player to begin building the roster'}
             </p>
-            {!search && <Link to="/players/new" className="btn-primary mt-2">+ Enlist First Player</Link>}
+            {!search && <Link to="/players/new" className="btn-primary mt-2">+ Add First Player</Link>}
           </div>
         ) : (
           <div className="overflow-x-auto">

@@ -17,6 +17,12 @@ export default function NewTournament() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError('');
+
+    if (endDate && endDate < startDate) {
+      setError('End date cannot be before start date.');
+      return;
+    }
+
     setLoading(true);
 
     const { error } = await supabase.from('tournaments').insert({

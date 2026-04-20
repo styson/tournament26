@@ -18,7 +18,7 @@ export default function StandingsReportButton({ standings, tournamentName, style
     <button
       onClick={handleClick}
       disabled={disabled}
-      className="btn-sm"
+      className="btn-sm min-w-32"
       style={style}
     >
       Point Details

@@ -53,15 +53,15 @@ const ROUND_STATUSES = [
 
 const SELECT_CLS = 'w-full bg-bg text-text border border-border tracking-[0.06em] py-2 pl-3 pr-8 outline-none appearance-none cursor-pointer';
 
-function roundStatusColor(s: string) {
+function roundStatusClass(s: string) {
   switch (s) {
-    case 'IN_PROGRESS': return 'var(--color-accent)';
-    case 'COMPLETED':   return 'var(--color-green-dim)';
-    default:            return 'var(--color-muted)';
+    case 'IN_PROGRESS': return 'status-in-progress';
+    case 'COMPLETED':   return 'status-completed';
+    default:            return 'status-pending';
   }
 }
-function gameStatusColor(s: string) {
-  return s === 'COMPLETED' ? 'var(--color-green-dim)' : 'var(--color-muted)';
+function gameStatusClass(s: string) {
+  return s === 'COMPLETED' ? 'status-completed' : 'status-pending';
 }
 
 // ─── scenario search combobox ────────────────────────────────
@@ -478,14 +478,13 @@ export default function RoundDetail() {
                 value={round.status}
                 onChange={e => handleStatusChange(e.target.value)}
                 disabled={updatingStatus}
-                className={`bg-bg tracking-[0.14em] uppercase py-1 pl-2.5 pr-7 outline-none appearance-none transition-opacity duration-150 ${updatingStatus ? 'opacity-60 cursor-wait' : 'opacity-100 cursor-pointer'}`}
-                style={{ color: roundStatusColor(round.status), border: `1px solid ${roundStatusColor(round.status)}` }}
+                className={`bg-bg tracking-[0.14em] uppercase py-1 pl-2.5 pr-7 outline-none appearance-none transition-opacity duration-150 ${roundStatusClass(round.status)} ${updatingStatus ? 'opacity-60 cursor-wait' : 'opacity-100 cursor-pointer'}`}
               >
                 {ROUND_STATUSES.map(s => (
                   <option key={s.value} value={s.value}>{s.label}</option>
                 ))}
               </select>
-              <span className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none inline-flex" style={{ color: roundStatusColor(round.status) }}><ChevronDownIcon size={12} /></span>
+              <span className={`absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none inline-flex ${roundStatusClass(round.status)}`}><ChevronDownIcon size={12} /></span>
             </div>
             {games.length > 0 && (
               <button
@@ -657,7 +656,7 @@ export default function RoundDetail() {
 
                     <div className="flex flex-col items-end gap-2">
                       <div className="flex items-center gap-1.5">
-                        <span className="tracking-tight uppercase border py-1 px-2" style={{ color: gameStatusColor(game.status), borderColor: gameStatusColor(game.status) }}>
+                        <span className={`status-badge tracking-tight ${gameStatusClass(game.status)}`}>
                           {game.status === 'COMPLETED' ? 'Complete' : 'Scheduled'}
                         </span>
                         {game.status === 'COMPLETED' && !roundComplete && (

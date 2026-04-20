@@ -130,7 +130,7 @@ export default function Standings() {
               value={selectedId}
               onChange={(e) => setSelectedId(e.target.value)}
               disabled={loadingTourneys}
-              className={`bg-bg ${selectedId ? 'text-text' : 'text-muted'} border border-border text-xs tracking-widest py-1.5 pl-3 pr-8 outline-none appearance-none ${loadingTourneys ? 'cursor-wait opacity-60' : 'cursor-pointer'} min-w-55`}
+              className={`bg-bg ${selectedId ? 'text-text' : 'text-muted'} border border-border tracking-widest py-[0.28rem] pl-3 pr-8 outline-none appearance-none ${loadingTourneys ? 'cursor-wait opacity-60' : 'cursor-pointer'} min-w-55`}
             >
               <option value=''>Select Tournament…</option>
               {tournaments.map((t) => (
@@ -182,7 +182,7 @@ export default function Standings() {
                       R{rn}
                     </th>
                   ))}
-                  <th className='text-right text-accent'>Pts</th>
+                  <th className='text-center text-accent'>Points</th>
                 </tr>
               </thead>
               <tbody>
@@ -223,14 +223,14 @@ export default function Standings() {
                         return (
                           <td key={rn} className='text-center'>
                             <span
-                              className={`font-semibold text-text${isWin ? ' border border-green-dim py-0.5 px-1.5' : ''}`}
+                              className={`font-semibold text-text inline-flex items-center justify-center w-8${isWin ? ' border border-green-dim py-0.5' : ''}`}
                             >
                               {oppPos ?? '?'}
                             </span>
                           </td>
                         );
                       })}
-                      <td className='text-right text-sm text-accent font-semibold'>{s.points}</td>
+                      <td className='text-center text-sm text-accent font-semibold'>{s.points}</td>
                     </tr>
                   );
                 })}
@@ -248,7 +248,7 @@ export default function Standings() {
           </span>
           <span>N = loss vs player N</span>
           <span>
-            <span className='text-accent'>PTS</span> = 10 per win + 1 per win earned by each defeated opponent
+            <span className='text-accent'>Points</span> = 10 per win + 1 per win earned by each defeated opponent
           </span>
         </div>
       )}

@@ -34,21 +34,21 @@ interface Round {
 
 // ─── helpers ────────────────────────────────────────────────
 
-function tournamentStatusColor(status: string) {
+function tournamentStatusClass(status: string) {
   switch (status) {
-    case 'ACTIVE':      return 'var(--color-green-dim)';
-    case 'COMPLETED':   return 'var(--color-muted)';
-    case 'CANCELLED':   return 'var(--color-red)';
-    case 'IN_PROGRESS': return 'var(--color-accent)';
-    default:            return 'var(--color-accent)';
+    case 'ACTIVE':      return 'status-active';
+    case 'COMPLETED':   return 'status-completed';
+    case 'CANCELLED':   return 'status-cancelled';
+    case 'IN_PROGRESS': return 'status-in-progress';
+    default:            return 'status-draft';
   }
 }
 
-function roundStatusColor(status: string) {
+function roundStatusClass(status: string) {
   switch (status) {
-    case 'IN_PROGRESS': return 'var(--color-accent)';
-    case 'COMPLETED':   return 'var(--color-green-dim)';
-    default:            return 'var(--color-muted)';
+    case 'IN_PROGRESS': return 'status-in-progress';
+    case 'COMPLETED':   return 'status-completed';
+    default:            return 'status-pending';
   }
 }
 
@@ -191,7 +191,8 @@ export default function TournamentDetail() {
     e.preventDefault();
     if (!selectedPlayerId) return;
     setEnrolling(true);
-    const seed = seedInput.trim() ? parseInt(seedInput.trim(), 10) : null;
+    const rawSeed = parseInt(seedInput.trim(), 10);
+    const seed = !isNaN(rawSeed) && rawSeed > 0 ? rawSeed : null;
     const { error } = await supabase.from('tournament_players')
       .insert({ tournament_id: id, player_id: selectedPlayerId, seed });
     if (error) { console.error(error); setError(error.message); }
@@ -214,7 +215,8 @@ export default function TournamentDetail() {
     e.preventDefault();
     if (!seedModal) return;
     setSeedModalSaving(true);
-    const seed = seedModalVal.trim() ? parseInt(seedModalVal.trim(), 10) : null;
+    const rawSeed = parseInt(seedModalVal.trim(), 10);
+    const seed = !isNaN(rawSeed) && rawSeed > 0 ? rawSeed : null;
     const { error } = await supabase.from('tournament_players')
       .update({ seed }).eq('tournament_id', id).eq('player_id', seedModal.id);
     if (error) { setError(error.message); }
@@ -289,8 +291,7 @@ export default function TournamentDetail() {
                 value={tournament.status}
                 onChange={e => handleStatusChange(e.target.value)}
                 disabled={updatingStatus}
-                className={`btn-sm appearance-none pr-7 ${updatingStatus ? 'opacity-60 cursor-wait' : 'cursor-pointer'}`}
-                style={{ color: tournamentStatusColor(tournament.status), borderColor: tournamentStatusColor(tournament.status) }}
+                className={`btn-sm appearance-none pr-7 ${tournamentStatusClass(tournament.status)} ${updatingStatus ? 'opacity-60 cursor-wait' : 'cursor-pointer'}`}
               >
                 <option value="DRAFT">DRAFT</option>
                 <option value="ACTIVE">ACTIVE</option>
@@ -299,8 +300,7 @@ export default function TournamentDetail() {
                 <option value="CANCELLED">CANCELLED</option>
               </select>
               <span
-                className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none inline-flex"
-                style={{ color: tournamentStatusColor(tournament.status) }}
+                className={`absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none inline-flex ${tournamentStatusClass(tournament.status)}`}
               ><ChevronDown size={12} /></span>
             </div>
             <div className="flex flex-col items-stretch gap-1.5">
@@ -366,10 +366,7 @@ export default function TournamentDetail() {
                   <LogIn size={16} className="text-muted shrink-0 mt-1" />
                 </div>
 
-                <span
-                  className="tracking-widest uppercase px-1.5 py-0.5 self-start border"
-                  style={{ color: roundStatusColor(round.status), borderColor: roundStatusColor(round.status) }}
-                >
+                <span className={`status-badge ${roundStatusClass(round.status)}`}>
                   {roundStatusLabel(round.status)}
                 </span>
               </Link>

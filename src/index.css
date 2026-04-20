@@ -365,6 +365,25 @@
     line-height: 1;
   }
 
+  /* ── Status badges ── */
+  .status-badge {
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.125rem 0.375rem;
+    border: 1px solid;
+    border-radius: .75rem;
+    display: inline-block;
+    width: 120px;
+    text-align: center;
+    margin-right: 30px;
+  }
+  .status-draft      { color: var(--color-accent);    border-color: var(--color-accent);    }
+  .status-active     { color: var(--color-green-dim); border-color: var(--color-green-dim); }
+  .status-in-progress{ color: var(--color-accent);    border-color: var(--color-accent);    }
+  .status-completed  { color: var(--color-muted);     border-color: var(--color-muted);     }
+  .status-cancelled  { color: var(--color-red);       border-color: var(--color-red);       }
+  .status-pending    { color: var(--color-muted);     border-color: var(--color-muted);     }
+
   /* ── Spinner ── */
   .spinner {
     width: 20px; height: 20px;

@@ -45,7 +45,7 @@ export default function NewPlayer() {
       <div className="anim-0">
         <div className="section-label mb-1">Players</div>
         <h1 className="text-4xl tracking-wider m-0">
-          Enlist Player
+          Add Player
         </h1>
       </div>
 
@@ -109,7 +109,7 @@ export default function NewPlayer() {
             className={`btn-primary ${loading ? 'opacity-60 cursor-wait' : 'cursor-pointer'}`}
             disabled={loading}
           >
-            {loading ? 'Enlisting...' : '+ Enlist Player'}
+            {loading ? 'Addng...' : '+ Add Player'}
           </button>
           <Link to="/players" search={{ q: '' }} className="btn-secondary">Cancel</Link>
         </div>
