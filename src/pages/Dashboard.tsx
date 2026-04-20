@@ -65,9 +65,54 @@ function StatCard({ label, value, link, delay = 0 }: StatCardProps) {
     : <div className="animate-[fadeUp_0.45s_ease_both]" style={{ animationDelay: `${delay}s` }}>{inner}</div>;
 }
 
+interface TopListRow {
+  rank: number;
+  label: string;
+  value: number;
+  link: string;
+}
+
+function TopList({ title, rows }: { title: string; rows: TopListRow[] }) {
+  return (
+    <div className="card">
+      <div className="section-label mb-3">{title}</div>
+      {rows.length === 0 ? (
+        <div className="flex flex-col items-center justify-center py-8 gap-2">
+          <div className="text-2xl text-border">—</div>
+          <p className="text-muted-dim tracking-widest uppercase m-0">No data yet</p>
+        </div>
+      ) : (
+        <div className="flex flex-col">
+          {rows.map((row) => (
+            <Link key={row.link} to={row.link} className="flex items-center gap-3 px-1 py-2 border-b border-border last:border-0 hover:bg-raised transition-colors duration-100 group">
+              <span className="w-5 text-right text-muted-dim font-mono text-xs shrink-0">{row.rank}</span>
+              <span className="flex-1 truncate text-text-dim group-hover:text-text tracking-wide transition-colors duration-100">{row.label}</span>
+              <span className="font-mono text-accent tabular-nums">{row.value}</span>
+            </Link>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+interface TopPlayer {
+  id: string;
+  name: string;
+  games: number;
+}
+
+interface TopScenario {
+  id: string;
+  title: string;
+  games: number;
+}
+
 export default function Dashboard() {
   const { user } = useAuth();
   const [counts, setCounts] = useState({ tournaments: '—', players: '—', games: '—', scenarios: '—' });
+  const [topPlayers, setTopPlayers] = useState<TopPlayer[]>([]);
+  const [topScenarios, setTopScenarios] = useState<TopScenario[]>([]);
 
   useEffect(() => {
     Promise.all([
@@ -75,13 +120,48 @@ export default function Dashboard() {
       supabase.from('players').select('*', { count: 'exact', head: true }),
       supabase.from('games').select('*', { count: 'exact', head: true }).eq('status', 'COMPLETED'),
       supabase.from('scenarios').select('*', { count: 'exact', head: true }),
-    ]).then(([t, p, g, s]) => {
+      supabase.from('games').select('player1_id, player2_id').eq('status', 'COMPLETED'),
+      supabase.from('games').select('scenario_id, scenarios(id, title)').eq('status', 'COMPLETED'),
+    ]).then(([t, p, g, s, gamesForPlayers, gamesForScenarios]) => {
       setCounts({
         tournaments: t.error ? 'Err' : String(t.count ?? 0),
         players:     p.error ? 'Err' : String(p.count ?? 0),
         games:       g.error ? 'Err' : String(g.count ?? 0),
         scenarios:   s.error ? 'Err' : String(s.count ?? 0),
       });
+
+      // Tally games per player
+      if (!gamesForPlayers.error && gamesForPlayers.data) {
+        const tally = new Map<string, number>();
+        for (const row of gamesForPlayers.data as { player1_id: string; player2_id: string }[]) {
+          tally.set(row.player1_id, (tally.get(row.player1_id) ?? 0) + 1);
+          tally.set(row.player2_id, (tally.get(row.player2_id) ?? 0) + 1);
+        }
+        const sorted = [...tally.entries()].sort((a, b) => b[1] - a[1]).slice(0, 10);
+        if (sorted.length > 0) {
+          const ids = sorted.map(([id]) => id);
+          supabase.from('players').select('id, name').in('id', ids).then(({ data }) => {
+            if (!data) return;
+            const nameMap = new Map(data.map((r) => [r.id, r.name]));
+            setTopPlayers(sorted.map(([id, games]) => ({ id, name: nameMap.get(id) ?? id, games })));
+          });
+        }
+      }
+
+      // Tally games per scenario
+      if (!gamesForScenarios.error && gamesForScenarios.data) {
+        const tally = new Map<string, { title: string; games: number }>();
+        for (const row of gamesForScenarios.data as { scenario_id: string; scenarios: { id: string; title: string } | null }[]) {
+          if (!row.scenario_id || !row.scenarios || row.scenarios.title === 'Forfeit') continue;
+          const cur = tally.get(row.scenario_id);
+          tally.set(row.scenario_id, { title: row.scenarios.title, games: (cur?.games ?? 0) + 1 });
+        }
+        const sorted = [...tally.entries()]
+          .sort((a, b) => b[1].games - a[1].games)
+          .slice(0, 10)
+          .map(([id, { title, games }]) => ({ id, title, games }));
+        setTopScenarios(sorted);
+      }
     });
   }, []);
 
@@ -155,6 +235,18 @@ export default function Dashboard() {
             </p>
           </div>
         </div>
+      </div>
+
+      {/* Top-10 leaderboards */}
+      <div className="grid grid-cols-2 gap-5">
+        <TopList
+          title="Most Games Played"
+          rows={topPlayers.map((p, i) => ({ rank: i + 1, label: p.name, value: p.games, link: `/players/${p.id}` }))}
+        />
+        <TopList
+          title="Most Played Scenarios"
+          rows={topScenarios.map((s, i) => ({ rank: i + 1, label: s.title, value: s.games, link: `/scenarios/${s.id}` }))}
+        />
       </div>
     </div>
   );
