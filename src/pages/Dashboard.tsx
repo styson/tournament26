@@ -151,7 +151,7 @@ export default function Dashboard() {
       // Tally games per scenario
       if (!gamesForScenarios.error && gamesForScenarios.data) {
         const tally = new Map<string, { title: string; games: number }>();
-        for (const row of gamesForScenarios.data as { scenario_id: string; scenarios: { id: string; title: string } | null }[]) {
+        for (const row of gamesForScenarios.data as unknown as { scenario_id: string; scenarios: { id: string; title: string } | null }[]) {
           if (!row.scenario_id || !row.scenarios || row.scenarios.title === 'Forfeit') continue;
           const cur = tally.get(row.scenario_id);
           tally.set(row.scenario_id, { title: row.scenarios.title, games: (cur?.games ?? 0) + 1 });
