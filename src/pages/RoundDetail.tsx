@@ -810,7 +810,7 @@ export default function RoundDetail() {
                   <div className="relative">
                     <select value={p2Id} onChange={e => setP2Id(e.target.value)} required disabled={!p1Id} className={`${SELECT_CLS} ${p1Id ? 'opacity-100' : 'opacity-50'}`}>
                       <option value="">Select player…</option>
-                      {p2Options.map(p => { const r = playerRecords[p.id] ?? { w: 0, l: 0 }; const pts = playerPoints[p.id] ?? 0; return <option key={p.id} value={p.id}>{p.name} ({r.w}-{r.l}, {pts}pts)</option>; })}
+                      {p2Options.map(p => { const r = playerRecords[p.id] ?? { w: 0, l: 0 }; const pts = playerPoints[p.id] ?? 0; return <option key={p.id} value={p.id}>{p.name} ({pts} pts, {r.w}-{r.l})</option>; })}
                     </select>
                     <ChevronDown />
                   </div>

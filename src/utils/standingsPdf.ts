@@ -64,9 +64,11 @@ export function computeStandings(players: PlayerRow[], games: GameResult[]): Sta
     return { player: p, wins: wins[p.id] ?? 0, losses: losses[p.id] ?? 0, points: points[p.id] ?? 0, tb1, tb2, rank: 0 };
   });
 
-  // Sort: points desc, seed asc (unseeded last), name asc
+  // Sort: points desc, tb1 desc, tb2 desc, seed asc (unseeded last), name asc
   entries.sort((a, b) =>
     b.points - a.points ||
+    b.tb1 - a.tb1 ||
+    b.tb2 - a.tb2 ||
     (a.player.seed ?? 999) - (b.player.seed ?? 999) ||
     a.player.name.localeCompare(b.player.name)
   );

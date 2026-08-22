@@ -1,10 +1,10 @@
+import { ChevronDown, ExternalLink } from 'lucide-react';
+import { openPlayerReportPdf } from '@/utils/playerReportPdf';
 import { supabase } from '@/config/supabase';
 import { type StandingEntry, type PlayerRow, type GameResult, computeStandings } from '@/utils/standingsPdf';
-import { openPlayerReportPdf } from '@/utils/playerReportPdf';
 import { useEffect, useState } from 'react';
-import StandingsReportButton from '@/components/StandingsReport';
 import CrosstableReportButton from '@/components/CrosstableReport';
-import { ChevronDown, ExternalLink } from 'lucide-react';
+import StandingsReportButton from '@/components/StandingsReport';
 
 // ─── types ────────────────────────────────────────────────────
 
