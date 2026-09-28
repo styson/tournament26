@@ -1,0 +1,52 @@
+name: Supabase keep-alive
+
+# Supabase free-tier projects pause after ~7 days without API activity.
+# This signs in as a dedicated user and runs a real authenticated query daily.
+
+on:
+  schedule:
+    - cron: '17 9 * * *'
+  workflow_dispatch:
+
+permissions:
+  actions: write
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Sign in and query Supabase
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+          KEEPALIVE_EMAIL: ${{ secrets.KEEPALIVE_EMAIL }}
+          KEEPALIVE_PASSWORD: ${{ secrets.KEEPALIVE_PASSWORD }}
+        run: |
+          set -euo pipefail
+
+          body=$(jq -n --arg email "$KEEPALIVE_EMAIL" --arg password "$KEEPALIVE_PASSWORD" \
+            '{email: $email, password: $password}')
+
+          token=$(curl -fsS -X POST "$SUPABASE_URL/auth/v1/token?grant_type=password" \
+            -H "apikey: $SUPABASE_ANON_KEY" \
+            -H "Content-Type: application/json" \
+            -d "$body" | jq -r '.access_token')
+          echo "::add-mask::$token"
+
+          if [ -z "$token" ] || [ "$token" = "null" ]; then
+            echo "Sign-in failed: no access token returned" >&2
+            exit 1
+          fi
+
+          for table in tournaments players; do
+            echo "Querying $table..."
+            curl -fsS "$SUPABASE_URL/rest/v1/$table?select=id&limit=1" \
+              -H "apikey: $SUPABASE_ANON_KEY" \
+              -H "Authorization: Bearer $token"
+            echo
+          done
+
+      # GitHub disables scheduled workflows after 60 days of repo inactivity;
+      # this re-enables it via the API (no commits).
+      - name: Keep workflow enabled
+        uses: gautamkrishnar/keepalive-workflow@v2

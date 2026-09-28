@@ -49,6 +49,17 @@ https://github.com/styson/tournament26
    - Add the secrets listed in README.md
 3. Deploy to AWS Amplify Hosting
 
+## Supabase Keep-Alive
+
+`.github/workflows/supabase-keepalive.yml` signs in and queries Supabase daily so the free-tier project isn't paused for inactivity.
+
+1. In the Supabase dashboard, create a dedicated user (e.g. `keepalive@yourdomain`) with a strong password
+2. Add these repo secrets (Settings > Secrets and variables > Actions):
+   - `SUPABASE_URL` — same as `VITE_SUPABASE_URL`
+   - `SUPABASE_ANON_KEY` — same as `VITE_SUPABASE_ANON_KEY`
+   - `KEEPALIVE_EMAIL`, `KEEPALIVE_PASSWORD` — the dedicated user's credentials
+3. Test with `gh workflow run supabase-keepalive.yml` (or Actions tab > Run workflow)
+
 ## Local Development
 
 To run the app locally:
