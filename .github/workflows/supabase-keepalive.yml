@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  actions: write
+  contents: read
 
 jobs:
   ping:
@@ -46,7 +46,12 @@ jobs:
             echo
           done
 
-      # GitHub disables scheduled workflows after 60 days of repo inactivity;
-      # this re-enables it via the API (no commits).
-      - name: Keep workflow enabled
-        uses: gautamkrishnar/keepalive-workflow@v2
+  # GitHub disables scheduled workflows after 60 days of repo inactivity;
+  # this re-enables it via the API (no commits).
+  workflow-keepalive:
+    if: github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    steps:
+      - uses: liskin/gh-workflow-keepalive@v1
