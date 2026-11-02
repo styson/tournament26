@@ -66,7 +66,7 @@ interface TopListRow {
   rank: number;
   label: string;
   value: number;
-  link: string;
+  link?: string;
 }
 
 function TopList({ title, rows }: { title: string; rows: TopListRow[] }) {
@@ -80,13 +80,19 @@ function TopList({ title, rows }: { title: string; rows: TopListRow[] }) {
         </div>
       ) : (
         <div className="flex flex-col">
-          {rows.map((row) => (
-            <Link key={row.link} to={row.link} className="flex items-center gap-3 px-1 py-2 border-b border-border last:border-0 hover:bg-raised transition-colors duration-100 group">
-              <span className="w-5 text-right text-muted-dim font-mono text-xs shrink-0">{row.rank}</span>
-              <span className="flex-1 truncate text-text-dim group-hover:text-text tracking-wide transition-colors duration-100">{row.label}</span>
-              <span className="font-mono text-accent tabular-nums">{row.value}</span>
-            </Link>
-          ))}
+          {rows.map((row) => {
+            const rowCls = 'flex items-center gap-3 px-1 py-2 border-b border-border last:border-0';
+            const content = (
+              <>
+                <span className="w-5 text-right text-muted-dim font-mono text-xs shrink-0">{row.rank}</span>
+                <span className="flex-1 truncate text-text-dim group-hover:text-text tracking-wide transition-colors duration-100">{row.label}</span>
+                <span className="font-mono text-accent tabular-nums">{row.value}</span>
+              </>
+            );
+            return row.link
+              ? <Link key={row.rank} to={row.link} className={`${rowCls} hover:bg-raised transition-colors duration-100 group`}>{content}</Link>
+              : <div key={row.rank} className={rowCls}>{content}</div>;
+          })}
         </div>
       )}
     </div>
@@ -241,11 +247,11 @@ export default function Dashboard() {
       <div className="grid grid-cols-2 gap-5">
         <TopList
           title="Most Games Played"
-          rows={topPlayers.map((p, i) => ({ rank: i + 1, label: p.name, value: p.games, link: `/players/${p.id}` }))}
+          rows={topPlayers.map((p, i) => ({ rank: i + 1, label: p.name, value: p.games }))}
         />
         <TopList
           title="Most Played Scenarios"
-          rows={topScenarios.map((s, i) => ({ rank: i + 1, label: s.title, value: s.games, link: `/scenarios/${s.id}` }))}
+          rows={topScenarios.map((s, i) => ({ rank: i + 1, label: s.title, value: s.games, link: `/scenarios/${s.id}/edit` }))}
         />
       </div>
     </div>
