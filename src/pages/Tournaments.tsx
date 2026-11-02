@@ -108,9 +108,19 @@ function TournamentRow({ tournament }: { tournament: Tournament }) {
   );
 }
 
+const SHOW_CANCELLED_KEY = 'tournaments.showCancelled';
+
 function TournamentList({ tournaments }: { tournaments: Tournament[] }) {
+  const [showCancelled, setShowCancelled] = useState(() => localStorage.getItem(SHOW_CANCELLED_KEY) === 'true');
+
+  const toggleShowCancelled = (checked: boolean) => {
+    localStorage.setItem(SHOW_CANCELLED_KEY, String(checked));
+    setShowCancelled(checked);
+  };
+
   const active = tournaments.filter(t => t.status !== 'COMPLETED' && t.status !== 'CANCELLED');
-  const completed = tournaments.filter(t => t.status === 'COMPLETED' || t.status === 'CANCELLED');
+  const completed = tournaments.filter(t => t.status === 'COMPLETED');
+  const cancelled = tournaments.filter(t => t.status === 'CANCELLED');
 
   return (
     <div className="flex flex-col gap-5">
@@ -126,6 +136,25 @@ function TournamentList({ tournaments }: { tournaments: Tournament[] }) {
             {completed.map(t => <TournamentRow key={t.id} tournament={t} />)}
           </div>
         </>
+      )}
+      {showCancelled && cancelled.length > 0 && (
+        <>
+          <div className="section-label mt-2">Cancelled</div>
+          <div className="flex flex-col gap-px bg-border">
+            {cancelled.map(t => <TournamentRow key={t.id} tournament={t} />)}
+          </div>
+        </>
+      )}
+      {cancelled.length > 0 && (
+        <label className="inline-flex items-center gap-2 self-start text-muted cursor-pointer select-none">
+          <input
+            type="checkbox"
+            className="cursor-pointer"
+            checked={showCancelled}
+            onChange={e => toggleShowCancelled(e.target.checked)}
+          />
+          Show cancelled tournaments
+        </label>
       )}
     </div>
   );
