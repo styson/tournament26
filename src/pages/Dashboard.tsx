@@ -6,15 +6,12 @@ import { supabase } from '@/config/supabase';
 // Animated count-up for a numeric string value
 function useCountUp(target: string, duration = 900): string {
   const [display, setDisplay] = useState('—');
+  // Non-numeric values ('—', 'Err') and zero are shown as-is without animating
+  const num = parseInt(target, 10);
+  const animate = !isNaN(num) && num !== 0;
 
   useEffect(() => {
-    if (target === '—' || target === 'Err') {
-      setDisplay(target);
-      return;
-    }
-    const num = parseInt(target, 10);
-    if (isNaN(num)) { setDisplay(target); return; }
-    if (num === 0) { setDisplay('0'); return; }
+    if (!animate) return;
 
     let raf: number;
     const start = performance.now();
@@ -28,9 +25,9 @@ function useCountUp(target: string, duration = 900): string {
     }
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [target, duration]);
+  }, [animate, num, duration]);
 
-  return display;
+  return animate ? display : target;
 }
 
 interface StatCardProps {
@@ -110,6 +107,9 @@ interface TopScenario {
 
 export default function Dashboard() {
   const { user } = useAuth();
+  const [today] = useState(() =>
+    new Date().toLocaleDateString('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' }).toUpperCase(),
+  );
   const [counts, setCounts] = useState({ tournaments: '—', players: '—', games: '—', scenarios: '—' });
   const [topPlayers, setTopPlayers] = useState<TopPlayer[]>([]);
   const [topScenarios, setTopScenarios] = useState<TopScenario[]>([]);
@@ -197,7 +197,7 @@ export default function Dashboard() {
             <div className="absolute inset-0 rounded-full bg-green animate-[pulseRing_2s_ease-out_infinite]" />
           </div>
           <span className="text-muted-dim tracking-widest">
-            {new Date().toLocaleDateString('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' }).toUpperCase()}
+            {today}
           </span>
         </div>
       </div>

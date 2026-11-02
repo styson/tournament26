@@ -3,6 +3,13 @@ import autoTable from 'jspdf-autotable';
 import { supabase } from '@/config/supabase';
 import { type StandingEntry } from './standingsPdf';
 
+interface CrosstableGameRow {
+  player1_id: string;
+  player2_id: string;
+  winner_id:  string | null;
+  rounds:     { round_number: number } | null;
+}
+
 export async function downloadCrosstablePdf(
   standings: StandingEntry[],
   tournamentId: string,
@@ -23,7 +30,7 @@ export async function downloadCrosstablePdf(
 
   if (gamesRes.error) { console.error(gamesRes.error); return; }
 
-  const games: any[] = gamesRes.data ?? [];
+  const games = (gamesRes.data ?? []) as unknown as CrosstableGameRow[];
 
   // Rank lookup: playerId → rank number
   const rankByPlayerId = new Map<string, number>();
@@ -35,12 +42,12 @@ export async function downloadCrosstablePdf(
   const roundNumbers = (roundsRes.data ?? []).map(r => r.round_number as number);
 
   // gameByPlayerRound: playerId → roundNumber → game
-  const gameByPlayerRound = new Map<string, Map<number, any>>();
+  const gameByPlayerRound = new Map<string, Map<number, CrosstableGameRow>>();
   for (const s of standings) {
     gameByPlayerRound.set(s.player.id, new Map());
   }
   for (const g of games) {
-    const rn = g.rounds?.round_number as number;
+    const rn = g.rounds?.round_number;
     if (rn == null) continue;
     for (const pid of [g.player1_id, g.player2_id]) {
       if (gameByPlayerRound.has(pid)) {
@@ -116,7 +123,7 @@ export async function downloadCrosstablePdf(
     },
   });
 
-  const finalY = (doc as any).lastAutoTable?.finalY ?? 200;
+  const finalY = (doc as jsPDF & { lastAutoTable?: { finalY: number } }).lastAutoTable?.finalY ?? 200;
   doc.setFontSize(7);
   doc.setFont('helvetica', 'normal');
   doc.setTextColor(130, 130, 130);

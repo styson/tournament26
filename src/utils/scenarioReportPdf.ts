@@ -2,6 +2,15 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { supabase } from '@/config/supabase';
 
+interface ScenarioGameRow {
+  player1_id:      string;
+  player2_id:      string;
+  player1_attacks: boolean;
+  winner_id:       string | null;
+  scenario_id:     string;
+  scenarios:       { id: string; title: string; attacker_nationality: string; defender_nationality: string } | null;
+}
+
 export async function openScenarioReportPdf(
   tournamentId:   string,
   tournamentName: string,
@@ -28,10 +37,10 @@ export async function openScenarioReportPdf(
     defenderWins:        number;
   }>();
 
-  for (const g of (data ?? [])) {
-    const scen = (g as any).scenarios;
+  for (const g of (data ?? []) as unknown as ScenarioGameRow[]) {
+    const scen = g.scenarios;
     if (!scen) continue;
-    const sid = (g as any).scenario_id as string;
+    const sid = g.scenario_id;
     if (!scenMap.has(sid)) {
       scenMap.set(sid, {
         title:               scen.title,
@@ -42,12 +51,12 @@ export async function openScenarioReportPdf(
       });
     }
     const entry    = scenMap.get(sid)!;
-    const attackerIsP1 = (g as any).player1_attacks as boolean;
-    const winnerId     = (g as any).winner_id as string | null;
+    const attackerIsP1 = g.player1_attacks;
+    const winnerId     = g.winner_id;
     if (!winnerId) continue;
     const attackerWon = attackerIsP1
-      ? winnerId === (g as any).player1_id
-      : winnerId === (g as any).player2_id;
+      ? winnerId === g.player1_id
+      : winnerId === g.player2_id;
     if (attackerWon) entry.attackerWins++;
     else             entry.defenderWins++;
   }

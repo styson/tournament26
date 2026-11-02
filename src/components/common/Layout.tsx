@@ -8,6 +8,8 @@ interface LayoutProps {
   children: ReactNode;
 }
 
+const currentYear = new Date().getFullYear();
+
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', code: 'DB' },
   { name: 'Tournaments', href: '/tournaments', code: 'TN' },
@@ -95,7 +97,7 @@ export default function Layout({ children }: LayoutProps) {
 
       {/* ── Footer ── */}
       <footer className='border-t border-t-raised py-3 px-4 text-center'>
-        <span className='text-muted-dim tracking-widest'>TOURNEY<span className='text-accent'>HQ</span> · {new Date().getFullYear()}</span>
+        <span className='text-muted-dim tracking-widest'>TOURNEY<span className='text-accent'>HQ</span> · {currentYear}</span>
       </footer>
     </div>
   );

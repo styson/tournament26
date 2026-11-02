@@ -27,12 +27,14 @@ export default function NewScenario() {
   const [matches,        setMatches]        = useState<MatchedScenario[]>([]);
   const [matchLoading,   setMatchLoading]   = useState(false);
   const titleRef = useRef('');
+  // Stale results from a previous search are hidden once the title is cleared
+  const visibleMatches = title.trim() ? matches : [];
 
   useEffect(() => {
     const term = title.trim();
     titleRef.current = term;
 
-    if (!term) { setMatches([]); return; }
+    if (!term) return;
 
     const timer = setTimeout(async () => {
       if (titleRef.current !== term) return;
@@ -183,9 +185,9 @@ export default function NewScenario() {
             <p className="text-muted-dim m-0 text-sm">Type a title to search existing scenarios.</p>
           )}
 
-          {matches.length > 0 && (
+          {visibleMatches.length > 0 && (
             <div className="flex flex-col gap-3">
-              {matches.map(s => (
+              {visibleMatches.map(s => (
                 <div key={s.id} className="border-t border-border pt-3">
                   <div className="flex justify-between items-baseline mb-1.5">
                     <span className="font-medium text-text">{s.title}</span>

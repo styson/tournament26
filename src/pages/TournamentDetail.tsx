@@ -3,7 +3,7 @@ import { openPlayerReportPdf } from '@/utils/playerReportPdf';
 import { openScenarioReportPdf } from '@/utils/scenarioReportPdf';
 import { supabase } from '@/config/supabase';
 import { createPortal } from 'react-dom';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useParams, Link } from '@tanstack/react-router';
 import StandingsReportButton from '@/components/StandingsReport';
 import { ArrowLeft, Check, ChevronDown, ExternalLink, LogIn, X } from 'lucide-react';
@@ -23,6 +23,11 @@ interface Player {
   email: string | null;
   location: string | null;
   seed: number | null;
+}
+
+interface EnrolledRow {
+  seed: number | null;
+  players: Omit<Player, 'seed'> | null;
 }
 
 interface Round {
@@ -100,8 +105,6 @@ export default function TournamentDetail() {
   const [updatingStatus,       setUpdatingStatus]       = useState(false);
   const [error,                setError]                = useState('');
 
-  useEffect(() => { setSeedInput(String(enrolled.length + 1)); }, [enrolled.length]);
-
   // ── fetch tournament ──────────────────────────────────────
   useEffect(() => {
     supabase.from('tournaments').select('*').eq('id', id).single()
@@ -113,9 +116,7 @@ export default function TournamentDetail() {
   }, [id]);
 
   // ── fetch players ─────────────────────────────────────────
-  useEffect(() => { fetchPlayers(); }, [id]);
-
-  async function fetchPlayers() {
+  const fetchPlayers = useCallback(async () => {
     setLoadingPlayers(true);
     const [enrolledRes, allRes, gamesRes] = await Promise.all([
       supabase.from('tournament_players')
@@ -127,11 +128,11 @@ export default function TournamentDetail() {
         .eq('rounds.tournament_id', id)
         .eq('status', 'COMPLETED'),
     ]);
-    const enrolledPlayers: Player[] = (enrolledRes.data ?? [])
-      .map((r: any) => r.players ? { ...r.players, seed: r.seed ?? null } : null)
-      .filter(Boolean);
+    const enrolledPlayers: Player[] = ((enrolledRes.data ?? []) as unknown as EnrolledRow[])
+      .flatMap(r => r.players ? [{ ...r.players, seed: r.seed ?? null }] : []);
     const enrolledIds = new Set(enrolledPlayers.map(p => p.id));
     setEnrolled(enrolledPlayers);
+    setSeedInput(String(enrolledPlayers.length + 1));
     setRoster((allRes.data ?? []).map(p => ({ ...p, seed: null })).filter(p => !enrolledIds.has(p.id)));
     setSelectedPlayerId('');
 
@@ -169,12 +170,15 @@ export default function TournamentDetail() {
     );
     setStandings(standingsResult);
     setLoadingPlayers(false);
-  }
+  }, [id]);
+
+  // oxlint's set-state-in-effect flags awaited setState calls inside useCallback;
+  // the only synchronous one is the loading flag, which should reset when id changes.
+  // oxlint-disable-next-line react/set-state-in-effect
+  useEffect(() => { fetchPlayers(); }, [fetchPlayers]);
 
   // ── fetch rounds ──────────────────────────────────────────
-  useEffect(() => { fetchRounds(); }, [id]);
-
-  async function fetchRounds() {
+  const fetchRounds = useCallback(async () => {
     setLoadingRounds(true);
     const { data, error: rErr } = await supabase
       .from('rounds')
@@ -184,7 +188,10 @@ export default function TournamentDetail() {
     if (rErr) { console.error(rErr); }
     setRounds(data ?? []);
     setLoadingRounds(false);
-  }
+  }, [id]);
+
+  // oxlint-disable-next-line react/set-state-in-effect -- see fetchPlayers effect above
+  useEffect(() => { fetchRounds(); }, [fetchRounds]);
 
   // ── enroll player ─────────────────────────────────────────
   async function handleEnroll(e: React.FormEvent) {

@@ -14,6 +14,15 @@ interface Tournament {
   status: string;
 }
 
+interface EnrolledRow {
+  seed: number | null;
+  players: { id: string; name: string } | null;
+}
+
+interface StandingsGameRow extends GameResult {
+  rounds: { round_number: number } | null;
+}
+
 // ─── helpers ──────────────────────────────────────────────────
 
 function Spinner() {
@@ -32,8 +41,10 @@ export default function Standings() {
   const [selectedId, setSelectedId] = useState('');
   const [standings, setStandings] = useState<StandingEntry[]>([]);
   const [roundNumbers, setRoundNumbers] = useState<number[]>([]);
-  const [gameByPlayerRound, setGameByPlayerRound] = useState<Map<string, Map<number, any>>>(new Map());
-  const [loading, setLoading] = useState(false);
+  const [gameByPlayerRound, setGameByPlayerRound] = useState<Map<string, Map<number, StandingsGameRow>>>(new Map());
+  // Loading until the selected tournament's data has been fetched
+  const [loadedId, setLoadedId] = useState('');
+  const loading = selectedId !== '' && loadedId !== selectedId;
   const [loadingTourneys, setLoadingTourneys] = useState(true);
   const [error, setError] = useState('');
 
@@ -59,14 +70,7 @@ export default function Standings() {
 
   // ── load standings + rounds when tournament selected ──────
   useEffect(() => {
-    if (!selectedId) {
-      setStandings([]);
-      setRoundNumbers([]);
-      setGameByPlayerRound(new Map());
-      return;
-    }
-    setLoading(true);
-    setError('');
+    if (!selectedId) return;
 
     Promise.all([
       supabase.from('tournament_players').select('seed, players(id, name)').eq('tournament_id', selectedId),
@@ -79,36 +83,36 @@ export default function Standings() {
     ]).then(([enrolledRes, gamesRes, roundsRes]) => {
       if (enrolledRes.error) {
         setError(enrolledRes.error.message);
-        setLoading(false);
+        setLoadedId(selectedId);
         return;
       }
       if (gamesRes.error) {
         setError(gamesRes.error.message);
-        setLoading(false);
+        setLoadedId(selectedId);
         return;
       }
 
-      const players: PlayerRow[] = (enrolledRes.data ?? [])
-        .map((r: any) => (r.players ? { ...r.players, seed: r.seed ?? null } : null))
-        .filter(Boolean);
-      const games: GameResult[] = gamesRes.data ?? [];
+      setError('');
+      const players: PlayerRow[] = ((enrolledRes.data ?? []) as unknown as EnrolledRow[])
+        .flatMap((r) => (r.players ? [{ ...r.players, seed: r.seed ?? null }] : []));
+      const games = (gamesRes.data ?? []) as unknown as StandingsGameRow[];
       const computed = computeStandings(players, games);
       setStandings(computed);
 
-      const rounds = (roundsRes.data ?? []).map((r: any) => r.round_number as number);
+      const rounds = (roundsRes.data ?? []).map((r) => r.round_number as number);
       setRoundNumbers(rounds);
 
-      const byPlayerRound = new Map<string, Map<number, any>>();
+      const byPlayerRound = new Map<string, Map<number, StandingsGameRow>>();
       for (const s of computed) byPlayerRound.set(s.player.id, new Map());
-      for (const g of gamesRes.data ?? []) {
-        const rn = (g as any).rounds?.round_number as number;
+      for (const g of games) {
+        const rn = g.rounds?.round_number;
         if (rn == null) continue;
         for (const pid of [g.player1_id, g.player2_id]) {
           if (byPlayerRound.has(pid)) byPlayerRound.get(pid)!.set(rn, g);
         }
       }
       setGameByPlayerRound(byPlayerRound);
-      setLoading(false);
+      setLoadedId(selectedId);
     });
   }, [selectedId]);
 

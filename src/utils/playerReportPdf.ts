@@ -2,6 +2,15 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { supabase } from '@/config/supabase';
 
+interface PlayerGameRow {
+  player1_id:      string;
+  player2_id:      string;
+  player1_attacks: boolean;
+  winner_id:       string | null;
+  rounds:          { round_number: number } | null;
+  scenarios:       { title: string; attacker_nationality: string; defender_nationality: string } | null;
+}
+
 export async function openPlayerReportPdf(
   playerId:       string,
   playerName:     string,
@@ -22,8 +31,8 @@ export async function openPlayerReportPdf(
 
   if (error) { console.error(error); return; }
 
-  const sorted = (data ?? []).slice().sort(
-    (a: any, b: any) => (a.rounds?.round_number ?? 0) - (b.rounds?.round_number ?? 0),
+  const sorted = ((data ?? []) as unknown as PlayerGameRow[]).slice().sort(
+    (a, b) => (a.rounds?.round_number ?? 0) - (b.rounds?.round_number ?? 0),
   );
 
   const doc = new jsPDF({ orientation: 'p', unit: 'pt', format: 'letter' });
@@ -35,7 +44,7 @@ export async function openPlayerReportPdf(
   doc.setFontSize(10);
   doc.text(tournamentName, 40, 60);
 
-  const rows = sorted.map((g: any) => {
+  const rows = sorted.map((g) => {
     const opponentId   = g.player1_id === playerId ? g.player2_id : g.player1_id;
     const opponentName = playerById[opponentId] ?? '—';
     const roundNum     = g.rounds?.round_number ?? '?';

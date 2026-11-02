@@ -8,7 +8,7 @@
 import { createPortal } from 'react-dom';
 import { Link, useParams } from '@tanstack/react-router';
 import { supabase } from '@/config/supabase';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { openMatchReportPdf } from '@/utils/matchReportPdf';
 import { ArrowLeft, ArrowRight, Check, ChevronDown as ChevronDownIcon, X } from 'lucide-react';
 
@@ -23,6 +23,9 @@ interface RoundData {
 }
 
 interface Player { id: string; name: string; seed: number | null; }
+
+interface EnrolledRow { seed: number | null; players: { id: string; name: string } | null; }
+interface RoundScenarioRow { scenarios: ScenarioRow | null; }
 
 interface ScenarioRow {
   id: string;
@@ -80,7 +83,12 @@ function ScenarioPicker({
   const inputRef  = useRef<HTMLInputElement>(null);
   const timerRef  = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  useEffect(() => { if (!value) setInputVal(''); }, [value]);
+  // Clear the input when the parent resets the selection
+  const [prevValue, setPrevValue] = useState(value);
+  if (value !== prevValue) {
+    setPrevValue(value);
+    if (!value) setInputVal('');
+  }
 
   function updateDropPos() {
     if (inputRef.current) {
@@ -121,7 +129,7 @@ function ScenarioPicker({
         type="text"
         value={inputVal}
         onChange={e => handleChange(e.target.value)}
-        onFocus={() => { updateDropPos(); inputVal.trim() && setOpen(true); }}
+        onFocus={() => { updateDropPos(); if (inputVal.trim()) setOpen(true); }}
         onBlur={() => setTimeout(() => setOpen(false), 150)}
         placeholder={'Search by ID or title…'}
         className="input"
@@ -185,7 +193,10 @@ export default function RoundDetail() {
   const [playerPoints,   setPlayerPoints]   = useState<Record<string, number>>({});
   const [priorMatchups,  setPriorMatchups]  = useState<Set<string>>(new Set());
 
-  const [loading, setLoading] = useState(true);
+  // Loading until the current round/tournament pair has been fetched
+  const loadKey = `${roundId}|${tournamentId}`;
+  const [loadedKey, setLoadedKey] = useState<string | null>(null);
+  const loading = loadedKey !== loadKey;
   const [error,   setError]   = useState('');
 
   // round status
@@ -215,89 +226,92 @@ export default function RoundDetail() {
 
   // ── load ──────────────────────────────────────────────────
 
-  useEffect(() => { if (roundId && tournamentId) fetchAll(); }, [roundId, tournamentId]);
+  const fetchGames = useCallback(async () => {
+    const { data, error: gErr } = await supabase
+      .from('games').select('*').eq('round_id', roundId).order('created_at');
+    if (gErr) { setError(gErr.message); return; }
+    setGames(data ?? []);
+  }, [roundId]);
 
-  async function fetchAll() {
-    setLoading(true);
-    setError('');
-    const [roundRes, tourneyRes, enrolledRes, scenRes, completedRes, allTourneyGamesRes, allRoundsRes] = await Promise.all([
-      supabase.from('rounds').select('*').eq('id', roundId).single(),
-      supabase.from('tournaments').select('id, name').eq('id', tournamentId).single(),
-      supabase.from('tournament_players')
-        .select('seed, players(id, name)')
-        .eq('tournament_id', tournamentId),
-      supabase.from('round_scenarios')
-        .select('scenario_id, scenarios(id, scen_id, title, attacker_nationality, defender_nationality)')
-        .eq('round_id', roundId),
-      supabase.from('games')
-        .select('player1_id, player2_id, winner_id, rounds!inner(tournament_id)')
-        .eq('rounds.tournament_id', tournamentId)
-        .eq('status', 'COMPLETED'),
-      supabase.from('games')
-        .select('player1_id, player2_id, rounds!inner(tournament_id)')
-        .eq('rounds.tournament_id', tournamentId),
-      supabase.from('rounds')
-        .select('id, round_number')
-        .eq('tournament_id', tournamentId)
-        .order('round_number'),
-    ]);
+  useEffect(() => {
+    if (!roundId || !tournamentId) return;
+    const fetchAll = async () => {
+      const key = `${roundId}|${tournamentId}`;
+      const [roundRes, tourneyRes, enrolledRes, scenRes, completedRes, allTourneyGamesRes, allRoundsRes] = await Promise.all([
+        supabase.from('rounds').select('*').eq('id', roundId).single(),
+        supabase.from('tournaments').select('id, name').eq('id', tournamentId).single(),
+        supabase.from('tournament_players')
+          .select('seed, players(id, name)')
+          .eq('tournament_id', tournamentId),
+        supabase.from('round_scenarios')
+          .select('scenario_id, scenarios(id, scen_id, title, attacker_nationality, defender_nationality)')
+          .eq('round_id', roundId),
+        supabase.from('games')
+          .select('player1_id, player2_id, winner_id, rounds!inner(tournament_id)')
+          .eq('rounds.tournament_id', tournamentId)
+          .eq('status', 'COMPLETED'),
+        supabase.from('games')
+          .select('player1_id, player2_id, rounds!inner(tournament_id)')
+          .eq('rounds.tournament_id', tournamentId),
+        supabase.from('rounds')
+          .select('id, round_number')
+          .eq('tournament_id', tournamentId)
+          .order('round_number'),
+      ]);
 
-    if (roundRes.error)   { setError(roundRes.error.message);   setLoading(false); return; }
-    if (tourneyRes.error) { setError(tourneyRes.error.message); setLoading(false); return; }
+      if (roundRes.error)   { setError(roundRes.error.message);   setLoadedKey(key); return; }
+      if (tourneyRes.error) { setError(tourneyRes.error.message); setLoadedKey(key); return; }
 
-    setRound(roundRes.data);
-    setTournament(tourneyRes.data ?? null);
-    setEnrolled((enrolledRes.data ?? []).map((r: any) => r.players ? { ...r.players, seed: r.seed ?? null } : null).filter(Boolean));
-    setRoundScenarios((scenRes.data ?? []).map((r: any) => r.scenarios).filter(Boolean));
-    setAllRounds(allRoundsRes.data ?? []);
+      setError('');
 
-    const rec: Record<string, { w: number; l: number }> = {};
-    const defeated: Record<string, string[]> = {};
-    for (const g of (completedRes.data ?? [])) {
-      const loserId = g.winner_id === g.player1_id ? g.player2_id : g.player1_id;
-      for (const pid of [g.player1_id, g.player2_id]) {
-        if (!rec[pid]) rec[pid] = { w: 0, l: 0 };
-        if (g.winner_id === pid) rec[pid].w++;
-        else rec[pid].l++;
+      setRound(roundRes.data);
+      setTournament(tourneyRes.data ?? null);
+      setEnrolled(((enrolledRes.data ?? []) as unknown as EnrolledRow[]).flatMap(r => r.players ? [{ ...r.players, seed: r.seed ?? null }] : []));
+      setRoundScenarios(((scenRes.data ?? []) as unknown as RoundScenarioRow[]).flatMap(r => r.scenarios ? [r.scenarios] : []));
+      setAllRounds(allRoundsRes.data ?? []);
+
+      const rec: Record<string, { w: number; l: number }> = {};
+      const defeated: Record<string, string[]> = {};
+      for (const g of (completedRes.data ?? [])) {
+        const loserId = g.winner_id === g.player1_id ? g.player2_id : g.player1_id;
+        for (const pid of [g.player1_id, g.player2_id]) {
+          if (!rec[pid]) rec[pid] = { w: 0, l: 0 };
+          if (g.winner_id === pid) rec[pid].w++;
+          else rec[pid].l++;
+        }
+        if (g.winner_id) {
+          if (!defeated[g.winner_id]) defeated[g.winner_id] = [];
+          defeated[g.winner_id].push(loserId);
+        }
       }
-      if (g.winner_id) {
-        if (!defeated[g.winner_id]) defeated[g.winner_id] = [];
-        defeated[g.winner_id].push(loserId);
+      setPlayerRecords(rec);
+
+      const pts: Record<string, number> = {};
+      for (const pid of Object.keys(rec)) {
+        const bonus = (defeated[pid] ?? []).reduce((sum, oppId) => sum + (rec[oppId]?.w ?? 0), 0);
+        pts[pid] = 10 * rec[pid].w + bonus;
       }
-    }
-    setPlayerRecords(rec);
+      setPlayerPoints(pts);
 
-    const pts: Record<string, number> = {};
-    for (const pid of Object.keys(rec)) {
-      const bonus = (defeated[pid] ?? []).reduce((sum, oppId) => sum + (rec[oppId]?.w ?? 0), 0);
-      pts[pid] = 10 * rec[pid].w + bonus;
-    }
-    setPlayerPoints(pts);
+      const matchups = new Set<string>();
+      for (const g of (allTourneyGamesRes.data ?? [])) {
+        const key = [g.player1_id, g.player2_id].sort().join('|');
+        matchups.add(key);
+      }
+      setPriorMatchups(matchups);
 
-    const matchups = new Set<string>();
-    for (const g of (allTourneyGamesRes.data ?? [])) {
-      const key = [g.player1_id, g.player2_id].sort().join('|');
-      matchups.add(key);
-    }
-    setPriorMatchups(matchups);
-
-    await fetchGames();
-    setLoading(false);
-  }
+      await fetchGames();
+      setLoadedKey(key);
+    };
+    fetchAll();
+  }, [roundId, tournamentId, fetchGames]);
 
   async function fetchRoundScenarios() {
     const { data } = await supabase
       .from('round_scenarios')
       .select('scenario_id, scenarios(id, scen_id, title, attacker_nationality, defender_nationality)')
       .eq('round_id', roundId);
-    setRoundScenarios((data ?? []).map((r: any) => r.scenarios).filter(Boolean));
-  }
-
-  async function fetchGames() {
-    const { data, error: gErr } = await supabase
-      .from('games').select('*').eq('round_id', roundId).order('created_at');
-    if (gErr) { setError(gErr.message); return; }
-    setGames(data ?? []);
+    setRoundScenarios(((data ?? []) as unknown as RoundScenarioRow[]).flatMap(r => r.scenarios ? [r.scenarios] : []));
   }
 
   // ── scenario handlers ─────────────────────────────────────
