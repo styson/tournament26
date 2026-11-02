@@ -89,7 +89,7 @@ export default function Home() {
         <div className="anim-2 flex items-center gap-3 mb-4">
           <div className="h-px w-8 bg-accent opacity-60" />
           <span className="tracking-widest text-accent uppercase opacity-70">
-            Designation: TOURNEY-26
+            Designation: TOURNEYHQ
           </span>
         </div>
 

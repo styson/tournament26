@@ -52,7 +52,7 @@ export default function Layout({ children }: LayoutProps) {
               )}
             </div>
             <span className='font-display tracking-widest text-text'>
-              TOURNEY<span className='text-accent'>26</span>
+              TOURNEY<span className='text-accent'>HQ</span>
             </span>
           </Link>
 
@@ -95,7 +95,7 @@ export default function Layout({ children }: LayoutProps) {
 
       {/* ── Footer ── */}
       <footer className='border-t border-t-raised py-3 px-4 text-center'>
-        <span className='text-muted-dim tracking-widest'>TOURNAMENT26 · {new Date().getFullYear()}</span>
+        <span className='text-muted-dim tracking-widest'>TOURNEY<span className='text-accent'>HQ</span> · {new Date().getFullYear()}</span>
       </footer>
     </div>
   );

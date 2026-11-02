@@ -47,7 +47,7 @@ export default function Login() {
             <span className="font-display text-2xl text-bg tracking-wider">T</span>
           </div>
           <h1 className="text-4xl tracking-widest text-text m-0">
-            TOURNEY<span className="text-accent">26</span>
+            TOURNEY<span className="text-accent">HQ</span>
           </h1>
           <p className="text-xs tracking-widest text-muted uppercase mt-1.5">
             Secure Access Required
